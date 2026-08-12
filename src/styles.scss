@@ -1,0 +1,165 @@
+@import 'wts-data-table/styles.css';
+
+:root {
+  color: #17201d;
+  background: #f2f0e9;
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+html {
+  scroll-behavior: smooth;
+}
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+button,
+input,
+select {
+  font: inherit;
+}
+
+.wts-data-table {
+  --wts-table-accent: #244f42;
+  --wts-table-accent-soft: #dce9e2;
+  --wts-table-background: #fffef9;
+  --wts-table-border: #dcded6;
+  --wts-table-header: #f4f4ef;
+  --wts-table-hover: #f7f8f3;
+  --wts-table-muted: #68716d;
+  --wts-table-radius: 0;
+  --wts-table-row-selected: #e8f0eb;
+  --wts-table-text: #1d2522;
+  --wts-table-control-radius: 0.25rem;
+  --wts-table-font-size: 0.8rem;
+  --wts-table-row-height: 4.5rem;
+}
+
+.wts-data-table .project-cell,
+.wts-data-table .lead-cell,
+.wts-data-table .progress-cell {
+  display: flex;
+  align-items: center;
+}
+
+.wts-data-table .project-cell {
+  gap: 0.75rem;
+}
+.wts-data-table .project-cell > i {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 0.35rem;
+  background: #e7e8dd;
+  color: #4e574f;
+  font-style: normal;
+  font-weight: 700;
+}
+.wts-data-table .project-cell > span {
+  display: grid;
+  gap: 0.18rem;
+}
+.wts-data-table .project-cell strong {
+  font-size: 0.8rem;
+  font-weight: 650;
+}
+.wts-data-table .project-cell small {
+  color: #8a918d;
+  font-size: 0.68rem;
+}
+
+.wts-data-table .lead-cell {
+  gap: 0.55rem;
+  white-space: nowrap;
+}
+.wts-data-table .lead-cell i {
+  display: grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  border-radius: 50%;
+  background: #d9e3dc;
+  color: #355649;
+  font-size: 0.58rem;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.wts-data-table .status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.38rem;
+  padding: 0.3rem 0.55rem;
+  border-radius: 99px;
+  font-size: 0.68rem;
+  font-weight: 650;
+  white-space: nowrap;
+}
+.wts-data-table .status-badge::before {
+  content: '';
+  width: 0.34rem;
+  height: 0.34rem;
+  border-radius: 50%;
+  background: currentColor;
+}
+.wts-data-table .status-on-track {
+  background: #e4efe5;
+  color: #397249;
+}
+.wts-data-table .status-in-review {
+  background: #e8ebf2;
+  color: #596683;
+}
+.wts-data-table .status-at-risk {
+  background: #f6e4dc;
+  color: #9d5036;
+}
+.wts-data-table .status-complete {
+  background: #e8e7e1;
+  color: #6c6b63;
+}
+
+.wts-data-table .progress-cell {
+  min-width: 7.5rem;
+  gap: 0.55rem;
+}
+.wts-data-table .progress-cell > i {
+  width: 5rem;
+  height: 0.3rem;
+  overflow: hidden;
+  border-radius: 1rem;
+  background: #e5e7e0;
+}
+.wts-data-table .progress-cell b {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #7a9d8e;
+}
+.wts-data-table .progress-cell span {
+  color: #66706b;
+  font-size: 0.7rem;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 640px) {
+  .wts-data-table {
+    --wts-table-cell-padding-inline: 0.65rem;
+    --wts-table-header-padding-inline: 0.55rem;
+  }
+}
