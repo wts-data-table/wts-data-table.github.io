@@ -19,7 +19,7 @@
     "@angular/router": "^22.1.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
-    "wts-data-table": "^1.0.0"
+    "wts-data-table": "^1.0.1"
   },
   "devDependencies": {
     "@angular/build": "^22.1.3",

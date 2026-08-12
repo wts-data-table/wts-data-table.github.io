@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.0.1
+
+### Fixed
+
+- Corrected sticky utility-column layering, grouped-header dividers, body-row
+  backgrounds, and summary-footer alignment.
+- Replaced ambiguous row-pin and expansion glyphs with consistent SVG icons
+  and fixed compact control spacing, clipping, and focus presentation.
+- Added packed-document link verification and strengthened the prepublish gate
+  with release identity, bundle-size, and browser checks.
+- Corrected framework-wrapper compatibility with the stable `1.x` core.
+- Updated package-size documentation and the live demo to match measured
+  release artifacts.
+
 ## 1.0.0
 
 First stable release of `wts-data-table`.
