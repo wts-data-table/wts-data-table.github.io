@@ -1,4 +1,5 @@
 import { Component, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 type Framework = 'Angular' | 'Core' | 'React' | 'Vue';
 const SNIPPETS: Record<Framework, string> = {
@@ -9,10 +10,11 @@ const SNIPPETS: Record<Framework, string> = {
 };
 
 @Component({
+  imports: [RouterLink],
   template: `
     <section class="page-hero wrap"><span class="kicker">Documentation</span><h1>From install to<br><em>working table.</em></h1><p>The shortest reliable integration path, with links to the complete package reference.</p></section>
     <section class="docs-layout wrap">
-      <aside><a href="#install">Install</a><a href="#integrate">Integrate</a><a href="#lifecycle">Lifecycle</a><a href="#reference">Reference</a></aside>
+      <aside aria-label="Documentation sections"><a routerLink="/docs" fragment="install">Install</a><a routerLink="/docs" fragment="integrate">Integrate</a><a routerLink="/docs" fragment="lifecycle">Lifecycle</a><a routerLink="/docs" fragment="reference">Reference</a></aside>
       <div class="docs-content">
         <section id="install"><span class="step">01</span><h2>Install the package</h2><p>The main package contains the typed core and complete DOM renderer.</p><pre><code>npm install wts-data-table</code></pre></section>
         <section id="integrate"><span class="step">02</span><h2>Choose your integration</h2><p>Start with the core API, or use the matching wrapper for native framework bindings.</p><div class="tabs" role="tablist">@for(item of frameworks;track item){<button type="button" role="tab" [attr.aria-selected]="framework()===item" [class.active]="framework()===item" (click)="framework.set(item)">{{ item }}</button>}</div><pre class="code"><code>{{ snippets[framework()] }}</code></pre></section>

@@ -6,7 +6,7 @@ import { SiteTitleStrategy } from './seo.strategy';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes, withInMemoryScrolling({ scrollPositionRestoration: 'top' })),
+    provideRouter(routes, withInMemoryScrolling({ anchorScrolling: 'enabled', scrollPositionRestoration: 'top' })),
     { provide: TitleStrategy, useClass: SiteTitleStrategy },
   ],
 };
