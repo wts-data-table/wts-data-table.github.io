@@ -11,7 +11,7 @@ import { TableDemo } from '../table-demo';
 @Component({
   imports: [RouterLink, TableDemo],
   template: `
-    <section class="page-hero wrap"><span class="kicker">Interactive gallery</span><h1>See every behavior<br><em>in context.</em></h1><p>Focused, runnable examples using the package API—not screenshots or simulated controls.</p></section>
+    <section class="page-hero wrap"><span class="kicker">Interactive gallery</span><h1>See every behavior<br><em>in context.</em></h1><p>Focused, runnable examples with live options and framework-specific implementation code.</p></section>
     <div class="examples-layout wrap">
       <aside aria-label="Example navigation"><span>Examples</span>@for (item of demos; track item.id) {<a [routerLink]="['/examples',item.id]" [class.active]="item.id===selected().id"><i></i><b>{{ item.title }}</b></a>}</aside>
       <section class="example-content">

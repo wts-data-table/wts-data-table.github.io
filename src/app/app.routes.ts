@@ -35,7 +35,7 @@ export const routes: Routes = [
   {
     path: 'premium',
     loadComponent: () => import('./pages/premium-page').then((m) => m.PremiumPage),
-    data: { seo: { title: 'Advanced Examples | WTS Data Table', description: 'See real WTS Data Table worker processing, remote viewport, and formula workbook fixtures with integration code.', path: '/premium/' } },
+    data: { seo: { title: 'Advanced Examples | WTS Data Table', description: 'Explore WTS Data Table worker processing, remote data viewports, and formula workflows with implementation code.', path: '/premium/' } },
   },
   {
     path: '**',
