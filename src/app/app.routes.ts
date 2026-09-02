@@ -18,6 +18,11 @@ export const routes: Routes = [
     data: { seo: { title: 'Features | WTS Data Table', description: 'Explore the capabilities of the WTS Data Table TypeScript data grid.', path: '/features/' } },
   },
   {
+    path: 'docs/guides/:slug',
+    loadComponent: () => import('./pages/developer-guide-page').then((m) => m.DeveloperGuidePage),
+    data: { seo: { title: 'Developer Guide | WTS Data Table', description: 'Detailed WTS Data Table integration and production development guidance.', path: '/docs/guides/framework-wrappers/' } },
+  },
+  {
     path: 'docs',
     loadComponent: () => import('./pages/docs-page').then((m) => m.DocsPage),
     data: { seo: { title: 'Documentation | WTS Data Table', description: 'Install WTS Data Table and integrate the framework-agnostic controller or an Angular, React, or Vue wrapper.', path: '/docs/' } },
