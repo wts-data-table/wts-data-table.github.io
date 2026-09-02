@@ -1,5 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { createDemoRuntimeOptions } from '../example-config';
 import { TABLE_DEMOS } from '../site-data';
 import { TableDemo } from '../table-demo';
 
@@ -25,7 +26,7 @@ import { TableDemo } from '../table-demo';
 
     <section class="section wrap">
       <div class="section-heading"><div><span class="kicker">Live, not simulated</span><h2>A table you can test here.</h2></div><p>This is the published package running inside Angular. Sort, search, select rows, open filters, resize the browser, and change pages.</p></div>
-      <app-table-demo [demo]="featured" />
+      <app-table-demo [demo]="featured" [runtimeOptions]="featuredOptions" />
       <div class="section-action"><a routerLink="/examples/portfolio">View all examples <span>→</span></a></div>
     </section>
 
@@ -61,6 +62,7 @@ import { TableDemo } from '../table-demo';
 })
 export class OverviewPage {
   protected readonly featured = TABLE_DEMOS[0];
+  protected readonly featuredOptions = createDemoRuntimeOptions('portfolio');
   protected readonly copied = signal(false);
   protected async copyInstall(): Promise<void> { await navigator.clipboard.writeText('npm i wts-data-table'); this.copied.set(true); window.setTimeout(() => this.copied.set(false), 1400); }
 }

@@ -1,5 +1,6 @@
 import { afterNextRender, Component, DestroyRef, effect, ElementRef, inject, input, signal, viewChild } from '@angular/core';
 import { DataTable, type DataTableOptions, type DataTableStateChangeReason, type DataTableViewColumn } from 'wts-data-table';
+import type { DemoRuntimeOptions } from './example-config';
 import type { TableDemoDefinition } from './site-data';
 
 type ProjectStatus = 'At risk' | 'Complete' | 'In review' | 'On track';
@@ -47,6 +48,7 @@ const PROJECTS: readonly Project[] = PROJECT_SEEDS.map((seed, index) => {
 })
 export class TableDemo {
   readonly demo = input.required<TableDemoDefinition>();
+  readonly runtimeOptions = input.required<DemoRuntimeOptions>();
   private readonly host = viewChild.required<ElementRef<HTMLElement>>('tableHost');
   private readonly destroyRef = inject(DestroyRef);
   private readonly mounted = signal(false);
@@ -58,14 +60,15 @@ export class TableDemo {
     afterNextRender(() => this.mounted.set(true));
     effect(() => {
       const demo = this.demo();
-      if (this.mounted()) this.mount(demo.id);
+      const runtime = this.runtimeOptions();
+      if (this.mounted()) this.mount(demo.id, runtime);
     });
     this.destroyRef.onDestroy(() => this.table?.destroy());
   }
 
   protected reset(): void { this.table?.reset(); this.lastAction.set('View reset'); }
 
-  private mount(mode: string): void {
+  private mount(mode: string, runtime: DemoRuntimeOptions): void {
     this.table?.destroy();
     this.host().nativeElement.replaceChildren();
     this.selectedCount.set(0);
@@ -79,20 +82,20 @@ export class TableDemo {
       columns: this.columns(mode === 'editing'),
       getRowId: ({ id }) => id,
       columnMenu: true,
-      showColumnManager: true,
-      pagination: { mode: 'pages', showFirst: true, showLast: true, showPageJump: true },
+      showColumnManager: runtime.columnManager,
+      pagination: runtime.pagination ? { mode: 'pages', showFirst: true, showLast: true, showPageJump: true } : false,
       pageSizes: [5, 8, 14],
       initialState: {
-        pagination: { pageSize: mode === 'responsive' ? 5 : 8 },
+        pagination: { pageSize: runtime.pageSize },
         sorting: [{ id: 'due', direction: 'asc' }],
         ...(mode === 'grouping' ? { grouping: ['status'] } : {}),
       },
-      showGlobalFilter: mode === 'portfolio' || mode === 'filtering',
-      columnFilters: mode === 'filtering' ? { mode: 'always' } : mode === 'portfolio' ? { mode: 'collapsible' } : false,
-      selectionMode: mode === 'selection' || mode === 'portfolio' ? 'multiple' : 'none',
-      bulkActions: mode === 'selection' || mode === 'portfolio',
+      showGlobalFilter: runtime.globalFilter,
+      columnFilters: runtime.columnFilters ? { mode: mode === 'portfolio' ? 'collapsible' : 'always' } : false,
+      selectionMode: runtime.selection ? 'multiple' : 'none',
+      bulkActions: runtime.selection,
       showGrouping: mode === 'grouping',
-      responsive: { breakpoint: mode === 'responsive' ? 1050 : 760, details: 'inline' },
+      responsive: runtime.responsive ? { breakpoint: mode === 'responsive' ? 1050 : 760, details: 'inline' } : false,
       editing: mode === 'editing',
       summaryRows: mode === 'grouping' || mode === 'portfolio' ? { label: 'Portfolio total', labelColumnId: 'name', columns: { budget: 'sum' }, scope: 'filtered' } : false,
       onStateChange: (state, reason) => { this.selectedCount.set(state.rowSelection.length); this.lastAction.set(this.describeReason(reason)); },
