@@ -1,5 +1,9 @@
 # wts-data-table
 
+[Website and live examples](https://wts-data-table.github.io/) ·
+[npm](https://www.npmjs.com/package/wts-data-table) ·
+[Source](https://github.com/wts-data-table/wts-data-table.github.io/tree/HEAD/projects/wts-data-table)
+
 Accessible, dependency-free data tables for JavaScript and TypeScript. The
 package is framework-agnostic by design:
 
@@ -36,6 +40,8 @@ Use these focused guides with this README:
   formatting, lazy loading, and RTL behavior.
 - [Browser/server integration](https://unpkg.com/wts-data-table@1/SERVER_INTEGRATIONS.md) — remote data,
   request handling, cursors, uploads, and runnable examples.
+- [External row windows](REMOTE_WINDOWS.md) — bounded remote scrolling,
+  global/physical ranges, server groups, and consumer-owned loading/editing.
 - [Server packages](https://unpkg.com/wts-data-table@1/SERVER_PACKAGES.md) — protocol and server-package
   boundaries for backend applications.
 - [Database adapters](https://unpkg.com/wts-data-table@1/DATABASE_ADAPTERS.md) — SQL, PostgreSQL, MySQL,
@@ -50,6 +56,13 @@ Use these focused guides with this README:
 ```bash
 npm install wts-data-table
 ```
+
+Advanced capabilities are included in this same package and use normal
+feature-named imports such as `wts-data-table/remote`,
+`wts-data-table/formula-engine`, and `wts-data-table/report-designer`. There is
+no separate Pro package and no `/premium` import path. These APIs require a
+verified signed entitlement at runtime; see the
+[licensed advanced-feature guide](https://unpkg.com/wts-data-table@1/ADVANCED_FEATURES.md).
 
 Load the stylesheet once when using the DOM controller or Web Component:
 
@@ -1203,6 +1216,14 @@ horizontal window for wide, flat column sets; pinned columns remain mounted.
 Grouped headers retain their complete column hierarchy so `colspan` semantics
 stay correct.
 
+Fixed-height vertical scrolling reuses row layout and updates the body while
+keeping the viewport, header and footer mounted. Data/state changes and explicit
+`table.render()` calls refresh that layout. Use `table.setData()` for new or
+mutated input data; call `table.render()` when external values used by custom
+render callbacks change. Variable-height callbacks and horizontal column-window
+changes retain the full-render path. Virtualization limits mounted DOM, not the
+amount of input data or cursor pages retained in memory.
+
 ## Row selection
 
 Set `selectionMode` to:
@@ -1848,6 +1869,10 @@ technology.
 - `npm run benchmark` measures 100k-row filtering, sorting, grouping, 10k-row
   virtualization, and repeated mount/destroy cycles against generous,
   machine-independent regression ceilings.
+- For real-browser WTS/DataTables comparisons and indexed SQLite workloads at
+  1 million / 10 million records, see the development-only
+  `benchmark/large-data/README.md` guide in the source
+  checkout. These measurements are not a supported-capacity guarantee.
 - `npm run test:browsers` runs the live demo contract in Chromium, Firefox,
   and WebKit. It covers compact toolbar layout, ARIA dimensions, action-menu
   dismissal, grid boundaries, and forced-colors focus behavior.
@@ -1967,9 +1992,9 @@ Install an official wrapper to let the framework own lifecycle and reactive
 row updates while retaining the complete `DataTable<T>` controller:
 
 ```sh
-npm install wts-data-table wts-data-table-react react react-dom
-npm install wts-data-table wts-data-table-vue vue
-npm install wts-data-table wts-data-table-angular @angular/core @angular/common
+npm install wts-data-table @wts-data-table/react react react-dom
+npm install wts-data-table @wts-data-table/vue vue
+npm install wts-data-table @wts-data-table/angular @angular/core @angular/common
 ```
 
 - React: `WtsDataTableReact<T>` with a forwarded controller ref, controlled

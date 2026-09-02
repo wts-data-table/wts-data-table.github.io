@@ -1,5 +1,36 @@
 # Changelog
 
+## 1.0.2 - 2026-09-02
+
+### Added
+
+- Added licensed advanced capabilities to the existing `wts-data-table`
+  package through feature-named subpaths such as `wts-data-table/remote`,
+  `wts-data-table/formula-engine`, and `wts-data-table/report-designer`.
+- Added signed entitlement verification for advanced execution while retaining
+  the package's existing MIT license and rejecting plain or forged API keys.
+- Added advanced feature, integration, validation, and LLM-oriented
+  documentation to the packed npm artifact.
+- Added maintainer-only Ed25519 key-generation and strict license-signing
+  commands with protected private storage and an editable claims template.
+
+### Fixed
+
+- Removed the obsolete separate-Pro-package and `/premium` import model from
+  public documentation, package exports, and release planning artifacts.
+- Isolated browser tests from unrelated development servers and added a real
+  package fixture for cross-browser UI and accessibility checks.
+- Kept compact row controls on one line without reserving a second expansion
+  column, removing the control-area stripe and spacing regression.
+- Prevented virtual-scroll feedback renders for unchanged/restored offsets.
+- Kept the viewport, header and footer mounted during fixed-height vertical
+  scrolling, reusing row partitions instead of processing the entire dataset.
+- Invalidated the scroll layout for data/state changes, including silent core
+  updates; retained the full-render path for variable heights and horizontal
+  window changes. Pending frame/timeout work is cancelled on render or destroy.
+- Added deterministic scrolling, invalidation and cleanup regressions and a
+  measured before/after browser report in the development benchmark guide.
+
 ## 1.0.1
 
 ### Fixed

@@ -1,119 +1,34 @@
-<main>
-  <header class="site-header">
-    <a class="brand" href="#top" aria-label="Index home"><span>IX</span> Index</a>
-    <div class="header-meta">
-      <span>Angular 22</span>
-      <span>wts-data-table 1.0.0</span>
-      <a href="https://www.npmjs.com/package/wts-data-table" target="_blank" rel="noreferrer"
-        >npm ↗</a
-      >
-    </div>
-  </header>
+<a class="skip-link" href="#content">Skip to content</a>
+<header class="site-header">
+  <div class="site-header__inner">
+    <a class="brand" routerLink="/" (click)="menuOpen.set(false)" aria-label="WTS Data Table home">
+      <span class="brand__mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+      <span><strong>WTS</strong> Data Table</span>
+    </a>
+    <button class="menu-toggle" type="button" [attr.aria-expanded]="menuOpen()" aria-controls="site-nav" (click)="menuOpen.update((open) => !open)">
+      <span></span><span></span><span></span><b class="sr-only">Toggle navigation</b>
+    </button>
+    <nav id="site-nav" [class.open]="menuOpen()" aria-label="Main navigation">
+      <a routerLink="/examples/portfolio" routerLinkActive="active" (click)="menuOpen.set(false)">Examples</a>
+      <a routerLink="/features" routerLinkActive="active" (click)="menuOpen.set(false)">Features</a>
+      <a routerLink="/docs" routerLinkActive="active" (click)="menuOpen.set(false)">Docs</a>
+      <a routerLink="/pricing" routerLinkActive="active" (click)="menuOpen.set(false)">Licensing</a>
+      <a routerLink="/premium" routerLinkActive="active" (click)="menuOpen.set(false)">Advanced</a>
+      <a class="nav-github" href="https://github.com/wts-data-table/wts-data-table.github.io" target="_blank" rel="noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+    </nav>
+  </div>
+</header>
 
-  <section id="top" class="hero" aria-labelledby="page-title">
-    <div class="hero-copy">
-      <span class="eyebrow"><i></i> Framework-agnostic by design</span>
-      <h1 id="page-title">The work,<br /><em>clearly.</em></h1>
-      <p>
-        One focused Angular example for navigating projects, spotting risk, and making faster
-        portfolio decisions.
-      </p>
-    </div>
-    <aside class="hero-note">
-      <span class="note-number">01</span>
-      <p>
-        The table below is rendered by the published package. Angular owns the page and lifecycle;
-        <code>wts-data-table</code> owns its accessible table UI.
-      </p>
-    </aside>
-  </section>
+<main id="content"><router-outlet /></main>
 
-  <section class="metrics" aria-label="Portfolio summary">
-    <article>
-      <span>Active projects</span>
-      <strong>12</strong>
-      <small><i class="up">↗</i> 3 this quarter</small>
-    </article>
-    <article>
-      <span>Portfolio value</span>
-      <strong>$1.40m</strong>
-      <small><i class="up">↗</i> 8.2% vs. last month</small>
-    </article>
-    <article>
-      <span>On-time delivery</span>
-      <strong>86%</strong>
-      <small><i class="up">↗</i> 4.6% improvement</small>
-    </article>
-    <article class="attention">
-      <span>Needs attention</span>
-      <strong>3</strong>
-      <small><i>●</i> Review this week</small>
-    </article>
-  </section>
-
-  <section class="table-section" aria-labelledby="portfolio-title">
-    <div class="table-heading">
-      <div>
-        <span class="section-kicker">Live portfolio</span>
-        <h2 id="portfolio-title">Delivery overview</h2>
-        <p>Sort columns, search projects, select rows, filter status, or change pages.</p>
-      </div>
-      <div class="state-readout" aria-live="polite">
-        <span>Latest table event</span>
-        <strong>{{ lastAction() }}</strong>
-        <small>{{ selectedCount() }} row{{ selectedCount() === 1 ? '' : 's' }} selected</small>
-      </div>
-    </div>
-
-    <div class="quick-filters" aria-label="Quick status filters">
-      <span>Show</span>
-      @for (filter of filters; track filter) {
-        <button
-          type="button"
-          [class.active]="activeFilter() === filter"
-          [attr.aria-pressed]="activeFilter() === filter"
-          (click)="filterByStatus(filter)"
-        >
-          {{ filter }}
-        </button>
-      }
-      <button class="reset-button" type="button" (click)="resetTable()">Reset view ↺</button>
-    </div>
-
-    <div class="table-shell">
-      <div id="project-table"></div>
-    </div>
-  </section>
-
-  <section class="capabilities" aria-labelledby="capabilities-title">
-    <span class="section-kicker">What this example uses</span>
-    <h2 id="capabilities-title">A small integration.<br />A capable table.</h2>
-    <div class="capability-grid">
-      <article>
-        <span>01</span>
-        <h3>Typed columns</h3>
-        <p>Strongly typed project rows, formatted cells, dates, currency, and semantic status.</p>
-      </article>
-      <article>
-        <span>02</span>
-        <h3>Real interaction</h3>
-        <p>Multi-row selection, sorting, filters, adaptive pagination, and column controls.</p>
-      </article>
-      <article>
-        <span>03</span>
-        <h3>Angular lifecycle</h3>
-        <p>The controller mounts after render and is destroyed automatically with its component.</p>
-      </article>
-      <article>
-        <span>04</span>
-        <h3>Responsive UI</h3>
-        <p>Priority-based columns collapse into accessible row details on smaller screens.</p>
-      </article>
-    </div>
-  </section>
-
-  <footer>
-    <span>Angular 22 integration example</span>
-    <span>Accessible · Dependency-free · TypeScript</span>
-  </footer>
-</main>
+<footer class="site-footer">
+  <div class="site-footer__lead">
+    <a class="brand brand--footer" routerLink="/"><span class="brand__mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span><strong>WTS</strong> Data Table</span></a>
+    <p>Serious data interaction without locking your product into one framework.</p>
+  </div>
+  <div class="site-footer__links">
+    <div><strong>Explore</strong><a routerLink="/examples/portfolio">Examples</a><a routerLink="/features">Features</a><a routerLink="/premium">Advanced examples</a><a routerLink="/docs">Documentation</a></div>
+    <div><strong>Packages</strong><a href="https://www.npmjs.com/package/wts-data-table" target="_blank" rel="noreferrer">Core</a><a href="https://www.npmjs.com/package/@wts-data-table/angular" target="_blank" rel="noreferrer">Angular</a><a href="https://www.npmjs.com/package/@wts-data-table/react" target="_blank" rel="noreferrer">React</a><a href="https://www.npmjs.com/package/@wts-data-table/vue" target="_blank" rel="noreferrer">Vue</a></div>
+  </div>
+  <div class="site-footer__bottom"><span>MIT licensed core · TypeScript</span><span>© 2026 WTS Data Table</span></div>
+</footer>

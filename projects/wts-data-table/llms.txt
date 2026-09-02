@@ -1,0 +1,512 @@
+# wts-data-table
+
+> Accessible, dependency-free, framework-agnostic data table for TypeScript
+> and JavaScript. It provides a DOM-free headless core, a semantic DOM
+> controller, and an optional Web Component with no runtime dependencies.
+
+Current stable package version: `1.0.2`.
+
+## Entry points
+
+- `wts-data-table`: `DataTable`, `DataTableCore`, `createDataTables`,
+  `createDataTableCore`, and all public types
+- `wts-data-table/base`: truly modular semantic renderer with sorting,
+  filtering, and pagination in core and executable optional feature runtimes
+- `wts-data-table/base-runtime`: contracts for third-party composable renderer
+  modules, per-instance hooks, row windows, and host/controller access
+- `wts-data-table/base.css`: structural and optional-runtime styles for base
+- `wts-data-table/complete`: explicit compatibility alias for the root renderer
+- `wts-data-table/card-view`: synchronized responsive table/card controller
+- `wts-data-table/core`: DOM-free `DataTableCore` and core types
+- `wts-data-table/crud`: headless CRUD transactions, REST adapter, and
+  dialog/bubble/inline multi-row editor
+- `wts-data-table/data-source`: abortable, debounced, cached remote loading
+- `wts-data-table/element`: `WtsDataTableElement`,
+  `defineDataTableElement`, and `WTS_DATA_TABLE_TAG_NAME`
+- `wts-data-table/edit-history`: atomic batch edits and bounded undo/redo
+- `wts-data-table/export`: PDF, print, XLSX, CSV, JSON, and clipboard helpers
+- `wts-data-table/feature-system`: feature validation and module types
+- `wts-data-table/features/*`: executable selection, grouping, editing,
+  responsive, virtualization, SearchPanes, export, pivot, ColumnControl, and
+  sticky modules
+- `wts-data-table/lite`: compact semantic renderer for sorting, filtering,
+  pagination, grouping, selection, responsive overflow, and virtualization
+- `wts-data-table/lite.css`: compact renderer styles
+- `wts-data-table/i18n`: immutable locale packs, negotiation, renderer option
+  adapters, Accept-Language parsing, and Intl formatter helpers
+- `wts-data-table/locales/*`: exact en, fr, de, es, ar, hi, ja, zh-CN, and
+  pt-BR locale packs; the aggregate `/locales` entry is optional
+- `wts-data-table/persistence`: versioned storage and URL-state helpers
+- `wts-data-table/pivot`: DOM-free pivot and cross-tab aggregation models
+- `wts-data-table/plugin`: import-scoped definitions, manifests, dependency
+  resolution, compatibility validation, catalogs, and per-table installation
+- `wts-data-table/plugin-manifest.schema.json`: JSON Schema for plug-in
+  manifest API v1
+- `wts-data-table/presets`: lite, standard, and complete feature arrays
+- `wts-data-table/saved-views`: versioned named-view repository
+- `wts-data-table/server`: shared rows/facets/cursor transport with request and
+  response mapping, retries, caching, cancellation, validation, and telemetry
+- `wts-data-table/server-db`: injected Prisma, Knex, PostgreSQL, MySQL, and
+  SQLite processing with facets, summaries, options, and signed keyset cursors;
+  compatibility entry retained through 1.x
+- `@wts-data-table/protocol`: separately published protocol v1 types, parser,
+  JSON Schema, response validation, and cross-language fixtures
+- `@wts-data-table/server`: separately published Node backend with Express,
+  GraphQL, Fetch, SQL, Prisma, and Knex integrations
+- `wts-data-table/theme`: semantic class/wrapper adapter helpers and types
+- `wts-data-table/themes/*`: Bootstrap 5, Bulma, Foundation, Fomantic UI,
+  jQuery UI, and Tailwind class presets with no framework stylesheet imports
+- `wts-data-table/themes`: aggregate preset registry, CSS detection, and theme
+  resolution helpers
+- `wts-data-table/styles.css`: UI styles for the DOM and custom-element layers
+
+## Licensed advanced features
+
+Advanced capabilities ship in the same `wts-data-table` package under normal
+feature-named subpaths. There is no separate Pro package and no `/premium`
+namespace. Representative entries are `wts-data-table/remote`,
+`wts-data-table/search`, `wts-data-table/worker-engine`,
+`wts-data-table/live-data`, `wts-data-table/pivot-controller`,
+`wts-data-table/formula-engine`, `wts-data-table/collaboration-client`,
+`wts-data-table/governance-client`, and `wts-data-table/report-designer`.
+
+Executable advanced factories require a signed grant created with
+`verifyDataTableLicense()` from the root or `wts-data-table/license` entry.
+Pass the grant as `license` in the factory options and pass `origin` when the
+entitlement is origin-bound. Plain API keys do not unlock these APIs. See
+`ADVANCED_FEATURES.md` and `docs/advanced/ROADMAP.md`.
+
+All JavaScript entry points are SSR-safe to import. The element entry registers
+`<wts-data-table>` only when a `CustomElementRegistry` exists.
+
+## Modular distribution
+
+Use `DataTable` from `wts-data-table/base` and exact
+`wts-data-table/features/*` imports for true renderer modularity. Each module
+owns executable render/event/lifecycle hooks and is absent from the bundle
+when omitted. Duplicate names, missing dependencies, conflicts, and missing
+base runtimes fail early. Sorting, filtering, and pagination need no module.
+`standardPreset()` adds selection and responsive behavior;
+`completePreset()` adds all first-party runtime modules.
+
+The root and `/complete` entries are the unchanged batteries-included
+compatibility renderer. `/lite` remains a fixed compact read-heavy renderer.
+Measured minified consumer bundles are about 13.5 KB gzip for bare `/base`,
+14.5 KB for standard, 21.4 KB for modular complete, and 49.6 KB for the
+compatibility renderer. Official React, Vue, and Angular packages expose
+components/composables for both base and compatibility renderers. Run
+`wts-data-table setup --renderer base --preset ...` or `--features ...` to
+generate imports.
+
+## Plug-in ecosystem
+
+`defineDataTablePlugin()` validates a serializable API-v1 manifest and a
+feature factory. `DataTablePluginRegistry` is local to the consumer and never
+loads packages or styles by name. `resolve()` orders registered transitive
+dependencies, validates API/WTS/dependency versions, renderers, conflicts,
+cycles, options, and feature duplication, then returns features for one table.
+Manifests can advertise explicit CSS exports; consumers import them normally.
+Use the `wts-data-table-plugin` npm keyword and the published manifest schema.
+Catalog helpers produce deterministic metadata and never execute remote code.
+
+## Internationalization
+
+Use an exact `wts-data-table/locales/<code>` import and the renderer-specific
+option helper from `/i18n`. Packs configure labels, filter operators, core
+collation locale, and direction together. Arabic is RTL. Locale negotiation
+supports BCP 47 aliases, subtag fallback, browser arrays, and weighted HTTP
+headers. Custom definitions inherit frozen English fallbacks. Intl formatter
+helpers cover numbers, dates, date/time, lists, relative time, and plurals
+without bundling CLDR data.
+
+## Styling API
+
+`wts-data-table/styles.css` exposes 78 supported `--wts-table-*` custom
+properties. The API covers the core palette, typography, density, cell and
+header spacing, focus/editing/error states, controls and filters, pagination,
+column menus, pinned columns and rows, row drag controls, aggregate summary
+footers, grouping, tree rows, detail panels, scrollbars, and layer ordering.
+Override tokens on the controller root, the custom-element host, or an
+ancestor. Component tokens derive from core palette tokens by default.
+
+`--wts-table-tree-indent`, `--wts-table-expander-size`,
+`--wts-table-detail-background`, and `--wts-table-detail-padding` customize
+hierarchy and master-detail presentation. `--wts-table-row-controls-width`,
+`--wts-table-row-drag-handle-color`,
+`--wts-table-row-pinned-background`, and
+`--wts-table-row-pinned-shadow` customize ordering and pinned rows.
+`--wts-table-summary-background`, `--wts-table-summary-text`,
+`--wts-table-summary-font-weight`, `--wts-table-summary-border`, and
+`--wts-table-summary-shadow` customize semantic aggregate footers.
+`--wts-pin-left`,
+`--wts-pin-right`, `--wts-group-depth`, `--wts-row-depth`,
+`--wts-selection-inline-start`, `--wts-control-inline-start`,
+`--wts-summary-sticky-count`, and `--wts-summary-sticky-index` are
+renderer-owned internal variables and are not part of the supported
+customization API. `data-theme="auto"` supplies dark palette overrides while
+preserving developer overrides.
+
+Host-framework theme presets apply classes from CSS already loaded by the
+application; they never import or bundle that framework. The WTS stylesheet is
+in the low-priority `wts-data-table` cascade layer. Tailwind must scan the
+installed `dist/themes/tailwind.js` entry so its utility classes are generated.
+Use `theme: 'auto'` for active CSS detection and default fallback, or a named
+string for validation. `getThemeStatus()` reports resolution and `setTheme()`
+switches at runtime. `<wts-data-table theme="auto">` is declarative shorthand.
+`npx wts-data-table setup` detects dependencies and prints or generates setup.
+
+Columns accept `minWidth`, `maxWidth`, and `enableResizing`. The DOM controller
+exposes constrained `getColumnSize()`, `setColumnSize()`,
+`autoSizeColumn()`, and `autoSizeColumns()` methods; double-clicking a resize
+handle and the header menu also autosize.
+
+## Scalable selection and bulk actions
+
+Set `selectionMode: 'multiple'` and `bulkActions: true` for the built-in
+selected count, all-filtered selection, and clear controls. An options object
+accepts async `actions`, custom DOM/SVG `content`, `disabled`, `renderSummary`,
+`showClear`, `showSelectAllFiltered`, `visibleWhen`, and `onError`.
+`selectAllFilteredRows()` uses a compact all-filtered scope plus
+`rowSelectionExcluded`; use `getSelectedRowCount()` and
+`getRowSelectionState()` rather than counting `state.rowSelection`. The action
+context contains both explicit IDs and exclusion IDs for server APIs.
+
+Web Components expose `bulk-actions` and `bulk-select-all-filtered`; assign
+callback actions through `element.options.bulkActions`.
+
+## SearchPanes, ranges, and AutoFill
+
+`searchPanes: true | DataTableSearchPanesOptions` adds a collapsible faceted
+sidebar with local or abortable remote facets, live counts, preselection,
+uniqueness thresholds, and cascading multi-value filters.
+Use `cellSelection: true` plus `selectCell`, `selectCellRange`,
+`selectColumnRange`, `selectRowRange`, `getCellSelection`, and
+`clearCellSelection` for framework-neutral range state. `autoFill: true` adds
+the editable fill handle; `autoFillTo(target, 'copy' | 'series')` exposes the
+same copy and numeric-series behavior programmatically.
+
+## Layout, grouped headers, and temporal controls
+
+`layout` places `toolbar`, `searchPanes`, `pagination`, callback content, or
+plugins in `topStart`, `topEnd`, `bottomStart`, and `bottomEnd`.
+`registerDataTableFeature()` owns global plugins; instance `plugins` override
+matching names. Plugins render direct DOM/SVG content and can implement
+`init`/`destroy`.
+
+`buttons` unifies copy/CSV/Excel/PDF/print, column visibility, nested
+collections, saved-view commands, and application actions. Per-column
+`columnControls` composes ordered sorting, grouping, pinning, ordering, sizing,
+visibility, table, and custom controls in the three-dot header menu.
+
+Columns accept `headerGroup: string | readonly string[]` for semantic nested
+header rows. `date-range`, `datetime-range`, and `time-range` filters use
+native controls. Editable columns accept `date`, `datetime-local`, and `time`
+editors with `min`, `max`, and `step`.
+
+## PDF, print, and CRUD
+
+`exportDataTableToPdf`, `downloadDataTablePdf`,
+`createDataTablePrintHtml`, and `printDataTable` share the standard visible
+columns, filtered/page/selected scopes, and value transforms.
+
+`createDataTableCrudController` from `wts-data-table/crud` provides serialized
+create/update/delete operations, async adapters, validation, optimistic
+updates, rollback, and state/error callbacks. `createDataTableCrudEditor`
+optionally adds dialog, anchored bubble, or inline workflows with typed/custom
+fields, direct DOM/SVG actions, and mixed-value-aware multi-row editing.
+`createDataTableRestCrudAdapter` supplies injectable JSON backend operations.
+
+Columns can return orthogonal `{ display, sort, filter, export }` values.
+Use `sortSequence` to configure a column's header cycle and `sortNulls` to
+keep nullish values automatic, first, or last in both sort directions.
+Use column `sortType` for built-in boolean, currency, date, file-size,
+formatted-number, HTML-text, IP-address, month-year, natural, number,
+numeric-comma, percentage, semantic-version, or text comparators. Applications can add
+named comparators with `registerDataTableSortType` or per-table `sortTypes`.
+`stickyHeader` and `stickyFooter` work with or without virtualization and
+coordinate with measured grouped/filter headers, summary rows, pinned
+columns, editable cells, and two-axis scrolling.
+Set sticky section `mode: 'window'` (or `sticky-mode="window"`) to follow
+document scrolling; the default container mode is required for virtualization.
+
+## Basic DOM API
+
+```ts
+const table = new DataTable<Person>({
+  element: '#table',
+  data,
+  columns: [
+    { accessor: 'name', header: 'Name' },
+    { accessor: 'age', header: 'Age', align: 'end' },
+  ],
+  getRowId: (row) => row.id,
+  editing: true,
+  initialState: { grouping: ['team'] },
+  selectionMode: 'multiple',
+  columnFilters: { mode: 'collapsible', initiallyExpanded: false },
+  showColumnManager: true,
+  showGrouping: true,
+  pagination: {
+    mode: 'pages',
+    siblingCount: 1,
+    boundaryCount: 1,
+    showPageJump: true,
+  },
+  responsive: { breakpoint: 720, details: 'inline' },
+  virtualization: { height: 480, rowHeight: 48, overscan: 6 },
+});
+```
+
+The controller renders a native table with accessible sorting, search,
+pagination, selection, loading, and empty states. Call `destroy()` during view
+cleanup.
+
+## Column filter row
+
+Use `columnFilters: 'hidden' | 'always' | 'collapsible'` or an options object
+with `mode` and `initiallyExpanded`. Collapsible mode adds an accessible
+funnel toggle to the final visible header and preserves active filters while
+the row is closed. `getColumnFiltersExpanded()` inspects the presentation and
+`setColumnFiltersExpanded(expanded)` controls it.
+
+The legacy `showColumnFilters: true` maps to always-visible mode. A modern
+`columnFilters` value takes precedence. Columns continue to opt out
+individually with `enableFiltering: false`.
+
+`globalFilterOptions` selects `contains`, `equals`, `starts-with`, or `regex`
+matching and configures case sensitivity and trimming without changing the
+controlled `globalFilter` string.
+Structured column and advanced filters also accept `operator: 'regex'` and
+`caseSensitive`. Async/server requests include normalized filtering metadata
+so remote adapters can mirror global matching semantics.
+Column `columnFilterOptions` makes plain header-filter strings use a configured
+contains, exact, prefix, or regex mode and transports that configuration too.
+
+## Faceted and advanced filtering
+
+Set `advancedFiltering: true` for removable chips and a visual query builder,
+or pass `{ showBuilder, showChips }`. `state.advancedFilter` is a typed nested
+tree of `and`/`or` groups and conditions using the standard structured-filter
+operators. Control it with `setAdvancedFilter(group)` and clear every filter
+surface with `clearFilters()`.
+
+`getColumnFacet(columnId, limit?)` returns unique values with counts plus
+minimum, maximum, and total metadata. Facets exclude the target column's own
+column filter. Advanced state is included in async request keys, persistence,
+saved views, URL state, and the `advanced-filter` change reason.
+
+## Adaptive pagination
+
+Use `pagination: true` for the default numbered paginator, `false` to hide it,
+or an options object with `mode: 'pages' | 'simple'`, `siblingCount`,
+`boundaryCount`, `showFirst`, `showPrevious`, `showPageNumbers`,
+`showPageStatus`, `showNext`, `showLast`, `showPageJump`, `showPageSize`, and
+`showSummary`. Numbered pagination uses a compact ellipsis window and marks
+the active page with `aria-current="page"`.
+
+Customize `controls.first`, `previous`, `page`, `ellipsis`, `next`, and `last`
+with direct or callback `content`, `className`, `ariaLabel`, and `title`
+values. Content accepts strings and DOM Nodes including `HTMLElement`,
+`SVGElement`, and `Text`. Static Nodes are cloned; callbacks receive the
+owning `document` plus page, active, and disabled state. At narrow widths,
+page numbers, first/last controls, and the jump input collapse to compact
+page status.
+
+The legacy `showPagination` option remains supported. An explicit
+`pagination` value takes precedence. Manual pagination uses the same UI and
+derives its page count from `rowCount`.
+
+With `showColumnManager: true`, every visible header gets a three-dot menu for
+sorting, pinning, moving, hiding, and resetting width. The final header menu
+also restores hidden columns and resets the full layout. Header grips support
+drag-and-drop ordering. Columns can opt out with `enableReordering: false` or
+`enableHiding: false`.
+
+Column menus close on outside pointer press, Escape, and actions by default.
+Use `columnMenu: true | false | { closeOnAction?, closeOnEscape?,
+closeOnOutsideClick? }` to enable, disable, or customize them. The Web
+Component mirrors these settings with `column-menu-close-on-action`,
+`column-menu-close-on-escape`, and
+`column-menu-close-on-outside-click`.
+
+## Grouping and aggregation
+
+Set `state.grouping` or call `setGrouping(columnIds)` for nested row groups.
+Group rows expand by default and explicit choices live in
+`state.groupExpansion`. Use `getGroupedRowModel()` for the nested tree or
+`getDisplayRowModel()` for visible group headers plus expanded leaves;
+`getRowModel()` remains the flat leaf-row API.
+
+Columns accept `aggregation: 'count' | 'sum' | 'average' | 'min' | 'max'` or
+a custom aggregation function, and `enableGrouping: false` disables grouping.
+With `showGrouping: true`, headers can be dragged into a compact grouping bar.
+Header menus also expose group/ungroup actions. Grouping participates in
+saved views, persistence, URL state, and async data-source requests.
+
+## Expandable rows, tree data, and master-detail
+
+Supply `getSubRows(row)` for hierarchical data. Tree rows expose `depth`,
+`parentId`, and `subRows`; filtering retains matching descendant paths,
+sorting runs independently per sibling level, and pagination counts root
+rows. `getRowModel()` returns paginated roots and `getDisplayRowModel()`
+returns the visible flattened tree.
+
+Use `rowExpansion: true | { allowMultiple?, expandOnRowClick?,
+showControls?, renderToggle?, renderDetailPanel? }`. Toggle and detail
+callbacks return safe text, a DOM Node, or another `DataTableCellContent`.
+Control state through
+`setRowExpanded`, `toggleRowExpanded`, `expandAllRows`, `collapseAllRows`,
+and `state.rowExpansion`. `getRowCanExpand` supports server-loaded parents.
+
+Expansion is persisted and sent to data sources with the `row-expansion`
+change reason. Web Component JSON trees use `tree-children-key`; the element
+also exposes `row-expansion`, `expand-on-row-click`,
+`row-expansion-controls`, and `row-expansion-multiple`.
+
+## Responsive columns
+
+Set `responsive: { breakpoint: 720, details: 'inline' }` on the DOM
+controller. Columns accept `responsivePriority` (lower values stay visible
+longer) and `responsive: 'always' | 'auto' | 'never'`. Collapsed values are
+available through accessible inline details or a popover dialog. With
+virtualization, inline details automatically use the popover mode.
+
+Responsive hiding is transient and does not modify core
+`columnVisibility`. Inspect it with `getResponsiveHiddenColumns()`, subscribe
+with `onResponsiveChange`, or listen for
+`wts-data-table-responsive-change`.
+
+## Inline editing
+
+Set `editing: true` and add `editable: true` or an editable options object to
+columns. Built-in editors are inferred from `dataType` and `filterOptions`.
+Editable options support `type`, `parse`, sync/async `validate`, immutable
+`setValue`, and a custom `editor(context)` HTMLElement.
+
+Editing supports Enter/F2 and double-click activation, Escape cancellation,
+Arrow-key navigation, Tab commit-and-move, Shift+Arrow range selection, and
+TSV copy/paste. ARIA grid semantics are added only while editing is enabled.
+The initial first-cell tab stop stays visually and semantically unselected
+until the user focuses, clicks, navigates, or edits a cell. Cell selection is
+separate from checkbox-based row selection.
+
+`onEditCommit(context)` persists an optimistic update. A rejected promise
+rolls the value back and displays an accessible error. Use
+`getDirtyCells()` and `clearDirtyCells()` for dirty tracking.
+
+Editing events are `wts-data-table-before-edit` (cancelable),
+`wts-data-table-cell-change`, `wts-data-table-edit-commit`,
+`wts-data-table-edit-cancel`, and `wts-data-table-edit-error`.
+
+## Headless API
+
+```ts
+const core = createDataTableCore({ data, columns, getRowId });
+core.subscribe((state, reason) => render(state, reason));
+core.toggleSorting('name');
+core.setGrouping(['team']);
+core.setGlobalFilter('engineering');
+core.setColumnFilter('status', 'active');
+core.setColumnVisibility('notes', false);
+core.setColumnSize('name', 280);
+core.pinColumn('name', 'left');
+core.resetColumnLayout();
+core.setPageIndex(1);
+core.setPageSize(25);
+core.toggleRowSelected('row-id');
+core.getRowModel();
+```
+
+`DataTableCore` never reads the DOM. It supports custom accessors, filters and
+comparators; stable multi-sort; client pagination; single or multiple
+selection; and immutable state snapshots.
+
+## Async data
+
+`createDataTableDataSourceController({ table, dataSource })` subscribes to
+query-state changes and provides debouncing, abort cancellation, stale-result
+protection, bounded TTL caching, refresh/invalidate methods, and status events.
+
+`createDataTableCursorDataSourceController()` supports opaque cursor pages,
+append loading, optional totals, duplicate-boundary removal, cancellation,
+query-change resets, and `getCursorState()`. Call `loadMore()` directly or use
+the SSR-safe `observeDataTableInfiniteScroll()` sentinel helper.
+
+## Saved views
+
+`createDataTableSavedViewStore()` saves, lists, renames, applies, and removes
+versioned named table states using localStorage or a custom storage adapter.
+
+## Manual server processing
+
+Set `manualFiltering`, `manualSorting`, and/or `manualPagination` to true.
+Respond to `onStateChange`, fetch rows, and call `setData(rows, total)`.
+`rowCount` controls the page count in manual pagination mode.
+
+## Web Component
+
+```ts
+import 'wts-data-table/element';
+element.data = rows;
+element.columns = columns;
+element.options = { getRowId, selectionMode: 'multiple' };
+```
+
+Basic object rows and property columns also accept JSON `data` and `columns`
+attributes. Function accessors and cell renderers must be assigned as
+properties.
+
+Attributes `responsive`, `responsive-breakpoint`, and `responsive-details`
+configure adaptive rendering. JSON column objects accept `responsive` and
+`responsivePriority`.
+
+Attributes `editing`, `edit-activation`, `edit-navigation`, and `edit-paste`
+configure editing. JSON columns accept `editable: true` or an object with a
+built-in editor `type`; assign validators and custom editors as properties.
+
+Attributes `pagination-mode`, `pagination-boundary-count`,
+`pagination-sibling-count`, `pagination-first-last`,
+`pagination-first`, `pagination-previous`, `pagination-page-numbers`,
+`pagination-page-status`, `pagination-next`, `pagination-last`,
+`pagination-page-jump`, `pagination-page-size`, and `pagination-summary`
+configure the adaptive paginator. Assign control Nodes through
+`element.options.pagination.controls`.
+
+Attributes `column-filters="hidden|always|collapsible"` and
+`column-filters-expanded` configure the filter row. The legacy
+`show-column-filters` attribute remains supported.
+
+Attributes `advanced-filtering`, `advanced-filter-builder`, and `filter-chips`
+configure advanced filtering.
+
+## Events
+
+- `wts-data-table-state-change`: bubbling event with
+  `{ instance, state, reason }`
+- `wts-data-table-responsive-change`: bubbling event with
+  `{ instance, hiddenColumnIds }`
+- `wts-data-table-error`: invalid Web Component JSON configuration with
+  `{ attribute, error }`
+
+String cell output is inserted with `textContent`. Return a `Node` from a
+column `cell` renderer for trusted rich UI.
+
+## Official framework wrappers
+
+`@wts-data-table/react`, `@wts-data-table/vue`, and
+`@wts-data-table/angular` keep their framework runtime and `wts-data-table` as
+peer dependencies. They update row input in place, remount when the options
+object changes, expose the complete `DataTable<T>` controller, skip DOM work
+during SSR, and destroy on unmount. Vue also exports
+`createWtsDataTableVue<T>` and `useWtsDataTable<T>`; Angular's component is
+standalone for Angular 17–22.
+
+Wrapper v1.1 adds framework-owned content and controlled state. React uses
+`renderers.columns[columnId]` for cell/header/filter/menu functions plus
+detail/empty/loading/footer renderers and `state` / `onStateChange`. Vue uses
+generic or `{kind}-{columnId}` scoped slots and `v-model:state`. Angular uses
+the standalone `wtsDataTableCell`, `wtsDataTableHeader`,
+`wtsDataTableFilter`, `wtsDataTableMenu`, `wtsDataTableDetail`,
+`wtsDataTableEmpty`, `wtsDataTableLoading`, and `wtsDataTableFooter`
+directives plus `[(state)]`. Renderer roots and embedded views are reclaimed
+after redraw and teardown.

@@ -22,6 +22,33 @@ Nine optional internationalization packs provide exact tree-shakable imports,
 locale negotiation, RTL metadata, translated modular controls, and platform
 `Intl` formatters.
 
+## Showcase website
+
+This repository also contains the Angular showcase intended for
+`https://wts-data-table.github.io/`. It includes prerendered overview, examples,
+features, documentation, licensing, and advanced-example routes. Advanced
+previews are screenshots captured from the repository's working validation
+fixtures, not generated product mockups.
+
+```bash
+npm ci
+npm start
+```
+
+Run the same release checks used by GitHub Actions:
+
+```bash
+npm test -- --watch=false
+npm run build:pages
+```
+
+The static output is written to
+`dist/wts-data-table-angular-example/browser`. The workflow in
+`.github/workflows/deploy-pages.yml` deploys that folder from `main`. To serve
+the root URL `wts-data-table.github.io`, the GitHub repository must be named
+`wts-data-table.github.io` under the `wts-data-table` account or organization,
+and Pages must use **GitHub Actions** as its source.
+
 ## Developer guides
 
 Use these focused guides with this README:

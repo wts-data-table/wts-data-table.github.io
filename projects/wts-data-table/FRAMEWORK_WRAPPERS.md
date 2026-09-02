@@ -41,12 +41,12 @@ locale changes follow the existing options-reference remount contract.
 ## React 18 and 19
 
 ```sh
-npm install wts-data-table wts-data-table-react react react-dom
+npm install wts-data-table @wts-data-table/react react react-dom
 ```
 
 ```tsx
 import { useMemo, useRef } from 'react';
-import { WtsDataTableReact } from 'wts-data-table-react';
+import { WtsDataTableReact } from '@wts-data-table/react';
 import type { DataTable } from 'wts-data-table';
 
 const table = useRef<DataTable<Person>>(null);
@@ -62,7 +62,7 @@ For a tree-shaken base composition, use `WtsDataTableBaseReact` with the same
 data/options/ref lifecycle and import `wts-data-table/base.css`:
 
 ```tsx
-import { WtsDataTableBaseReact } from 'wts-data-table-react';
+import { WtsDataTableBaseReact } from '@wts-data-table/react';
 import { selectionFeature } from 'wts-data-table/features/selection';
 import 'wts-data-table/base.css';
 
@@ -82,13 +82,13 @@ and summary changes update the controller in place. A new `options` or
 ## Vue 3
 
 ```sh
-npm install wts-data-table wts-data-table-vue vue
+npm install wts-data-table @wts-data-table/vue vue
 ```
 
 ```vue
 <script setup lang="ts">
 import { shallowRef } from 'vue';
-import { WtsDataTableVue } from 'wts-data-table-vue';
+import { WtsDataTableVue } from '@wts-data-table/vue';
 
 const table = shallowRef();
 const options = {
@@ -116,12 +116,12 @@ Use `WtsDataTableBaseVue`, `createWtsDataTableBaseVue<T>()`, or
 ## Angular 17–22
 
 ```sh
-npm install wts-data-table wts-data-table-angular
+npm install wts-data-table @wts-data-table/angular @angular/core @angular/common
 ```
 
 ```ts
 import { Component } from '@angular/core';
-import { WtsDataTableAngularComponent } from 'wts-data-table-angular';
+import { WtsDataTableAngularComponent } from '@wts-data-table/angular';
 
 @Component({
   imports: [WtsDataTableAngularComponent],
@@ -140,7 +140,7 @@ export class PeopleComponent {}
 Use standalone `WtsDataTableAngularBaseComponent` for the modular renderer:
 
 ```ts
-import { WtsDataTableAngularBaseComponent } from 'wts-data-table-angular';
+import { WtsDataTableAngularBaseComponent } from '@wts-data-table/angular';
 
 @Component({
   standalone: true,

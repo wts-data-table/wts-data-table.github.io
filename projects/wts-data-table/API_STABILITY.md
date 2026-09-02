@@ -64,8 +64,8 @@ section `mode`, and Web Component `sticky-mode` attribute are additive stable
 contracts. Container sticky behavior and existing server payloads remain
 backwards compatible when these additions are omitted.
 
-The separately versioned `wts-data-table-react`, `wts-data-table-vue`, and
-`wts-data-table-angular` packages treat their documented props, inputs,
+The separately versioned `@wts-data-table/react`, `@wts-data-table/vue`, and
+`@wts-data-table/angular` packages treat their documented props, inputs,
 outputs, composables, controller exposure, peer-dependency boundaries, and
 SSR lifecycle behavior as stable v1 wrapper contracts.
 

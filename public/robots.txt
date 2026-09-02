@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://wts-data-table.github.io/sitemap.xml
