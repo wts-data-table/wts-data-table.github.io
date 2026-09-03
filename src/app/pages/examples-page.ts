@@ -15,6 +15,7 @@ import {
 } from "../example-config";
 import { TABLE_DEMOS } from "../site-data";
 import { TableDemo } from "../table-demo";
+import type { DataTableCardViewMode } from "wts-data-table/card-view";
 
 const OPTION_GROUPS = [
   {
@@ -99,7 +100,7 @@ const OPTION_GROUPS = [
               <span class="kicker">Live configuration</span>
               <h3 id="runtime-options-title">Change the options</h3>
               <p>
-                These 20 high-impact controls update the running table and the
+                These controls update the running table and the
                 framework code below. Data-source contracts, callbacks, custom
                 renderers, and lower-level APIs remain in the
                 <a routerLink="/docs" fragment="reference">full reference</a>.
@@ -143,7 +144,7 @@ const OPTION_GROUPS = [
                         (change)="setPageSize($event)"
                       >
                         @for (size of pageSizes; track size) {
-                          <option [value]="size">{{ size }}</option>
+                          <option [value]="size" [selected]="size === runtimeOptions().pageSize">{{ size }}</option>
                         }
                       </select>
                     </label>
@@ -156,6 +157,7 @@ const OPTION_GROUPS = [
         <app-table-demo
           [demo]="selected()"
           [runtimeOptions]="runtimeOptions()"
+          (viewModeChange)="setViewMode($event)"
         />
         <section class="code-section" aria-labelledby="framework-code-title">
           <div class="code-heading">
@@ -203,6 +205,7 @@ const OPTION_GROUPS = [
         align-items: start;
       }
       .examples-layout aside {
+        min-width: 0;
         position: sticky;
         top: 105px;
         display: grid;
@@ -243,6 +246,9 @@ const OPTION_GROUPS = [
         margin: 0.7rem 0;
         font-size: clamp(2.5rem, 5vw, 4.8rem);
         letter-spacing: -0.065em;
+      }
+      .example-content {
+        min-width: 0;
       }
       .lead {
         max-width: 770px;
@@ -547,6 +553,10 @@ export class ExamplesPage {
       (event.target as HTMLSelectElement).value,
     ) as DemoPageSize;
     this.runtimeOptions.update((current) => ({ ...current, pageSize }));
+  }
+
+  protected setViewMode(viewMode: DataTableCardViewMode): void {
+    this.runtimeOptions.update((current) => ({ ...current, viewMode }));
   }
 
   protected resetOptions(): void {

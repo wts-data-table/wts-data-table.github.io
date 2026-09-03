@@ -6,6 +6,7 @@ import {
   ElementRef,
   inject,
   input,
+  output,
   signal,
   viewChild,
 } from "@angular/core";
@@ -16,6 +17,11 @@ import {
   type DataTableStateChangeReason,
   type DataTableViewColumn,
 } from "wts-data-table";
+import {
+  createDataTableCardView,
+  type DataTableCardViewController,
+  type DataTableCardViewMode,
+} from "wts-data-table/card-view";
 import type { DemoRuntimeOptions } from "./example-config";
 import type { TableDemoDefinition } from "./site-data";
 
@@ -190,6 +196,15 @@ const PROJECTS: readonly Project[] = PROJECT_SEEDS.map((seed, index) => {
 @Component({
   selector: "app-table-demo",
   template: `
+    <div class="view-controls" role="group" aria-label="View mode">
+      <span>View</span>
+      @for (view of viewModes; track view.mode) {
+        <button type="button"
+          [attr.aria-pressed]="runtimeOptions().viewMode === view.mode"
+          (click)="viewModeChange.emit(view.mode)">{{ view.label }}</button>
+      }
+    </div>
+    <p class="view-help">Cards share the same search, page, and row selection. Use Table for column controls and inline editing. Auto switches at a container width of 720px.</p>
     <div class="demo-readout" aria-live="polite">
       <span
         ><b>{{ selectedCount() }}</b> selected</span
@@ -205,6 +220,12 @@ const PROJECTS: readonly Project[] = PROJECT_SEEDS.map((seed, index) => {
       :host {
         display: block;
       }
+      .view-controls { display: flex; align-items: center; flex-wrap: wrap; gap: .4rem; }
+      .view-controls span { margin-right: .4rem; font-size: .8rem; font-weight: 650; }
+      .view-controls button { padding: .55rem .9rem; border: 1px solid var(--line-dark); border-radius: 7px; background: white; color: var(--ink); cursor: pointer; }
+      .view-controls button[aria-pressed="true"] { background: var(--blue); border-color: var(--blue); color: white; }
+      .view-controls button:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+      .view-help { margin: .6rem 0 1rem; color: var(--muted); font-size: .75rem; line-height: 1.6; }
       .demo-readout {
         display: flex;
         min-height: 48px;
@@ -255,11 +276,19 @@ const PROJECTS: readonly Project[] = PROJECT_SEEDS.map((seed, index) => {
 export class TableDemo {
   readonly demo = input.required<TableDemoDefinition>();
   readonly runtimeOptions = input.required<DemoRuntimeOptions>();
+  readonly viewModeChange = output<DataTableCardViewMode>();
+  protected readonly viewModes = [
+    { mode: 'table', label: 'Table' },
+    { mode: 'cards', label: 'Cards' },
+    { mode: 'auto', label: 'Auto' },
+  ] as const;
   private readonly host =
     viewChild.required<ElementRef<HTMLElement>>("tableHost");
   private readonly destroyRef = inject(DestroyRef);
   private readonly mounted = signal(false);
   private table?: DataTable<Project>;
+  private cards?: DataTableCardViewController<Project>;
+  private mountedConfiguration?: string;
   protected readonly selectedCount = signal(0);
   protected readonly lastAction = signal("Table ready");
 
@@ -270,7 +299,10 @@ export class TableDemo {
       const runtime = this.runtimeOptions();
       if (this.mounted()) this.mount(demo.id, runtime);
     });
-    this.destroyRef.onDestroy(() => this.table?.destroy());
+    this.destroyRef.onDestroy(() => {
+      this.cards?.destroy();
+      this.table?.destroy();
+    });
   }
 
   protected reset(): void {
@@ -279,6 +311,13 @@ export class TableDemo {
   }
 
   private mount(mode: string, runtime: DemoRuntimeOptions): void {
+    const { viewMode, ...tableOptions } = runtime;
+    const configuration = JSON.stringify({ mode, ...tableOptions });
+    if (this.cards && this.mountedConfiguration === configuration) {
+      if (this.cards.getMode() !== viewMode) this.cards.setMode(viewMode);
+      return;
+    }
+    this.cards?.destroy();
     this.table?.destroy();
     this.host().nativeElement.replaceChildren();
     this.selectedCount.set(0);
@@ -355,6 +394,15 @@ export class TableDemo {
     };
 
     this.table = new DataTable<Project>(options);
+    this.cards = createDataTableCardView({
+      table: this.table,
+      mode: viewMode,
+      breakpoint: 720,
+      minCardWidth: '17rem',
+      selection: runtime.selection,
+      showToggle: false,
+    });
+    this.mountedConfiguration = configuration;
   }
 
   private columns(editable: boolean): readonly DataTableViewColumn<Project>[] {

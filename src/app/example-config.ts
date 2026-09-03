@@ -1,4 +1,5 @@
 import type { TableDemoDefinition } from "./site-data";
+import type { DataTableCardViewMode } from "wts-data-table/card-view";
 
 export const FRAMEWORKS = ["Vanilla TS", "Angular", "React", "Vue"] as const;
 export type ExampleFramework = (typeof FRAMEWORKS)[number];
@@ -6,6 +7,7 @@ export const DEMO_PAGE_SIZES = [5, 8, 14] as const;
 export type DemoPageSize = (typeof DEMO_PAGE_SIZES)[number];
 
 export interface DemoRuntimeOptions {
+  readonly viewMode: DataTableCardViewMode;
   readonly globalFilter: boolean;
   readonly columnFilters: boolean;
   readonly advancedFiltering: boolean;
@@ -29,17 +31,18 @@ export interface DemoRuntimeOptions {
   readonly virtualization: boolean;
 }
 
-export type DemoBooleanOption = Exclude<keyof DemoRuntimeOptions, "pageSize">;
+export type DemoBooleanOption = Exclude<keyof DemoRuntimeOptions, "pageSize" | "viewMode">;
 
 export function createDemoRuntimeOptions(id: string): DemoRuntimeOptions {
   return {
-    globalFilter: id === "portfolio" || id === "filtering",
+    viewMode: id === "card-view" ? "cards" : "table",
+    globalFilter: id === "portfolio" || id === "filtering" || id === "card-view",
     columnFilters: id === "portfolio" || id === "filtering",
     advancedFiltering: false,
     searchPanes: false,
     pagination: true,
     pageSize: id === "responsive" ? 5 : 8,
-    selection: id === "portfolio" || id === "selection",
+    selection: id === "portfolio" || id === "selection" || id === "card-view",
     cellSelection: id === "editing",
     editing: id === "editing",
     autoFill: false,
@@ -65,58 +68,129 @@ export function createFrameworkSnippet(
   const options = optionLines(demo.id, runtime)
     .map((line) => `    ${line}`)
     .join("\n");
+  const cardImport = `import { createDataTableCardView, type DataTableCardViewController } from 'wts-data-table/card-view';`;
+  const cardOptions = `table, mode: '${runtime.viewMode}', breakpoint: 720, minCardWidth: '17rem',\n      selection: ${runtime.selection}, showToggle: false`;
+  const selectorNote = `// Wire your Table / Cards / Auto buttons to cards.setMode(mode).\n// This changes the layout without resetting table state.`;
 
   if (framework === "Angular") {
     return `import { Component } from '@angular/core';
 import { WtsDataTableAngularComponent } from '@wts-data-table/angular';
+import type { DataTable, DataTableOptions } from 'wts-data-table';
+${cardImport}
 import 'wts-data-table/styles.css';
 
 @Component({
   standalone: true,
   imports: [WtsDataTableAngularComponent],
-  template: \`<wts-data-table-angular
+  template: \`<div role="group" aria-label="View mode">
+    <button (click)="setView('table')">Table</button>
+    <button (click)="setView('cards')">Cards</button>
+    <button (click)="setView('auto')">Auto</button>
+  </div>
+  <wts-data-table-angular
     [data]="projects"
     [options]="options"
+    (ready)="onReady($event)"
+    (destroyed)="destroyCards()"
   />\`,
 })
 export class ProjectTableComponent {
   readonly projects = projects;
-  readonly options = {
+  readonly options: Omit<DataTableOptions<Project>, 'element' | 'data'> = {
 ${options}
   };
+
+  private cards?: DataTableCardViewController<Project>;
+  onReady(table: DataTable<Project>) {
+    this.destroyCards();
+    this.cards = createDataTableCardView({
+      ${cardOptions}
+    });
+  }
+  setView(mode: 'table' | 'cards' | 'auto') {
+    this.cards?.setMode(mode);
+  }
+  destroyCards() {
+    this.cards?.destroy();
+    this.cards = undefined;
+  }
 }`;
   }
 
   if (framework === "React") {
-    return `import { useMemo } from 'react';
+    return `import { useCallback, useMemo, useRef } from 'react';
 import { WtsDataTableReact } from '@wts-data-table/react';
+import type { DataTable, DataTableOptions } from 'wts-data-table';
+${cardImport}
 import 'wts-data-table/styles.css';
 
 export function ProjectTable() {
-  const options = useMemo(() => ({
+  const cards = useRef<DataTableCardViewController<Project> | null>(null);
+  const options = useMemo<Omit<DataTableOptions<Project>, 'element' | 'data'>>(() => ({
 ${options}
   }), []);
 
-  return <WtsDataTableReact data={projects} options={options} />;
+  const destroyCards = useCallback(() => {
+    cards.current?.destroy();
+    cards.current = null;
+  }, []);
+  const onReady = useCallback((table: DataTable<Project>) => {
+    destroyCards();
+    cards.current = createDataTableCardView({
+      ${cardOptions}
+    });
+  }, [destroyCards]);
+
+  return <>
+    <div role="group" aria-label="View mode">
+      {(['table', 'cards', 'auto'] as const).map(mode =>
+        <button key={mode} onClick={() => cards.current?.setMode(mode)}>{mode}</button>
+      )}
+    </div>
+    <WtsDataTableReact data={projects} options={options}
+      onReady={onReady} onDestroy={destroyCards} />
+  </>;
 }`;
   }
 
   if (framework === "Vue") {
     return `<script setup lang="ts">
 import { WtsDataTableVue } from '@wts-data-table/vue';
+import type { DataTable, DataTableOptions } from 'wts-data-table';
+${cardImport}
 import 'wts-data-table/styles.css';
 
-const options = {
+const options: Omit<DataTableOptions<Project>, 'element' | 'data'> = {
 ${options}
 };
+let cards: DataTableCardViewController<Project> | undefined;
+function destroyCards() {
+  cards?.destroy();
+  cards = undefined;
+}
+function onReady(table: DataTable<Project>) {
+  destroyCards();
+  cards = createDataTableCardView({
+    ${cardOptions}
+  });
+}
+const viewModes = ['table', 'cards', 'auto'] as const;
+function setView(mode: 'table' | 'cards' | 'auto') {
+  cards?.setMode(mode);
+}
 </script>
 
 <template>
-  <WtsDataTableVue :data="projects" :options="options" />
+  <div role="group" aria-label="View mode">
+    <button v-for="mode in viewModes" :key="mode" @click="setView(mode)">{{ mode }}</button>
+  </div>
+  <WtsDataTableVue :data="projects" :options="options"
+    @ready="onReady" @destroy="destroyCards" />
 </template>`;
   }
 
   return `import { DataTable } from 'wts-data-table';
+import { createDataTableCardView } from 'wts-data-table/card-view';
 import 'wts-data-table/styles.css';
 
 const table = new DataTable<Project>({
@@ -125,7 +199,18 @@ const table = new DataTable<Project>({
 ${options}
 });
 
-await table.ready();`;
+await table.ready();
+const cards = createDataTableCardView({
+  ${cardOptions}
+});
+
+${selectorNote}
+
+// Call when the page or component is removed.
+function destroy() {
+  cards.destroy();
+  table.destroy();
+}`;
 }
 
 function optionLines(id: string, runtime: DemoRuntimeOptions): string[] {
