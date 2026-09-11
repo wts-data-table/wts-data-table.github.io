@@ -1,11 +1,21 @@
 {
   "name": "wts-data-table-angular-example",
-  "version": "0.0.0",
+  "version": "1.1.0",
+  "description": "Documentation and interactive Angular examples for WTS Data Table.",
+  "homepage": "https://wts-data-table.github.io/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wts-data-table/wts-data-table.github.io.git"
+  },
+  "bugs": {
+    "url": "https://github.com/wts-data-table/wts-data-table.github.io/issues"
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "build:pages": "ng build --configuration production",
+    "prebuild:pages": "node scripts/verify-card-view-package.mjs && node scripts/verify-site-metadata.mjs",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
@@ -22,7 +32,7 @@
     "@angular/ssr": "22.1.6",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
-    "wts-data-table": "1.0.2"
+    "wts-data-table": "1.1.0"
   },
   "devDependencies": {
     "@angular/build": "22.1.3",

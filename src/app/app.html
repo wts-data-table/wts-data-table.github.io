@@ -1,34 +1,75 @@
-<a class="skip-link" href="#content">Skip to content</a>
+<a class="skip-link" href="#content" (click)="skipToContent($event)">Skip to content</a>
 <header class="site-header">
   <div class="site-header__inner">
     <a class="brand" routerLink="/" (click)="menuOpen.set(false)" aria-label="WTS Data Table home">
       <span class="brand__mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
       <span><strong>WTS</strong> Data Table</span>
     </a>
-    <button class="menu-toggle" type="button" [attr.aria-expanded]="menuOpen()" aria-controls="site-nav" (click)="menuOpen.update((open) => !open)">
+    <button
+      class="menu-toggle"
+      type="button"
+      [attr.aria-expanded]="menuOpen()"
+      aria-controls="site-nav"
+      (click)="menuOpen.update((open) => !open)"
+    >
       <span></span><span></span><span></span><b class="sr-only">Toggle navigation</b>
     </button>
     <nav id="site-nav" [class.open]="menuOpen()" aria-label="Main navigation">
-      <a routerLink="/examples/portfolio" routerLinkActive="active" (click)="menuOpen.set(false)">Examples</a>
+      <a routerLink="/examples/portfolio" routerLinkActive="active" (click)="menuOpen.set(false)"
+        >Examples</a
+      >
       <a routerLink="/features" routerLinkActive="active" (click)="menuOpen.set(false)">Features</a>
       <a routerLink="/docs" routerLinkActive="active" (click)="menuOpen.set(false)">Docs</a>
       <a routerLink="/pricing" routerLinkActive="active" (click)="menuOpen.set(false)">Licensing</a>
       <a routerLink="/premium" routerLinkActive="active" (click)="menuOpen.set(false)">Advanced</a>
-      <a class="nav-github" href="https://github.com/wts-data-table/wts-data-table.github.io" target="_blank" rel="noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+      <a
+        class="nav-github"
+        href="https://github.com/wts-data-table/wts-data-table.github.io"
+        target="_blank"
+        rel="noreferrer"
+        >GitHub <span aria-hidden="true">↗</span></a
+      >
     </nav>
   </div>
 </header>
 
-<main id="content"><router-outlet /></main>
+<main id="content" tabindex="-1"><router-outlet /></main>
 
 <footer class="site-footer">
   <div class="site-footer__lead">
-    <a class="brand brand--footer" routerLink="/"><span class="brand__mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span><strong>WTS</strong> Data Table</span></a>
+    <a class="brand brand--footer" routerLink="/"
+      ><span class="brand__mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span
+      ><span><strong>WTS</strong> Data Table</span></a
+    >
     <p>Serious data interaction without locking your product into one framework.</p>
   </div>
   <div class="site-footer__links">
-    <div><strong>Explore</strong><a routerLink="/examples/portfolio">Examples</a><a routerLink="/features">Features</a><a routerLink="/premium">Advanced examples</a><a routerLink="/docs">Documentation</a></div>
-    <div><strong>Packages</strong><a href="https://www.npmjs.com/package/wts-data-table" target="_blank" rel="noreferrer">Core</a><a href="https://www.npmjs.com/package/@wts-data-table/angular" target="_blank" rel="noreferrer">Angular</a><a href="https://www.npmjs.com/package/@wts-data-table/react" target="_blank" rel="noreferrer">React</a><a href="https://www.npmjs.com/package/@wts-data-table/vue" target="_blank" rel="noreferrer">Vue</a></div>
+    <div>
+      <strong>Explore</strong><a routerLink="/examples/portfolio">Examples</a
+      ><a routerLink="/features">Features</a><a routerLink="/premium">Advanced examples</a
+      ><a routerLink="/docs">Documentation</a>
+      <a href="https://github.com/wts-data-table/wts-data-table.github.io/issues" target="_blank" rel="noreferrer">Issue tracker ↗</a>
+    </div>
+    <div>
+      <strong>Packages</strong
+      ><a href="https://www.npmjs.com/package/wts-data-table" target="_blank" rel="noreferrer"
+        >Core</a
+      ><a
+        href="https://www.npmjs.com/package/@wts-data-table/angular"
+        target="_blank"
+        rel="noreferrer"
+        >Angular</a
+      ><a
+        href="https://www.npmjs.com/package/@wts-data-table/react"
+        target="_blank"
+        rel="noreferrer"
+        >React</a
+      ><a href="https://www.npmjs.com/package/@wts-data-table/vue" target="_blank" rel="noreferrer"
+        >Vue</a
+      >
+    </div>
   </div>
-  <div class="site-footer__bottom"><span>MIT licensed core · TypeScript</span><span>© 2026 WTS Data Table</span></div>
+  <div class="site-footer__bottom">
+    <span>MIT licensed core · TypeScript</span><span>© 2026 WTS Data Table</span>
+  </div>
 </footer>

@@ -21,6 +21,16 @@ versions. Existing behavior or signatures change only in a major release.
 Deprecations remain available for at least one minor release and are recorded
 in the changelog before removal.
 
+### Explicit 1.1.0 card-view exception
+
+Version 1.1.0 introduces a licensing migration despite using a minor version:
+`createDataTableCardView` and `DataTableCardViewController` require a verified
+`card-view` entitlement. This is not backwards compatible for existing card-view
+callers and is an explicit exception to the general policy above. Pass `license`
+and the deployment `origin` when upgrading, or pin an existing 1.0.x release.
+Standard tables do not require a key; import paths and the MIT license remain
+unchanged. See [the migration example](README.md#card-view-licensed).
+
 ## New in v1.34–v1.35
 
 `wts-data-table/server` is stable for its rows, facets, cursor payloads,

@@ -161,7 +161,8 @@ new DataTable({
     intro: 'Advanced code ships inside wts-data-table under normal feature names. There is no separate Pro package and no premium import namespace.',
     sections: [
       { title: 'Verify before construction', body: 'verifyDataTableLicense accepts a signed entitlement token. Invalid signatures, expiry, origin mismatch, or a missing feature claim fail before the advanced controller is created.' },
-      { title: 'Available entitlements', body: 'Advanced row model, indexed search, background export, worker processing, live data, server analytics, formulas, collaboration, governance, and report design can be licensed independently.' },
+      { title: 'Available entitlements', body: 'Card view, advanced row model, indexed search, background export, worker processing, live data, server analytics, formulas, collaboration, governance, and report design can be licensed independently.' },
+      { title: 'Card-view migration', body: 'From version 1.1.0, createDataTableCardView and DataTableCardViewController require a verified card-view entitlement. Pass license and origin: window.location.origin. The controller also validates the real host document origin; a copied demo key cannot unlock another site. Standard tables need no key, and published 1.0.x behavior is unchanged.' },
       { title: 'Keep authorization separate', body: 'The entitlement controls access to package APIs. It never replaces user authentication, server authorization, tenant checks, or mutation validation.' },
     ],
     codeTitle: 'Verify and use a licensed feature',

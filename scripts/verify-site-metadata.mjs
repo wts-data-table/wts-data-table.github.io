@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
+const tracker = 'https://github.com/wts-data-table/wts-data-table.github.io/issues';
+const manifest = JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8'));
+const html = await readFile(new URL('../src/index.html', import.meta.url), 'utf8');
+const match = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
+assert(match, 'Software structured metadata is required');
+const metadata = JSON.parse(match[1]);
+assert.equal(manifest.bugs?.url, tracker);
+assert.equal(metadata.softwareVersion, manifest.dependencies['wts-data-table'], 'Site version must match the pinned npm package');
+assert.equal(metadata.softwareHelp?.url, tracker);
+assert.equal(metadata.softwareHelp?.['@type'], 'WebPage');
+assert(html.includes('<link rel="help" href="' + tracker + '"'), 'HTML help link must point to the issue tracker');
+console.log('Portal package and structured metadata link to the public issue tracker.');

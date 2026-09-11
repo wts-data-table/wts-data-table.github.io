@@ -4,7 +4,9 @@
 > and JavaScript. It provides a DOM-free headless core, a semantic DOM
 > controller, and an optional Web Component with no runtime dependencies.
 
-Current stable package version: `1.0.2`.
+Current stable package version: `1.1.0`.
+Migration notice: card view requires a verified `card-view` entitlement from
+1.1.0 onward. Existing 1.0.x releases remain unchanged; standard tables need no key.
 
 ## Entry points
 
@@ -16,7 +18,7 @@ Current stable package version: `1.0.2`.
   modules, per-instance hooks, row windows, and host/controller access
 - `wts-data-table/base.css`: structural and optional-runtime styles for base
 - `wts-data-table/complete`: explicit compatibility alias for the root renderer
-- `wts-data-table/card-view`: synchronized responsive table/card controller
+- `wts-data-table/card-view`: licensed responsive table/card controller; requires a verified `card-view` entitlement and actual host origin for origin-bound keys
 - `wts-data-table/core`: DOM-free `DataTableCore` and core types
 - `wts-data-table/crud`: headless CRUD transactions, REST adapter, and
   dialog/bubble/inline multi-row editor

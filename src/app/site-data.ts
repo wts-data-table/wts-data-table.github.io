@@ -28,9 +28,9 @@ export const TABLE_DEMOS: readonly TableDemoDefinition[] = [
   {
     id: 'card-view',
     title: 'Card view',
-    eyebrow: 'Alternative layout',
+    eyebrow: 'Licensed layout',
     description:
-      'Explore projects as responsive cards. Switch between Table, Cards, and Auto without losing search, pagination, or row selection. Auto uses cards when the table container is 720px wide or smaller.',
+      'A licensed responsive card layout, enabled here with an origin-bound demo key. Explore projects as responsive cards. Switch between Table, Cards, and Auto without losing search, pagination, or row selection. Auto uses cards when the table container is 720px wide or smaller.',
     highlights: ['Table / Cards / Auto', 'Shared search and selection', 'Responsive card grid'],
   },
   {

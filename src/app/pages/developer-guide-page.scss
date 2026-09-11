@@ -1,0 +1,131 @@
+@use '../documentation';
+.guide-meta {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 1.2rem;
+  color: var(--muted);
+  font: 0.67rem var(--mono);
+}
+.guide-meta > span {
+  padding: 0.3rem 0.5rem;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: white;
+}
+.guide-meta > span:first-child {
+  background: var(--blue-soft);
+  border-color: #d6e3fc;
+  color: var(--blue);
+}
+.guide-summary {
+  margin-top: 1.8rem;
+  padding: 1.2rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: white;
+}
+.guide-summary > strong {
+  color: var(--ink);
+  font-size: 0.83rem;
+}
+.guide-summary ul {
+  display: grid;
+  gap: 0.4rem;
+  margin: 0.8rem 0 0;
+  padding-left: 1.15rem;
+}
+.guide-summary li {
+  font-size: 0.83rem;
+}
+.guide-summary a {
+  color: var(--blue);
+  text-decoration: none;
+}
+.guide-summary a:hover {
+  text-decoration: underline;
+}
+.guide-points {
+  display: grid;
+  gap: 0.65rem;
+  padding-left: 1.2rem;
+}
+.guide-points li::marker {
+  color: var(--blue);
+}
+.guide-frameworks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1.3rem;
+}
+.guide-frameworks a {
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: white;
+  color: var(--blue);
+  font-size: 0.78rem;
+  text-decoration: none;
+}
+.guide-frameworks a:hover {
+  border-color: var(--blue);
+}
+.recipe-context {
+  font-size: 0.82rem !important;
+}
+.guide-footer {
+  display: flex;
+  gap: 0.8rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+}
+.guide-footer > a {
+  display: grid;
+  flex: 1;
+  gap: 0.5rem;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: white;
+  text-decoration: none;
+}
+.guide-footer > a:hover {
+  border-color: #9cb8ee;
+}
+.guide-footer small {
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+.guide-footer strong {
+  color: var(--blue);
+  font-size: 0.87rem;
+  font-weight: 650;
+}
+.guide-footer .next-guide {
+  text-align: right;
+}
+.guide-help {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.2rem;
+}
+.guide-help p {
+  font-size: 0.78rem;
+}
+.guide-help a {
+  color: var(--blue);
+  font-size: 0.78rem;
+  text-decoration: none;
+}
+@media (max-width: 600px) {
+  .guide-footer {
+    flex-direction: column;
+  }
+  .guide-help {
+    flex-direction: column;
+    align-items: start;
+    gap: 0;
+  }
+}

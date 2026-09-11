@@ -1,5 +1,29 @@
 # Changelog
 
+## 1.1.0 - 2026-09-11
+
+### Fixed
+
+- Column menus escape the table scroll area, stay aligned with their trigger,
+  fit the viewport, and clean up on close, rerender, and destruction (#1).
+- Range filters shrink or stack within their column instead of overlapping (#2).
+- Select filters show a dropdown indicator, including RTL and forced-colors
+  handling (#3).
+- Framework and portal metadata now link directly to the canonical issue tracker.
+
+### Card-view migration required
+
+- Card view now requires a verified `card-view` entitlement in both its factory
+  and controller constructor. Existing import paths and the MIT license remain
+  unchanged. Standard table features do not require a key.
+- Added exact browser-origin enforcement and expiry cleanup for card view, plus
+  public verifier `wts-data-table-production-02` for newly issued signed keys.
+- Existing 1.0.x releases are unaffected. This release intentionally introduces
+  the card-view licensing requirement in 1.1.0; it is not backwards compatible
+  for existing card-view callers. Obtain an entitlement and pass `license` and
+  `origin` before upgrading, or pin an existing 1.0.x release. Standard tables
+  need no key, and the package remains MIT licensed.
+
 ## 1.0.2 - 2026-09-02
 
 ### Added

@@ -10,7 +10,7 @@ import { LICENSE_REQUEST } from '../site-data';
       <h1>Open foundation.<br /><em>Advanced scale.</em></h1>
       <p>
         Use the standard data table under MIT. Add signed entitlement access when your product needs
-        the advanced data platform capabilities.
+        licensed card layouts or advanced data platform capabilities.
       </p>
     </section>
     <section class="plans wrap">
@@ -36,8 +36,9 @@ import { LICENSE_REQUEST } from '../site-data';
         <header>
           <span>Licensed advanced</span><strong>Contact</strong><small>Signed entitlement</small>
         </header>
-        <p>Specialized infrastructure for very large, live, governed, and analytical datasets.</p>
+        <p>Responsive card layouts and infrastructure for very large, live, governed, and analytical datasets.</p>
         <ul>
+          <li>Responsive card view · Table / Cards / Auto</li>
           <li>Dedicated-worker processing</li>
           <li>Remote viewport and live data</li>
           <li>Server pivot and drill-through</li>

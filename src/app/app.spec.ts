@@ -13,5 +13,8 @@ describe('App shell', () => {
     expect(text).toContain('Examples');
     expect(text).toContain('Documentation');
     expect(fixture.nativeElement.querySelector('router-outlet')).toBeTruthy();
+    const tracker = fixture.nativeElement.querySelector('footer a[href="https://github.com/wts-data-table/wts-data-table.github.io/issues"]') as HTMLAnchorElement;
+    expect(tracker?.textContent).toContain('Issue tracker');
+    expect(tracker?.rel).toContain('noreferrer');
   });
 });

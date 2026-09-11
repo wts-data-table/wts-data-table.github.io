@@ -4,6 +4,7 @@ import {
   DestroyRef,
   effect,
   ElementRef,
+  PendingTasks,
   inject,
   input,
   output,
@@ -22,6 +23,8 @@ import {
   type DataTableCardViewController,
   type DataTableCardViewMode,
 } from "wts-data-table/card-view";
+import { DataTableLicenseError, type DataTableLicenseGrant } from 'wts-data-table/license';
+import { CARD_VIEW_LICENSE_LOADER } from './card-view-demo-license';
 import type { DemoRuntimeOptions } from "./example-config";
 import type { TableDemoDefinition } from "./site-data";
 
@@ -200,11 +203,13 @@ const PROJECTS: readonly Project[] = PROJECT_SEEDS.map((seed, index) => {
       <span>View</span>
       @for (view of viewModes; track view.mode) {
         <button type="button"
-          [attr.aria-pressed]="runtimeOptions().viewMode === view.mode"
+          [attr.aria-pressed]="(cardLicense() ? runtimeOptions().viewMode : 'table') === view.mode"
+          [disabled]="view.mode !== 'table' && !cardLicense()"
           (click)="viewModeChange.emit(view.mode)">{{ view.label }}</button>
       }
     </div>
-    <p class="view-help">Cards share the same search, page, and row selection. Use Table for column controls and inline editing. Auto switches at a container width of 720px.</p>
+    <p class="view-help"><strong>Card view · Licensed.</strong> Cards share the same search, page, and row selection. Use Table for column controls and inline editing. Auto switches at a container width of 720px.</p>
+    @if (licenseError()) { <p class="view-help" role="status">{{ licenseError() }} Standard table view remains available.</p> }
     <div class="demo-readout" aria-live="polite">
       <span
         ><b>{{ selectedCount() }}</b> selected</span
@@ -286,6 +291,10 @@ export class TableDemo {
     viewChild.required<ElementRef<HTMLElement>>("tableHost");
   private readonly destroyRef = inject(DestroyRef);
   private readonly mounted = signal(false);
+  private readonly pendingTasks = inject(PendingTasks);
+  private readonly loadCardLicense = inject(CARD_VIEW_LICENSE_LOADER);
+  protected readonly cardLicense = signal<DataTableLicenseGrant | undefined>(undefined);
+  protected readonly licenseError = signal('');
   private table?: DataTable<Project>;
   private cards?: DataTableCardViewController<Project>;
   private mountedConfiguration?: string;
@@ -293,11 +302,22 @@ export class TableDemo {
   protected readonly lastAction = signal("Table ready");
 
   constructor() {
-    afterNextRender(() => this.mounted.set(true));
+    afterNextRender(() => {
+      this.mounted.set(true);
+      void this.pendingTasks.run(async () => {
+        try {
+          const license = await this.loadCardLicense(window.location.origin);
+          if (!this.destroyRef.destroyed) this.cardLicense.set(license);
+        } catch {
+          if (!this.destroyRef.destroyed) this.licenseError.set('Card view requires a valid signed license for this origin.');
+        }
+      });
+    });
     effect(() => {
       const demo = this.demo();
       const runtime = this.runtimeOptions();
-      if (this.mounted()) this.mount(demo.id, runtime);
+      const license = this.cardLicense();
+      if (this.mounted()) this.mount(demo.id, runtime, license);
     });
     this.destroyRef.onDestroy(() => {
       this.cards?.destroy();
@@ -310,14 +330,16 @@ export class TableDemo {
     this.lastAction.set("View reset");
   }
 
-  private mount(mode: string, runtime: DemoRuntimeOptions): void {
+  private mount(mode: string, runtime: DemoRuntimeOptions, license?: DataTableLicenseGrant): void {
     const { viewMode, ...tableOptions } = runtime;
     const configuration = JSON.stringify({ mode, ...tableOptions });
-    if (this.cards && this.mountedConfiguration === configuration) {
-      if (this.cards.getMode() !== viewMode) this.cards.setMode(viewMode);
+    if (this.table && this.mountedConfiguration === configuration) {
+      if (!this.cards && license) this.attachCards(runtime, license);
+      else if (this.cards && this.cards.getMode() !== viewMode) this.cards.setMode(viewMode);
       return;
     }
     this.cards?.destroy();
+    this.cards = undefined;
     this.table?.destroy();
     this.host().nativeElement.replaceChildren();
     this.selectedCount.set(0);
@@ -394,15 +416,28 @@ export class TableDemo {
     };
 
     this.table = new DataTable<Project>(options);
-    this.cards = createDataTableCardView({
-      table: this.table,
-      mode: viewMode,
-      breakpoint: 720,
-      minCardWidth: '17rem',
-      selection: runtime.selection,
-      showToggle: false,
-    });
     this.mountedConfiguration = configuration;
+    if (license) this.attachCards(runtime, license);
+  }
+
+  private attachCards(runtime: DemoRuntimeOptions, license: DataTableLicenseGrant): void {
+    if (!this.table) return;
+    try {
+      this.cards = createDataTableCardView({
+        license,
+        origin: window.location.origin,
+        table: this.table,
+        mode: runtime.viewMode,
+        breakpoint: 720,
+        minCardWidth: '17rem',
+        selection: runtime.selection,
+        showToggle: false,
+      });
+    } catch (error) {
+      if (!(error instanceof DataTableLicenseError)) throw error;
+      this.cardLicense.set(undefined);
+      this.licenseError.set('Card view requires a valid signed license for this origin.');
+    }
   }
 
   private columns(editable: boolean): readonly DataTableViewColumn<Project>[] {

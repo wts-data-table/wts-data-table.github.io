@@ -659,7 +659,7 @@ Use `getResponsiveHiddenColumns()` to inspect the current responsive result,
 `wts-data-table-responsive-change`, whose detail contains
 `{ instance, hiddenColumnIds }`.
 
-## Card view
+## Card view (licensed)
 
 `wts-data-table/card-view` switches the processed page between its semantic
 table and a responsive CSS card grid. Sorting, filtering, paging, visible
@@ -667,8 +667,13 @@ columns, cell renderers, and row selection stay synchronized.
 
 ```ts
 import { createDataTableCardView } from 'wts-data-table/card-view';
+import { verifyDataTableLicense } from 'wts-data-table/license';
 
+// Use your signed key containing the card-view entitlement.
+const license = await verifyDataTableLicense(entitlementToken);
 const cards = createDataTableCardView({
+  license,
+  origin: window.location.origin,
   table,
   mode: 'auto',
   breakpoint: 720,
@@ -684,6 +689,10 @@ cards.destroy();
 
 `renderCard` can replace a complete card with text or a direct DOM/SVG node.
 Set `showToggle: false` when the application supplies its own view controls.
+Card view requires a signed `card-view` entitlement, including when initially
+mounted in table or auto mode. Origin-bound keys are checked against the actual
+host document. The standard `DataTable` does not require a key. See
+[license setup](ADVANCED_FEATURES.md). This is a breaking change from 1.0.x.
 
 ## Inline editing
 

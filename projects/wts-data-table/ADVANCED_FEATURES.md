@@ -26,6 +26,19 @@ The optional `origin` value is required only for an origin-bound entitlement.
 Server-rendered and Node applications must supply the deployed HTTP(S) origin
 explicitly when their entitlement is origin-bound.
 
+For card view, the controller also checks the actual host document origin;
+a caller-supplied origin cannot override it. Missing, expired, or wrong-origin
+keys cannot construct the controller. Expiry detected on a subsequent update
+restores the standard table. Both the factory and direct constructor are guarded.
+
+## Official card-view demo
+
+The portal uses a signed, card-view-only key restricted to
+`https://wts-data-table.github.io` (expires September 11, 2027 UTC). Local preview
+uses a separate loopback-only key, not a production-origin bypass. The private
+signer stays in ignored `.license-private/` storage. Back it up securely; only
+signed tokens and public verification keys belong in applications.
+
 ## Issue a license
 
 License issuance is a maintainer operation. From the source repository's
@@ -62,6 +75,7 @@ retain the private key in an isolated secrets manager or licensing service.
 
 | Capability | Entitlement | Primary imports |
 | --- | --- | --- |
+| Card view | `card-view` | `wts-data-table/card-view` |
 | Advanced row model | `advanced-row-model` | `wts-data-table/remote`, `wts-data-table/remote-viewport` |
 | Indexed search | `indexed-search` | `wts-data-table/search`, `wts-data-table/search-filters` |
 | Background export | `background-export` | `wts-data-table/export-jobs`, `wts-data-table/durable-export` |

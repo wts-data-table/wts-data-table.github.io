@@ -1,0 +1,142 @@
+<div class="documentation-layout wrap">
+  <details class="docs-sidebar" appDocsSidebar open>
+    <summary>Browse documentation <span aria-hidden="true">⌄</span></summary>
+    <app-docs-navigation [guideSlug]="guide().slug" />
+  </details>
+  <article class="docs-content guide-content">
+    <header class="docs-intro">
+      <nav class="docs-breadcrumb" aria-label="Breadcrumb">
+        <a routerLink="/docs">Documentation</a><span>/</span
+        ><a routerLink="/docs" fragment="reference">Developer guides</a>
+      </nav>
+      <div class="guide-meta">
+        <span>Developer guide</span><span>{{ readingMinutes() }} min read</span>
+      </div>
+      <h1>{{ guide().title }}</h1>
+      <p>{{ guide().intro }}</p>
+      @if (guide().slug === 'framework-wrappers') {
+        <div class="guide-frameworks">
+          @for (framework of frameworks; track framework) {
+            <a
+              routerLink="/docs"
+              fragment="integrate"
+              [queryParams]="{ framework: framework.toLowerCase() }"
+              >{{ framework }} quick start →</a
+            >
+          }
+        </div>
+      }
+      <div class="guide-summary">
+        <strong>In this guide</strong>
+        <ul>
+          @for (section of guide().sections; track section.title) {
+            <li>
+              <a
+                [routerLink]="['/docs/guides', guide().slug]"
+                [fragment]="sectionId(section.title)"
+                >{{ section.title }}</a
+              >
+            </li>
+          }
+        </ul>
+      </div>
+    </header>
+
+    @for (section of guide().sections; track section.title) {
+      <section [id]="sectionId(section.title)" data-doc-section>
+        <div class="section-title">
+          <h2>{{ section.title }}</h2>
+          <a
+            [routerLink]="['/docs/guides', guide().slug]"
+            [fragment]="sectionId(section.title)"
+            [attr.aria-label]="'Link to ' + section.title"
+            >#</a
+          >
+        </div>
+        <p>{{ section.body }}</p>
+        @if (section.points) {
+          <ul class="guide-points">
+            @for (point of section.points; track point) {
+              <li>{{ point }}</li>
+            }
+          </ul>
+        }
+      </section>
+    }
+    <section id="code-example" data-doc-section>
+      <div class="section-title">
+        <h2>{{ guide().codeTitle }}</h2>
+        <a
+          [routerLink]="['/docs/guides', guide().slug]"
+          fragment="code-example"
+          aria-label="Link to code example"
+          >#</a
+        >
+      </div>
+      <p class="recipe-context">
+        This recipe focuses on the integration pattern. Replace application-specific values and
+        callbacks with your own data and services.
+      </p>
+      <app-doc-code
+        [code]="guide().code"
+        [label]="guide().codeTitle"
+        [language]="
+          guide().slug === 'themes'
+            ? 'CSS'
+            : guide().slug === 'bundle-size'
+              ? 'Shell'
+              : 'TypeScript'
+        "
+      />
+      <div class="callout">
+        <strong>Need a complete starting point?</strong>
+        <p>
+          The framework quick start includes install commands, a typed data file, and the component
+          that renders it.
+        </p>
+        <a routerLink="/docs" fragment="install">Go to the quick start →</a>
+      </div>
+    </section>
+
+    <footer class="guide-footer">
+      @if (previousGuide(); as previous) {
+        <a [routerLink]="['/docs/guides', previous.slug]"
+          ><small>← Previous guide</small><strong>{{ previous.title }}</strong></a
+        >
+      }
+      @if (nextGuide(); as next) {
+        <a class="next-guide" [routerLink]="['/docs/guides', next.slug]"
+          ><small>Next guide →</small><strong>{{ next.title }}</strong></a
+        >
+      }
+    </footer>
+    <div class="guide-help">
+      <p>Ready to try it with real data?</p>
+      <a routerLink="/examples/portfolio">Explore configurable examples ↗</a>
+    </div>
+  </article>
+
+  <aside class="page-outline" aria-label="On this page">
+    <strong>On this page</strong>
+    @for (section of guide().sections; track section.title) {
+      <a
+        [routerLink]="['/docs/guides', guide().slug]"
+        [fragment]="sectionId(section.title)"
+        [class.active]="reading.active() === sectionId(section.title)"
+        [attr.aria-current]="reading.active() === sectionId(section.title) ? 'location' : null"
+        >{{ section.title }}</a
+      >
+    }
+    <a
+      [routerLink]="['/docs/guides', guide().slug]"
+      fragment="code-example"
+      [class.active]="reading.active() === 'code-example'"
+      >Code example</a
+    >
+    <div class="outline-help">
+      <span>Explore the API</span>
+      <p>Find the option or import for your next feature.</p>
+      <a routerLink="/docs" fragment="features">Feature guide →</a>
+    </div>
+  </aside>
+</div>

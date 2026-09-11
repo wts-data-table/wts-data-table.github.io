@@ -5,12 +5,17 @@ import { DocsPage } from './docs-page';
 
 describe('DocsPage', () => {
   it('links every sidebar item to its section on the docs route', async () => {
-    await TestBed.configureTestingModule({ imports: [DocsPage], providers: [provideRouter([])] }).compileComponents();
+    await TestBed.configureTestingModule({
+      imports: [DocsPage],
+      providers: [provideRouter([])],
+    }).compileComponents();
     const fixture = TestBed.createComponent(DocsPage);
     fixture.detectChanges();
     await fixture.whenStable();
 
-    const links = [...fixture.nativeElement.querySelectorAll('aside a')] as HTMLAnchorElement[];
+    const links = [
+      ...fixture.nativeElement.querySelectorAll('nav[aria-label="Getting started"] a'),
+    ] as HTMLAnchorElement[];
     expect(links.slice(0, 8).map(({ pathname, hash }) => `${pathname}${hash}`)).toEqual([
       '/docs#install',
       '/docs#integrate',
@@ -24,7 +29,10 @@ describe('DocsPage', () => {
   });
 
   it('documents standard and licensed capabilities with developer entry points', async () => {
-    await TestBed.configureTestingModule({ imports: [DocsPage], providers: [provideRouter([])] }).compileComponents();
+    await TestBed.configureTestingModule({
+      imports: [DocsPage],
+      providers: [provideRouter([])],
+    }).compileComponents();
     const fixture = TestBed.createComponent(DocsPage);
     fixture.detectChanges();
     const text = fixture.nativeElement.textContent as string;
@@ -39,12 +47,17 @@ describe('DocsPage', () => {
   });
 
   it('uses internal website routes for every developer guide card', async () => {
-    await TestBed.configureTestingModule({ imports: [DocsPage], providers: [provideRouter([])] }).compileComponents();
+    await TestBed.configureTestingModule({
+      imports: [DocsPage],
+      providers: [provideRouter([])],
+    }).compileComponents();
     const fixture = TestBed.createComponent(DocsPage);
     fixture.detectChanges();
     await fixture.whenStable();
 
-    const links = [...fixture.nativeElement.querySelectorAll('#reference a')] as HTMLAnchorElement[];
+    const links = [
+      ...fixture.nativeElement.querySelectorAll('#reference .resource-grid a'),
+    ] as HTMLAnchorElement[];
     expect(links).toHaveLength(10);
     expect(links.every(({ pathname }) => pathname.startsWith('/docs/guides/'))).toBe(true);
     expect(links.every(({ hostname }) => hostname === 'localhost')).toBe(true);

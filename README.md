@@ -49,6 +49,24 @@ the root URL `wts-data-table.github.io`, the GitHub repository must be named
 `wts-data-table.github.io` under the `wts-data-table` account or organization,
 and Pages must use **GitHub Actions** as its source.
 
+## Card-view licensing (1.1.0)
+
+Card view requires a verified entitlement from library version 1.1.0. The
+portal uses a public signed key restricted to `https://wts-data-table.github.io`;
+local development uses a separate loopback-only key. Both demo keys expire on
+September 11, 2027 UTC. Only signed tokens are included in
+`src/app/card-view-demo-license.ts`; the signing private key must never be copied
+into this repository or uploaded to GitHub Pages.
+
+The portal pins `wts-data-table@1.1.0` from npm. Run `npm ci` to reproduce the
+deployed dependency tree. `npm run build:pages` verifies the installed entitlement
+API and issue-tracker metadata before building. Push tested updates to `main`
+to deploy through the existing GitHub Actions workflow.
+
+Migration notice: existing card-view callers must pass a verified `license`
+and the deployment `origin` when upgrading to 1.1.0. Standard tables need no key;
+existing published 1.0.x versions are unchanged.
+
 ## Developer guides
 
 Use these focused guides with this README:

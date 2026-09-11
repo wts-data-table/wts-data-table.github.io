@@ -183,6 +183,9 @@ const OPTION_GROUPS = [
               }
             </div>
           </div>
+          <p>Table-only examples need no key. Card and Auto layouts require your own signed
+            <code>card-view</code> entitlement for your deployment origin.
+            <a routerLink="/docs/guides/advanced-features">License setup →</a></p>
           <div class="code-block" role="tabpanel">
             <div>
               <span>{{ activeFramework() }}</span

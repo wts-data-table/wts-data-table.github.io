@@ -12,7 +12,7 @@ repeatable regression measurements, not network-transfer guarantees.
 | `/base` + plug-in registry API | 59,728 B | 16,296 B | 2.5 KB incremental |
 | `/base` + exact French locale | 61,529 B | 16,582 B | 3 KB incremental |
 | `/base` + `completePreset()` | 78,073 B | 22,044 B | 22.4 KB |
-| Compatibility `wts-data-table` | 200,762 B | 52,648 B | ratio reference |
+| Compatibility `wts-data-table` | 204,301 B | 53,745 B | ratio reference |
 
 The modular complete composition is below 45% of the compatibility renderer's
 gzip size. A bare base consumer is about 27% of the compatibility renderer.
@@ -24,7 +24,7 @@ minification) remain useful for diagnosing output growth:
 
 | Entry | Raw | Gzip | Budget |
 | --- | ---: | ---: | ---: |
-| Compatibility `wts-data-table` | 322,687 B | 69,090 B | 334 KB / 70 KB |
+| Compatibility `wts-data-table` | 327,974 B | 70,551 B | 334 KB / 71 KB |
 | `wts-data-table/base` | 85,361 B | 19,158 B | 90 KB / 19.3 KB |
 | `wts-data-table/lite` | 84,273 B | 18,906 B | 90 KB / 19 KB |
 | `wts-data-table/i18n` | 10,454 B | 3,090 B | 12 KB / 4 KB |
@@ -68,3 +68,11 @@ to 19,300 bytes, and base/standard/complete consumer caps each rise by 400 bytes
 to accommodate their shared-core increase. Raw limits, lite limits, optional
 feature incremental limits and the 45% ratio are unchanged. These are explicit
 development budget revisions, not claims that the old caps passed.
+
+The 2026-09-11 UI fixes add overflow-safe column-menu positioning, native
+top-layer rendering, a legacy-browser fallback, and lifecycle cleanup. The
+readable full entry increases by 5,287 raw bytes and 1,461 gzip bytes from the
+previous checkpoint. Its diagnostic gzip cap is explicitly revised from 70,000
+to 71,000 bytes; the old cap does not pass. The minified consumer increases by
+3,539 raw bytes and 1,097 gzip bytes. The 334,000-byte raw cap, modular consumer
+budgets, optional-feature budgets, and 45% ratio are unchanged.

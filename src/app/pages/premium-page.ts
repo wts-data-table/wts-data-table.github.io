@@ -1,7 +1,33 @@
 import { Component, signal } from '@angular/core';
-import { LICENSE_REQUEST } from '../site-data';
+import { LICENSE_REQUEST, TABLE_DEMOS } from '../site-data';
+import { RouterLink } from '@angular/router';
+import { TableDemo } from '../table-demo';
+import { createDemoRuntimeOptions } from '../example-config';
+import type { DataTableCardViewMode } from 'wts-data-table/card-view';
 
 const PREMIUM_EXAMPLES = [
+  {
+    id: 'card-view',
+    label: 'Card view',
+    title: 'Responsive cards, shared table state',
+    description: 'Switch between Table, Cards, and Auto without resetting search, pagination, or selection. Card view uses a signed entitlement restricted to your deployment origin.',
+    image: '',
+    alt: '',
+    caption: 'Live licensed card-view component · official demo key',
+    options: ['mode', 'breakpoint', 'minCardWidth', 'selection', 'renderCard', 'renderField'],
+    code: `import { verifyDataTableLicense } from 'wts-data-table/license';
+import { createDataTableCardView } from 'wts-data-table/card-view';
+
+const license = await verifyDataTableLicense(entitlementToken);
+const cards = createDataTableCardView({
+  license, origin: window.location.origin,
+  table, mode: 'auto', breakpoint: 720, minCardWidth: '17rem',
+  selection: true
+});
+cards.setMode('cards');
+// When the component unmounts:
+cards.destroy();`,
+  },
   {
     id: 'worker-processing',
     label: 'Worker processing',
@@ -125,16 +151,17 @@ const PREMIUM_EXAMPLES = [
 ] as const;
 
 @Component({
+  imports: [RouterLink, TableDemo],
   template: `
     <section class="page-hero wrap">
       <span class="kicker">Licensed advanced capabilities</span>
       <h1>Every shipped feature.<br /><em>Demonstrated.</em></h1>
       <p>
-        Explore all 10 licensed capability groups. Each section identifies runtime controls, shows
+        Explore all {{ examples.length }} licensed capability groups. Each section identifies runtime controls, shows
         the product-facing result, and provides the package API used to build it.
       </p>
       <div class="coverage">
-        <strong>10 / 10</strong><span>licensed capability groups documented below</span>
+        <strong>{{ examples.length }} / {{ examples.length }}</strong><span>licensed capability groups documented below</span>
       </div>
     </section>
     <nav class="premium-index wrap" aria-label="Advanced capability examples">
@@ -149,7 +176,7 @@ const PREMIUM_EXAMPLES = [
       @for (item of examples; track item.id; let index = $index) {
         <article [id]="item.id">
           <div class="premium-copy">
-            <span class="kicker">{{ index + 1 }} / 10 · {{ item.label }}</span>
+            <span class="kicker">{{ index + 1 }} / {{ examples.length }} · {{ item.label }}</span>
             <h2>{{ item.title }}</h2>
             <p>{{ item.description }}</p>
             <div class="runtime-options">
@@ -171,7 +198,12 @@ const PREMIUM_EXAMPLES = [
             </div>
           </div>
           <figure>
-            <img [src]="item.image" [alt]="item.alt" width="1280" height="540" loading="lazy" />
+            @if (item.id === 'card-view') {
+              <app-table-demo [demo]="cardDemo" [runtimeOptions]="cardOptions()" (viewModeChange)="setCardView($event)" />
+              <a class="button" routerLink="/examples/card-view">All options &amp; framework code →</a>
+            } @else {
+              <img [src]="item.image" [alt]="item.alt" width="1280" height="540" loading="lazy" />
+            }
             <figcaption>{{ item.caption }}</figcaption>
           </figure>
         </article>
@@ -180,8 +212,8 @@ const PREMIUM_EXAMPLES = [
     <section class="premium-boundary wrap">
       <strong>One package, explicit entitlement</strong>
       <p>
-        All 10 capabilities are included in <code>wts-data-table</code> 1.0.2 and later under
-        feature-named imports. Advanced factories require a verified signed entitlement. The
+        These capabilities are included in <code>wts-data-table</code> under
+        feature-named imports. Card-view licensing starts with version 1.1.0; published 1.0.x remains unchanged. Advanced factories require a verified signed entitlement. The
         controllers are framework-neutral, so Angular, React, Vue, and JavaScript applications use
         the same feature APIs and connect them to their own component lifecycle.
       </p>
@@ -244,7 +276,7 @@ const PREMIUM_EXAMPLES = [
         display: grid;
         gap: 7rem;
       }
-      .premium-list article {
+      .premium-list > article {
         display: grid;
         grid-template-columns: minmax(320px, 0.72fr) minmax(0, 1.28fr);
         min-width: 0;
@@ -252,10 +284,11 @@ const PREMIUM_EXAMPLES = [
         align-items: center;
         scroll-margin-top: 6rem;
       }
-      .premium-list article:nth-child(even) {
+      #card-view { align-items: start; }
+      .premium-list > article:nth-child(even) {
         grid-template-columns: minmax(0, 1.28fr) minmax(320px, 0.72fr);
       }
-      .premium-list article:nth-child(even) .premium-copy {
+      .premium-list > article:nth-child(even) .premium-copy {
         order: 2;
       }
       .premium-list h2 {
@@ -363,12 +396,13 @@ const PREMIUM_EXAMPLES = [
         margin-top: 1rem;
       }
       @media (max-width: 900px) {
-        .premium-list article,
-        .premium-list article:nth-child(even) {
+        .premium-list > article,
+        #card-view { align-items: start; }
+      .premium-list > article:nth-child(even) {
           grid-template-columns: 1fr;
           gap: 2rem;
         }
-        .premium-list article:nth-child(even) .premium-copy {
+        .premium-list > article:nth-child(even) .premium-copy {
           order: 0;
         }
       }
@@ -391,6 +425,11 @@ const PREMIUM_EXAMPLES = [
 })
 export class PremiumPage {
   protected readonly examples = PREMIUM_EXAMPLES;
+  protected readonly cardDemo = TABLE_DEMOS.find(demo => demo.id === 'card-view')!;
+  protected readonly cardOptions = signal(createDemoRuntimeOptions('card-view'));
+  protected setCardView(viewMode: DataTableCardViewMode): void {
+    this.cardOptions.update(options => ({ ...options, viewMode }));
+  }
   protected readonly licenseRequest = LICENSE_REQUEST;
   protected readonly copied = signal('');
   protected async copy(code: string, id: string) {

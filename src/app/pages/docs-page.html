@@ -1,0 +1,434 @@
+<div class="documentation-layout wrap">
+  <details class="docs-sidebar" appDocsSidebar open>
+    <summary>Browse documentation <span aria-hidden="true">⌄</span></summary>
+    <app-docs-navigation
+      [activeSection]="reading.active()"
+      [framework]="framework()"
+      (navigated)="sidebarNavigate()"
+    />
+  </details>
+
+  <article class="docs-content">
+    <header class="docs-intro">
+      <div class="docs-breadcrumb">Documentation <span>/</span> Getting started</div>
+      <div class="intro-heading">
+        <h1>Build your first table.</h1>
+        <span class="version-badge">v1.1.0</span>
+      </div>
+      <p>
+        Go from an array of data to a searchable, interactive table. Start with your framework, then
+        add the features your application needs.
+      </p>
+      <div class="intro-links">
+        <a routerLink="/examples/portfolio">Open the playground <span aria-hidden="true">↗</span></a
+        ><a
+          routerLink="/docs"
+          [queryParams]="{ framework: framework().toLowerCase() }"
+          fragment="features"
+          >Explore the feature guide <span aria-hidden="true">→</span></a
+        >
+      </div>
+      <div class="learning-paths">
+        <a
+          routerLink="/docs"
+          [queryParams]="{ framework: framework().toLowerCase() }"
+          fragment="integrate"
+          ><span class="path-icon" aria-hidden="true">01</span><strong>Get started</strong
+          ><small>A working table in your framework</small></a
+        >
+        <a routerLink="/docs/guides/server-integration"
+          ><span class="path-icon" aria-hidden="true">02</span><strong>Connect your data</strong
+          ><small>APIs, server queries, and cursors</small></a
+        >
+        <a routerLink="/docs/guides/themes"
+          ><span class="path-icon" aria-hidden="true">03</span><strong>Make it yours</strong
+          ><small>Theme adapters and CSS variables</small></a
+        >
+      </div>
+    </header>
+
+    <section id="install" data-doc-section>
+      <div class="section-title">
+        <h2>Install the package</h2>
+        <a
+          routerLink="/docs"
+          [queryParams]="{ framework: framework().toLowerCase() }"
+          fragment="install"
+          aria-label="Link to installation"
+          >#</a
+        >
+      </div>
+      <p>
+        Use an existing TypeScript application with a bundler. Select a framework to see its install
+        command and starter files. The wrappers use the same table engine and options.
+      </p>
+      <div class="framework-tabs" role="tablist" aria-label="Framework integration">
+        @for (item of frameworks; track item) {
+          <button
+            type="button"
+            role="tab"
+            [id]="'framework-' + item"
+            [attr.aria-selected]="framework() === item"
+            [attr.tabindex]="framework() === item ? 0 : -1"
+            aria-controls="framework-setup"
+            [class.active]="framework() === item"
+            (click)="selectFramework(item)"
+            (keydown)="frameworkKey($event, item)"
+          >
+            <span
+              class="framework-dot"
+              [class]="'framework-dot framework-' + item"
+              aria-hidden="true"
+            ></span
+            >{{ item === 'Core' ? 'JavaScript / TS' : item }}
+          </button>
+        }
+      </div>
+      <div id="framework-setup" role="tabpanel" [attr.aria-labelledby]="'framework-' + framework()">
+        <app-doc-code [code]="installs[framework()]" label="Terminal" language="npm" />
+        <p class="framework-note">{{ frameworkNotes[framework()] }}</p>
+        <div class="callout">
+          <strong>Import the stylesheet once</strong>
+          <p>
+            Add this to your application’s global stylesheet (for example,
+            <code>styles.css</code> or <code>styles.scss</code>). For Next.js, load it from the root
+            layout or global stylesheet.
+          </p>
+          <app-doc-code [code]="stylesCode" label="Global stylesheet" language="CSS" />
+        </div>
+      </div>
+    </section>
+
+    <section id="integrate" data-doc-section>
+      <div class="section-title">
+        <h2>Integrate your framework</h2>
+        <a
+          routerLink="/docs"
+          [queryParams]="{ framework: framework().toLowerCase() }"
+          fragment="integrate"
+          aria-label="Link to framework quick start"
+          >#</a
+        >
+      </div>
+      <p>
+        These two files give you typed columns, stable row IDs, search, selection, and pagination.
+        The same data file works with all four integrations.
+      </p>
+      <h3 class="step-heading"><span>1</span> Define your rows and columns</h3>
+      <app-doc-code [code]="tableData" label="table-data.ts" />
+      <h3 class="step-heading">
+        <span>2</span> Mount the {{ framework() === 'Core' ? 'table' : framework() + ' component' }}
+      </h3>
+      <div class="framework-switch">
+        <span>Showing {{ framework() === 'Core' ? 'JavaScript / TypeScript' : framework() }}</span
+        ><a
+          routerLink="/docs"
+          [queryParams]="{ framework: framework().toLowerCase() }"
+          fragment="install"
+          >Change framework ↑</a
+        >
+      </div>
+      @if (framework() === 'Core') {
+        <p>
+          Add a host element to your page, then load <code>main.ts</code> with your application
+          entry point.
+        </p>
+        <app-doc-code [code]="hostCode" label="index.html" language="HTML" />
+      }
+      <app-doc-code
+        [code]="snippets[framework()]"
+        [label]="starterFiles[framework()]"
+        [language]="framework() === 'Vue' ? 'Vue' : framework() === 'React' ? 'TSX' : 'TypeScript'"
+      />
+      @if (framework() === 'Angular') {
+        <p class="framework-note">
+          Import <code>ProjectTableComponent</code> into its parent component and use
+          <code>&lt;app-project-table /&gt;</code> in the parent template.
+        </p>
+      }
+      @if (framework() === 'React') {
+        <p class="framework-note">
+          Import <code>ProjectTable</code> into your page and render
+          <code>&lt;ProjectTable /&gt;</code>.
+        </p>
+      }
+      @if (framework() === 'Vue') {
+        <p class="framework-note">
+          Import <code>ProjectTable.vue</code> into your page and render
+          <code>&lt;ProjectTable /&gt;</code> in its template.
+        </p>
+      }
+      <div class="next-step">
+        <div>
+          <strong>Your table is ready to explore.</strong>
+          <p>Try selection, filtering, and card view with editable options and framework code.</p>
+        </div>
+        <a class="button" routerLink="/examples/portfolio">Try the example →</a>
+      </div>
+    </section>
+
+    <section id="renderers" data-doc-section>
+      <div class="section-title">
+        <h2>Choose a renderer</h2>
+        <a
+          routerLink="/docs"
+          [queryParams]="{ framework: framework().toLowerCase() }"
+          fragment="renderers"
+          aria-label="Link to renderer selection"
+          >#</a
+        >
+      </div>
+      <p>
+        Use Complete for your first integration. Select another renderer when you need precise
+        control over the bundle or your rendered UI.
+      </p>
+      <div class="renderer-grid">
+        @for (item of renderers; track item.name) {
+          <article [class.recommended]="item.name === 'Complete'">
+            <div class="renderer-heading">
+              <h3>{{ item.name }}</h3>
+              @if (item.name === 'Complete') {
+                <span>Start here</span>
+              }
+            </div>
+            <code>{{ item.import }}</code>
+            <p>{{ item.use }}</p>
+          </article>
+        }
+      </div>
+      <details class="recipe">
+        <summary>Example: compose features with Base</summary>
+        <app-doc-code [code]="baseRendererExample" label="Base renderer recipe" />
+        <p>
+          Use your existing <code>options</code> object with a host, data, and columns. See the
+          <a routerLink="/docs/guides/bundle-size">bundle-size guide</a> for composition choices.
+        </p>
+      </details>
+    </section>
+
+    <section id="features" data-doc-section>
+      <div class="section-title">
+        <h2>Feature guide</h2>
+        <a
+          routerLink="/docs"
+          [queryParams]="{ framework: framework().toLowerCase() }"
+          fragment="features"
+          aria-label="Link to feature guide"
+          >#</a
+        >
+      </div>
+      <p>
+        Find the option or import for a capability, understand when to use it, and continue to a
+        live example or a focused guide.
+      </p>
+      <div class="feature-tools">
+        <label for="feature-filter">Find a feature or API</label
+        ><input
+          id="feature-filter"
+          type="search"
+          placeholder="Try “card view”, “setSorting”, or “server”…"
+          [value]="featureQuery()"
+          (input)="featureQuery.set($any($event.target).value)"
+          (keydown.escape)="featureQuery.set('')"
+        /><span role="status">{{ featureCount() }} features</span>
+      </div>
+      @for (group of filteredGroups(); track group.title) {
+        <div class="feature-group">
+          <h3>{{ group.title }}</h3>
+          <p>{{ group.description }}</p>
+          <div class="feature-list">
+            @for (feature of group.features; track feature.name) {
+              <article [id]="featureId(feature.name)" class="feature-item">
+                <div>
+                  <h4>{{ feature.name }}</h4>
+                  <code>{{ feature.api }}</code>
+                  <p>{{ feature.use }}</p>
+                </div>
+                <a
+                  [routerLink]="featureLink(feature.name).route"
+                  [fragment]="featureLink(feature.name).fragment"
+                  [attr.aria-label]="featureLink(feature.name).label + ': ' + feature.name"
+                  >{{ featureLink(feature.name).label }} <span aria-hidden="true">→</span></a
+                >
+              </article>
+            }
+          </div>
+        </div>
+      } @empty {
+        <div class="empty-state">
+          <strong>No matching features</strong>
+          <p>Try a broader term, or reset the filter to see all standard features.</p>
+          <button type="button" class="button" (click)="featureQuery.set('')">
+            Show all features
+          </button>
+        </div>
+      }
+    </section>
+
+    <section id="configure" data-doc-section>
+      <div class="section-title">
+        <h2>Build a production configuration</h2>
+        <a
+          routerLink="/docs"
+          [queryParams]="{ framework: framework().toLowerCase() }"
+          fragment="configure"
+          aria-label="Link to table configuration"
+          >#</a
+        >
+      </div>
+      <p>
+        Extend your starter with typed filters, sorting, bulk actions, and a summary. Wrapper
+        components receive the same options without <code>element</code> or <code>data</code>.
+      </p>
+      <app-doc-code [code]="starterConfig" label="Configuration recipe" />
+      <div class="callout">
+        <strong>Choose a data strategy before increasing row counts</strong>
+        <p>
+          Virtualization reduces the rendered DOM. Server processing keeps the full dataset outside
+          browser memory. They solve different problems and can be used together.
+        </p>
+        <a routerLink="/docs/guides/server-integration">Read the server integration guide →</a>
+      </div>
+    </section>
+
+    <section id="lifecycle" data-doc-section>
+      <div class="section-title">
+        <h2>Own state and lifecycle</h2>
+        <a
+          routerLink="/docs"
+          [queryParams]="{ framework: framework().toLowerCase() }"
+          fragment="lifecycle"
+          aria-label="Link to state and lifecycle"
+          >#</a
+        >
+      </div>
+      <p>
+        Use the existing controller to change data or view state. These calls are independent
+        examples; replace the application values with your own records.
+      </p>
+      <app-doc-code [code]="stateExample" label="Controller recipes" />
+      <div class="method-list">
+        <code>setColumnFilter()</code><code>setGrouping()</code><code>setRowExpanded()</code
+        ><code>pinRow()</code><code>setColumnVisibility()</code><code>replaceState()</code
+        ><code>reset()</code><code>render()</code>
+      </div>
+      <div class="callout">
+        <strong>Preserve state across framework renders</strong>
+        <p>
+          Updating data changes rows in place. Replacing the options object remounts the controller.
+          Keep options stable and let the wrapper handle cleanup on unmount.
+        </p>
+        <a routerLink="/docs/guides/framework-wrappers">Understand wrapper lifecycle →</a>
+      </div>
+      <details class="recipe">
+        <summary>Troubleshooting common integration issues</summary>
+        <dl>
+          <dt>The table is unstyled</dt>
+          <dd>
+            Import the matching stylesheet globally. Complete uses <code>styles.css</code>; Base
+            uses <code>base.css</code>; Lite uses <code>lite.css</code>.
+          </dd>
+          <dt>Selection disappears after changing data</dt>
+          <dd>
+            Set <code>getRowId</code> to a stable, unique record ID. Avoid array positions as IDs
+            for sortable or changing data.
+          </dd>
+          <dt>The table resets on every render</dt>
+          <dd>
+            Keep the options object reference stable. In React, create it outside the component or
+            with <code>useMemo</code>.
+          </dd>
+          <dt>A detail row repeats the parent data</dt>
+          <dd>
+            Use <code>renderDetailPanel</code> for custom details. Real child rows require
+            <code>getSubRows</code> or <code>loadSubRows</code>.
+          </dd>
+        </dl>
+      </details>
+    </section>
+
+    <section id="advanced" data-doc-section>
+      <div class="section-title">
+        <h2>Licensed advanced features</h2>
+        <a
+          routerLink="/docs"
+          [queryParams]="{ framework: framework().toLowerCase() }"
+          fragment="advanced"
+          aria-label="Link to licensed features"
+          >#</a
+        >
+      </div>
+      <p>
+        Advanced features are included in <code>wts-data-table</code>. Import the feature you need
+        and provide a verified license. Explore a working demonstration before integrating it.
+      </p>
+      <div class="advanced-grid">
+        @for (feature of advancedFeatures; track feature.entitlement) {
+          <article [id]="featureId(feature.name)">
+            <span class="license-tag">Licensed</span>
+            <h3>{{ feature.name }}</h3>
+            <p>{{ feature.use }}</p>
+            <code>{{ feature.import }}</code
+            ><a routerLink="/premium" [fragment]="advancedDemo(feature.entitlement)"
+              >View demonstration →</a
+            >
+          </article>
+        }
+      </div>
+      <app-doc-code [code]="licenseExample" label="License verification recipe" />
+      <p>
+        The token and <code>options</code> come from your application. See
+        <a routerLink="/docs/guides/advanced-features">license integration</a> for feature claims
+        and <a routerLink="/pricing">licensing</a> for contact details.
+      </p>
+    </section>
+
+    <section id="reference" data-doc-section>
+      <div class="section-title">
+        <h2>Developer guides</h2>
+        <a
+          routerLink="/docs"
+          [queryParams]="{ framework: framework().toLowerCase() }"
+          fragment="reference"
+          aria-label="Link to developer guides"
+          >#</a
+        >
+      </div>
+      <p>
+        Continue with integration patterns, design choices, and the boundaries your application
+        owns.
+      </p>
+      <div class="resource-grid">
+        @for (guide of developerGuides; track guide.slug) {
+          <a [routerLink]="['/docs/guides', guide.slug]"
+            ><strong>{{ guide.title }} <span aria-hidden="true">↗</span></strong
+            ><span>{{ guide.summary }}</span></a
+          >
+        }
+      </div>
+    </section>
+    <footer class="docs-bottom">
+      <span>Next: connect WTS to your framework</span
+      ><a routerLink="/docs/guides/framework-wrappers">Framework wrappers →</a>
+    </footer>
+  </article>
+
+  <aside class="page-outline" aria-label="On this page">
+    <strong>On this page</strong>
+    @for (section of sections; track section.id) {
+      <a
+        routerLink="/docs"
+        [queryParams]="{ framework: framework().toLowerCase() }"
+        [fragment]="section.id"
+        [class.active]="reading.active() === section.id"
+        [attr.aria-current]="reading.active() === section.id ? 'location' : null"
+        >{{ section.title }}</a
+      >
+    }
+    <div class="outline-help">
+      <span>Learn by doing</span>
+      <p>Change options and see the table update.</p>
+      <a routerLink="/examples/portfolio">Open playground ↗</a>
+    </div>
+  </aside>
+</div>

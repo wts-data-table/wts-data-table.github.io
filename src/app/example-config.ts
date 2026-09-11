@@ -68,8 +68,63 @@ export function createFrameworkSnippet(
   const options = optionLines(demo.id, runtime)
     .map((line) => `    ${line}`)
     .join("\n");
-  const cardImport = `import { createDataTableCardView, type DataTableCardViewController } from 'wts-data-table/card-view';`;
-  const cardOptions = `table, mode: '${runtime.viewMode}', breakpoint: 720, minCardWidth: '17rem',\n      selection: ${runtime.selection}, showToggle: false`;
+  if (runtime.viewMode === 'table' && demo.id !== 'card-view') {
+    // The standard table does not import a licensed controller or need a key.
+    if (framework === 'Angular') return `import { Component } from '@angular/core';
+import { WtsDataTableAngularComponent } from '@wts-data-table/angular';
+import type { DataTableOptions } from 'wts-data-table';
+import 'wts-data-table/styles.css';
+
+@Component({
+  standalone: true,
+  imports: [WtsDataTableAngularComponent],
+  template: \`<wts-data-table-angular [data]="projects" [options]="options" />\`,
+})
+export class ProjectTableComponent {
+  readonly projects = projects;
+  readonly options: Omit<DataTableOptions<Project>, 'element' | 'data'> = {
+${options}
+  };
+}`;
+    if (framework === 'React') return `import { useMemo } from 'react';
+import { WtsDataTableReact } from '@wts-data-table/react';
+import type { DataTableOptions } from 'wts-data-table';
+import 'wts-data-table/styles.css';
+
+export function ProjectTable() {
+  const options = useMemo<Omit<DataTableOptions<Project>, 'element' | 'data'>>(() => ({
+${options}
+  }), []);
+  return <WtsDataTableReact data={projects} options={options} />;
+}`;
+    if (framework === 'Vue') return `<script setup lang="ts">
+import { WtsDataTableVue } from '@wts-data-table/vue';
+import type { DataTableOptions } from 'wts-data-table';
+import 'wts-data-table/styles.css';
+
+const options: Omit<DataTableOptions<Project>, 'element' | 'data'> = {
+${options}
+};
+</script>
+
+<template>
+  <WtsDataTableVue :data="projects" :options="options" />
+</template>`;
+    return `import { DataTable } from 'wts-data-table';
+import 'wts-data-table/styles.css';
+
+const table = new DataTable<Project>({
+  element: '#project-table',
+  data: projects,
+${options}
+});
+await table.ready();
+// On page or component teardown:
+function destroy() { table.destroy(); }`;
+  }
+
+  const cardImport = `import { createDataTableCardView, type DataTableCardViewController } from 'wts-data-table/card-view';\nimport { verifyDataTableLicense } from 'wts-data-table/license';\n\n// Replace with your signed key containing the card-view entitlement.\nconst entitlementToken = 'YOUR_SIGNED_CARD_VIEW_KEY';`;
+  const cardOptions = `license, origin: window.location.origin,\n      table, mode: '${runtime.viewMode}', breakpoint: 720, minCardWidth: '17rem',\n      selection: ${runtime.selection}, showToggle: false`;
   const selectorNote = `// Wire your Table / Cards / Auto buttons to cards.setMode(mode).\n// This changes the layout without resetting table state.`;
 
   if (framework === "Angular") {
@@ -101,16 +156,25 @@ ${options}
   };
 
   private cards?: DataTableCardViewController<Project>;
-  onReady(table: DataTable<Project>) {
+  private revision = 0;
+  async onReady(table: DataTable<Project>) {
     this.destroyCards();
-    this.cards = createDataTableCardView({
-      ${cardOptions}
-    });
+    const revision = this.revision;
+    try {
+      const license = await verifyDataTableLicense(entitlementToken);
+      if (revision !== this.revision) return; // The table was replaced or destroyed.
+      this.cards = createDataTableCardView({
+        ${cardOptions}
+      });
+    } catch {
+      console.error('Card view requires a valid license for this origin.');
+    }
   }
   setView(mode: 'table' | 'cards' | 'auto') {
     this.cards?.setMode(mode);
   }
   destroyCards() {
+    this.revision++;
     this.cards?.destroy();
     this.cards = undefined;
   }
@@ -126,19 +190,28 @@ import 'wts-data-table/styles.css';
 
 export function ProjectTable() {
   const cards = useRef<DataTableCardViewController<Project> | null>(null);
+  const revision = useRef(0);
   const options = useMemo<Omit<DataTableOptions<Project>, 'element' | 'data'>>(() => ({
 ${options}
   }), []);
 
   const destroyCards = useCallback(() => {
+    revision.current++;
     cards.current?.destroy();
     cards.current = null;
   }, []);
-  const onReady = useCallback((table: DataTable<Project>) => {
+  const onReady = useCallback(async (table: DataTable<Project>) => {
     destroyCards();
-    cards.current = createDataTableCardView({
-      ${cardOptions}
-    });
+    const current = revision.current;
+    try {
+      const license = await verifyDataTableLicense(entitlementToken);
+      if (current !== revision.current) return;
+      cards.current = createDataTableCardView({
+        ${cardOptions}
+      });
+    } catch {
+      console.error('Card view requires a valid license for this origin.');
+    }
   }, [destroyCards]);
 
   return <>
@@ -164,15 +237,24 @@ const options: Omit<DataTableOptions<Project>, 'element' | 'data'> = {
 ${options}
 };
 let cards: DataTableCardViewController<Project> | undefined;
+let revision = 0;
 function destroyCards() {
+  revision++;
   cards?.destroy();
   cards = undefined;
 }
-function onReady(table: DataTable<Project>) {
+async function onReady(table: DataTable<Project>) {
   destroyCards();
-  cards = createDataTableCardView({
-    ${cardOptions}
-  });
+  const current = revision;
+  try {
+    const license = await verifyDataTableLicense(entitlementToken);
+    if (current !== revision) return;
+    cards = createDataTableCardView({
+      ${cardOptions}
+    });
+  } catch {
+    console.error('Card view requires a valid license for this origin.');
+  }
 }
 const viewModes = ['table', 'cards', 'auto'] as const;
 function setView(mode: 'table' | 'cards' | 'auto') {
@@ -190,7 +272,7 @@ function setView(mode: 'table' | 'cards' | 'auto') {
   }
 
   return `import { DataTable } from 'wts-data-table';
-import { createDataTableCardView } from 'wts-data-table/card-view';
+${cardImport}
 import 'wts-data-table/styles.css';
 
 const table = new DataTable<Project>({
@@ -200,6 +282,8 @@ ${options}
 });
 
 await table.ready();
+// If verification fails, the standard table remains available.
+const license = await verifyDataTableLicense(entitlementToken);
 const cards = createDataTableCardView({
   ${cardOptions}
 });
