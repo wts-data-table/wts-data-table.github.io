@@ -30,7 +30,7 @@ export const routes: Routes = [
   {
     path: 'pricing',
     loadComponent: () => import('./pages/pricing-page').then((m) => m.PricingPage),
-    data: { seo: { title: 'Licensing | WTS Data Table', description: 'Understand the open-source foundation and optional licensed advanced capabilities for WTS Data Table.', path: '/pricing/' } },
+    data: { seo: { title: 'Pricing & Licensing | WTS Data Table', description: 'Compare MIT-licensed Standard features and renewable Premium subscriptions. Request WTS Data Table pricing, evaluation access, or renewal.', path: '/pricing/' } },
   },
   {
     path: 'premium',

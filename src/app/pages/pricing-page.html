@@ -1,0 +1,276 @@
+<section class="page-hero wrap pricing-hero">
+  <span class="kicker">Plans for your project</span>
+  <h1>Pricing &amp; licensing</h1>
+  <p>
+    Build rich data tables with the MIT-licensed Standard features. Add a renewable Premium
+    subscription when you need card layouts or advanced data workflows.
+  </p>
+  <nav class="pricing-jumps" aria-label="On this page">
+    <a routerLink="/pricing" fragment="plans">Choose a plan</a>
+    <a routerLink="/pricing" fragment="comparison">Compare features</a>
+    <a routerLink="/pricing" fragment="questions">Common questions</a>
+  </nav>
+</section>
+
+<section id="plans" class="plans wrap pricing-width" aria-label="Plans">
+  <article class="plan">
+    <header>
+      <span class="plan-label">Open-source foundation</span>
+      <h2>Standard</h2>
+      <p class="price">Free <span>MIT license</span></p>
+      <p class="plan-description">
+        The essentials for production tables, with no license key required.
+      </p>
+    </header>
+    <a class="button" routerLink="/docs" fragment="install">Get started →</a>
+    <ul>
+      <li>Sorting, search, filters, and grouping</li>
+      <li>Selection, standard editing, and summaries</li>
+      <li>Responsive tables and virtualized rows</li>
+      <li>Themes, localization, and standard export</li>
+      <li>Standard server-side data integration</li>
+      <li>Angular, React, Vue, and JavaScript integration</li>
+    </ul>
+    <a class="text-link" routerLink="/examples/portfolio">Explore Standard examples →</a>
+  </article>
+
+  <article class="plan premium-plan">
+    <header>
+      <span class="plan-label">Advanced capabilities</span>
+      <h2>Premium</h2>
+      <p class="price contact-price">
+        Contact for pricing <span>Monthly or yearly subscription</span>
+      </p>
+      <p class="plan-description">
+        For large datasets, responsive cards, and collaborative data applications.
+      </p>
+    </header>
+    <button
+      type="button"
+      class="button button--primary"
+      aria-haspopup="dialog"
+      (click)="requestForm.open('PRICE_QUOTE')"
+    >
+      Request pricing →
+    </button>
+    <ul>
+      <li>Everything in Standard, plus all 11 Premium capabilities</li>
+      <li>Card layouts and advanced remote row model</li>
+      <li>Worker processing and indexed search</li>
+      <li>Background exports and live-data workflows</li>
+      <li>Server analytics and spreadsheet formulas</li>
+      <li>Collaboration, governance, and report design</li>
+    </ul>
+    <a class="text-link" routerLink="/premium">Explore all 11 Premium capabilities →</a>
+    <p class="fine-print">
+      Your quote confirms the deployment origins, billing cycle, subscription period, and commercial
+      terms. Requesting pricing does not activate Premium.
+    </p>
+  </article>
+</section>
+
+<section class="license-note wrap pricing-width">
+  <div>
+    <h2>Use the same package for both plans.</h2>
+    <p>
+      Standard and Premium APIs live in <code>wts-data-table</code> with normal feature-named
+      imports. An active, verified Premium subscription enables all Premium features defined by the
+      package. Standard code remains MIT-licensed; Premium code requires a separate written
+      commercial subscription agreement. A deployment key alone is not a commercial license grant.
+    </p>
+  </div>
+  <a class="text-link" routerLink="/docs/guides/advanced-features">Read the licensing guide →</a>
+</section>
+
+<section
+  id="evaluation"
+  class="wrap pricing-width pricing-section"
+  aria-labelledby="evaluation-heading"
+>
+  <div class="section-heading">
+    <span class="kicker">Before you subscribe</span>
+    <h2 id="evaluation-heading">Evaluate it in your workflow</h2>
+    <p>Explore the APIs first, then tell us what your application needs.</p>
+  </div>
+  <ol class="evaluation-steps">
+    <li>
+      <span class="step-number" aria-hidden="true">01</span>
+      <h3>Start with Standard</h3>
+      <p>Install the package and explore the interactive examples in your preferred framework.</p>
+      <a class="text-link" routerLink="/docs" fragment="install">Installation guide →</a>
+    </li>
+    <li>
+      <span class="step-number" aria-hidden="true">02</span>
+      <h3>Review Premium</h3>
+      <p>Inspect each capability, its product preview, and the code needed to integrate it.</p>
+      <a class="text-link" routerLink="/premium">Premium demonstrations →</a>
+    </li>
+    <li>
+      <span class="step-number" aria-hidden="true">03</span>
+      <h3>Request access</h3>
+      <p>
+        Share your use case and application origins. Ask about an evaluation and the terms for your
+        deployment.
+      </p>
+      <button
+        type="button"
+        class="text-link"
+        aria-haspopup="dialog"
+        (click)="requestForm.open('NEW_ACCESS')"
+      >
+        Discuss access &amp; evaluation →
+      </button>
+    </li>
+  </ol>
+  <p class="fine-print">
+    Evaluation access is subject to confirmation; submitting a request is not a purchase or a
+    guaranteed trial. Final commercial terms must be approved before sale.
+  </p>
+</section>
+
+<section
+  id="comparison"
+  class="wrap pricing-width pricing-section"
+  aria-labelledby="comparison-heading"
+>
+  <div class="section-heading">
+    <span class="kicker">Feature comparison</span>
+    <h2 id="comparison-heading">Compare the plans</h2>
+    <p>
+      All 11 Premium capability groups are included with an active Premium subscription. The package
+      defines the features; the licensing service verifies your subscription and deployment origins.
+    </p>
+  </div>
+  <div class="comparison-scroll" role="region" aria-label="Plan feature comparison" tabindex="0">
+    <table>
+      <caption>
+        WTS Data Table feature availability
+      </caption>
+      <thead>
+        <tr>
+          <th scope="col">Capability</th>
+          <th scope="col">Standard</th>
+          <th scope="col">Premium subscription</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (capability of capabilities; track capability.name) {
+          <tr [attr.data-tier]="capability.premium ? 'premium' : 'standard'">
+            <th scope="row">
+              @if (capability.premium) {
+                <a routerLink="/premium" [fragment]="capability.fragment">{{ capability.name }}</a>
+              } @else {
+                <span>{{ capability.name }}</span>
+              }
+              <small>{{ capability.description }}</small>
+            </th>
+            <td [class.not-included]="capability.premium">
+              {{ capability.premium ? 'Not included' : 'Included' }}
+            </td>
+            <td>
+              <span [class.licensed]="capability.premium">{{
+                capability.premium ? 'Included with subscription' : 'Included'
+              }}</span>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="renewal" class="renewal wrap pricing-width" aria-labelledby="renewal-heading">
+  <div>
+    <span class="kicker">Already using Premium?</span>
+    <h2 id="renewal-heading">Keep your subscription active.</h2>
+    <p>
+      Premium access ends when the paid subscription period expires. Request renewal before that
+      date to avoid interruption. Standard features remain available without a key.
+    </p>
+  </div>
+  <button type="button" class="button" aria-haspopup="dialog" (click)="requestForm.open('RENEWAL')">
+    Request renewal →
+  </button>
+</section>
+
+<section
+  id="questions"
+  class="wrap pricing-width pricing-section faq"
+  aria-labelledby="questions-heading"
+>
+  <div class="section-heading">
+    <span class="kicker">Good to know</span>
+    <h2 id="questions-heading">Frequently asked questions</h2>
+  </div>
+  <details>
+    <summary>Can I use Standard in a commercial application?</summary>
+    <p>
+      Yes. Standard code is MIT-licensed and can be used in commercial applications subject to its
+      license terms. It does not require a Premium subscription or license key.
+    </p>
+  </details>
+  <details>
+    <summary>How do I get a Premium license key?</summary>
+    <p>
+      Submit a pricing or access request with your email, use case, and deployment origins. We will
+      respond by email to confirm scope and terms before a key is issued. Do not include passwords
+      or existing license keys in your request.
+    </p>
+  </details>
+  <details>
+    <summary>Does Premium continue working after my subscription expires?</summary>
+    <p>
+      No. This is a renewable subscription, not a perpetual Premium license. Premium access stops at
+      subscription expiry or when its verified short-lived access lease expires. Renew the
+      subscription, refresh the license session, and recreate disposed Premium controllers. Standard
+      features are unaffected.
+    </p>
+    <a class="text-link" routerLink="/docs/guides/advanced-features"
+      >Integration and renewal lifecycle →</a
+    >
+  </details>
+  <details>
+    <summary>Do I need a new license for each package version?</summary>
+    <p>
+      No. Premium access is subscription-based, not tied to a package release. You need an active
+      monthly or yearly subscription for the registered application origin, not a new license
+      whenever the package is updated. Upgrading does not extend the paid subscription period.
+    </p>
+  </details>
+  <details>
+    <summary>Does a license key work on any domain or offline?</summary>
+    <p>
+      No. Premium verification checks the package, registered application origin, subscription
+      period, and package-wide Premium access. A fresh session requires online verification; a
+      cached short-lived lease does not grant permanent offline access. Tell us every production,
+      staging, and local-development origin you need.
+    </p>
+  </details>
+  <details>
+    <summary>Is a hosted data backend included?</summary>
+    <p>
+      No. The package provides UI components and integration APIs. Your application owns its data
+      services, hosting, authentication, authorization, and infrastructure costs. A package license
+      key does not replace your application's user permissions.
+    </p>
+  </details>
+  <details>
+    <summary>What are the prices, renewal terms, and support commitments?</summary>
+    <p>
+      Contact us for a quote and choose monthly or yearly billing. Premium access follows the paid
+      subscription period, rather than a one-time purchase of a package version. Availability,
+      included capabilities, deployment scope, renewal pricing, support, and redistribution rights
+      must be confirmed in the agreed terms. Sending a request does not create a subscription or
+      authorize a payment.
+    </p>
+  </details>
+  <details>
+    <summary>What happens to previously published MIT releases?</summary>
+    <p>
+      Previously published MIT releases retain their original terms. The Standard/Premium
+      distinction and subscription requirements described here apply to the corresponding licensed
+      release; they do not retroactively change earlier licenses.
+    </p>
+  </details>
+</section>
+<app-license-request-form #requestForm />

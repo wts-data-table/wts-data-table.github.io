@@ -49,23 +49,65 @@ the root URL `wts-data-table.github.io`, the GitHub repository must be named
 `wts-data-table.github.io` under the `wts-data-table` account or organization,
 and Pages must use **GitHub Actions** as its source.
 
-## Card-view licensing (1.1.0)
+## Renewable demo subscription — 1.1.1
 
-Card view requires a verified entitlement from library version 1.1.0. The
-portal uses a public signed key restricted to `https://wts-data-table.github.io`;
-local development uses a separate loopback-only key. Both demo keys expire on
-September 11, 2027 UTC. Only signed tokens are included in
-`src/app/card-view-demo-license.ts`; the signing private key must never be copied
-into this repository or uploaded to GitHub Pages.
+The portal pins the published `wts-data-table@1.1.1` subscription-only build.
+The dependency, lockfile, installed API, and site metadata are checked before
+deployment. Local development tarballs must not replace the registry artifact.
 
-The portal pins `wts-data-table@1.1.0` from npm. Run `npm ci` to reproduce the
-deployed dependency tree. `npm run build:pages` verifies the installed entitlement
-API and issue-tracker metadata before building. Push tested updates to `main`
-to deploy through the existing GitHub Actions workflow.
+Configure a browser-visible deployment key in `public/license-config.json`:
+`{"deployments":{"https://wts-data-table.github.io":"DEPLOYMENT_KEY"}}`.
+Local preview needs a separately registered local origin/key. Never put an
+admin/billing credential here. No signed-token fallback or hostname bypass exists.
+An empty configuration keeps standard tables available but disables cards.
 
-Migration notice: existing card-view callers must pass a verified `license`
-and the deployment `origin` when upgrading to 1.1.0. Standard tables need no key;
-existing published 1.0.x versions are unchanged.
+CI can override the approved public demo key with `WTS_DATA_TABLE_DEMO_KEY`.
+An unset or empty variable retains the official-origin configuration in the
+repository. The configuration step includes that public deployment key in the
+static artifact. This value is visible to visitors by design, and must never be
+an admin/billing credential. Production build refuses to proceed without a key.
+The verification service controls subscription expiry, renewal, revocation and
+package-wide Premium authorization; the browser configuration cannot grant access.
+The package defines all Premium features. Backend `features` metadata is not a
+per-feature allowlist and may be empty.
+Premium access is time-based, not version-based. The SDK ignores response
+version metadata for entitlement, while still rejecting explicit server denials.
+After npm publication and catalog synchronization on 2026-09-18, live `1.1.1`
+activation and automatic lease refresh returned `ACTIVE`, granting all 11
+package-defined Premium groups. The earlier `UNKNOWN_VERSION` response is
+resolved. Keep the licensing portal's npm catalog synchronized after releases;
+catalog registration is not a version-based subscription entitlement.
+
+## Pricing and Premium requests
+
+The `/pricing` page follows the WTS Calendar inquiry flow: Standard/Premium plan
+cards, feature comparison, evaluation guidance, renewal information, and FAQs.
+Pricing and advanced-example CTAs share `LicenseRequestForm`.
+
+The form sends JSON to the existing service at
+`https://package-portal.dedicateddevelopers.us/api/public/premium-requests`:
+`npmName: "wts-data-table"`, `requestType: "PRICE_QUOTE" | "NEW_ACCESS" | "RENEWAL"`,
+`period: "ONE_MONTH" | "ONE_YEAR"`, plus `name`, `email`, `company`, `website`, and `message`.
+The Billing cycle selector defaults to Monthly (`ONE_MONTH`) and also offers
+Yearly (`ONE_YEAR`). It requests the selected cycle; it does not create invoices
+or charge the customer. Invoice scheduling belongs to the billing service.
+Website origins are optional at inquiry time. No license key or admin credential
+is requested, and no personal details are stored in browser storage. The service
+must validate requests and provide its own abuse protection.
+
+This is an inquiry, not checkout or automatic activation. Prices, included
+features, registered origins, and final commercial terms require confirmation.
+Data Table Premium requires renewal; the page does not inherit Calendar's
+perpetual-access wording.
+
+Form tests mock the service: they cover validation, payloads, success, failure,
+duplicate prevention, timeout, cancellation, and late responses. They do not
+create production inquiries or verify email delivery. A separate owner-authorized
+live QA request on 2026-09-18 confirmed that `ONE_MONTH` is accepted for
+`wts-data-table` and appears as `1 month` in the admin portal. It used a disposable
+QA member and a $0 localhost license, which was left revoked after testing.
+`ONE_YEAR`, email delivery, invoices and recurring charges remain unverified live
+for this package. Those checks are not established by the mocked form tests.
 
 ## Developer guides
 
@@ -2053,4 +2095,9 @@ npm run check
 
 ## License
 
-[MIT](./LICENSE)
+This example application's source remains [MIT](./LICENSE).
+For `wts-data-table@1.1.1`, Standard code is MIT-licensed and Premium code requires
+a separate written commercial subscription agreement. See the package's
+`LICENSE`, `LICENSE-COMMERCIAL.md`, and `license-scope.json`, and the
+[pricing and licensing guide](https://wts-data-table.github.io/pricing).
+Previously published MIT copies retain their original permissions.

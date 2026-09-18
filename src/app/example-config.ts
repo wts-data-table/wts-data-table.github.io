@@ -123,9 +123,9 @@ await table.ready();
 function destroy() { table.destroy(); }`;
   }
 
-  const cardImport = `import { createDataTableCardView, type DataTableCardViewController } from 'wts-data-table/card-view';\nimport { verifyDataTableLicense } from 'wts-data-table/license';\n\n// Replace with your signed key containing the card-view entitlement.\nconst entitlementToken = 'YOUR_SIGNED_CARD_VIEW_KEY';`;
+  const cardImport = `import { createDataTableCardView, type DataTableCardViewController } from 'wts-data-table/card-view';\nimport { connectDataTableLicense, type DataTableLicenseSession } from 'wts-data-table/license';\n\n// Replace with your deployment key registered for this origin and card-view.\nconst deploymentKey = 'YOUR_DEPLOYMENT_KEY';`;
   const cardOptions = `license, origin: window.location.origin,\n      table, mode: '${runtime.viewMode}', breakpoint: 720, minCardWidth: '17rem',\n      selection: ${runtime.selection}, showToggle: false`;
-  const selectorNote = `// Wire your Table / Cards / Auto buttons to cards.setMode(mode).\n// This changes the layout without resetting table state.`;
+  const selectorNote = `// Wire your Table / Cards / Auto buttons to cards.setMode(mode).\n// This changes the layout without resetting table state.\n// On expiry, disable card controls. After renewal: await license.refresh(),\n// then recreate disposed cards. Save drafts in application-owned state.`;
 
   if (framework === "Angular") {
     return `import { Component } from '@angular/core';
@@ -156,13 +156,18 @@ ${options}
   };
 
   private cards?: DataTableCardViewController<Project>;
+  private session?: DataTableLicenseSession;
   private revision = 0;
   async onReady(table: DataTable<Project>) {
     this.destroyCards();
     const revision = this.revision;
     try {
-      const license = await verifyDataTableLicense(entitlementToken);
-      if (revision !== this.revision) return; // The table was replaced or destroyed.
+      const license = await connectDataTableLicense({ licenseKey: deploymentKey });
+      if (revision !== this.revision) { license.destroy(); return; }
+      this.session = license;
+      license.subscribe(status => {
+        if (!status.features.includes('card-view')) { this.cards?.destroy(); this.cards = undefined; }
+      }); // The table was replaced or destroyed.
       this.cards = createDataTableCardView({
         ${cardOptions}
       });
@@ -177,6 +182,8 @@ ${options}
     this.revision++;
     this.cards?.destroy();
     this.cards = undefined;
+    this.session?.destroy();
+    this.session = undefined;
   }
 }`;
   }
@@ -190,6 +197,7 @@ import 'wts-data-table/styles.css';
 
 export function ProjectTable() {
   const cards = useRef<DataTableCardViewController<Project> | null>(null);
+  const session = useRef<DataTableLicenseSession | null>(null);
   const revision = useRef(0);
   const options = useMemo<Omit<DataTableOptions<Project>, 'element' | 'data'>>(() => ({
 ${options}
@@ -199,13 +207,19 @@ ${options}
     revision.current++;
     cards.current?.destroy();
     cards.current = null;
+    session.current?.destroy();
+    session.current = null;
   }, []);
   const onReady = useCallback(async (table: DataTable<Project>) => {
     destroyCards();
     const current = revision.current;
     try {
-      const license = await verifyDataTableLicense(entitlementToken);
-      if (current !== revision.current) return;
+      const license = await connectDataTableLicense({ licenseKey: deploymentKey });
+      if (current !== revision.current) { license.destroy(); return; }
+      session.current = license;
+      license.subscribe(status => {
+        if (!status.features.includes('card-view')) { cards.current?.destroy(); cards.current = null; }
+      });
       cards.current = createDataTableCardView({
         ${cardOptions}
       });
@@ -237,18 +251,25 @@ const options: Omit<DataTableOptions<Project>, 'element' | 'data'> = {
 ${options}
 };
 let cards: DataTableCardViewController<Project> | undefined;
+let session: DataTableLicenseSession | undefined;
 let revision = 0;
 function destroyCards() {
   revision++;
   cards?.destroy();
   cards = undefined;
+  session?.destroy();
+  session = undefined;
 }
 async function onReady(table: DataTable<Project>) {
   destroyCards();
   const current = revision;
   try {
-    const license = await verifyDataTableLicense(entitlementToken);
-    if (current !== revision) return;
+    const license = await connectDataTableLicense({ licenseKey: deploymentKey });
+    if (current !== revision) { license.destroy(); return; }
+    session = license;
+    license.subscribe(status => {
+      if (!status.features.includes('card-view')) { cards?.destroy(); cards = undefined; }
+    });
     cards = createDataTableCardView({
       ${cardOptions}
     });
@@ -283,7 +304,7 @@ ${options}
 
 await table.ready();
 // If verification fails, the standard table remains available.
-const license = await verifyDataTableLicense(entitlementToken);
+const license = await connectDataTableLicense({ licenseKey: deploymentKey });
 const cards = createDataTableCardView({
   ${cardOptions}
 });
@@ -293,6 +314,7 @@ ${selectorNote}
 // Call when the page or component is removed.
 function destroy() {
   cards.destroy();
+  license.destroy();
   table.destroy();
 }`;
 }

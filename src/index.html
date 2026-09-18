@@ -2,6 +2,20 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <!-- Google tag (gtag.js): production portal only, never local previews. -->
+    <script id="wts-google-analytics">
+      (function () {
+        if (window.location.origin !== 'https://wts-data-table.github.io') return;
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = function () { window.dataLayer.push(arguments); };
+        window.gtag('js', new Date());
+        window.gtag('config', 'G-9W47VR2YWH');
+        var tag = document.createElement('script');
+        tag.async = true;
+        tag.src = 'https://www.googletagmanager.com/gtag/js?id=G-9W47VR2YWH';
+        document.head.appendChild(tag);
+      })();
+    </script>
     <title>WTS Data Table | Accessible JavaScript Data Grid</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -21,7 +35,7 @@
     <link rel="canonical" href="https://wts-data-table.github.io/" />
     <link rel="help" href="https://github.com/wts-data-table/wts-data-table.github.io/issues" />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"WTS Data Table","softwareVersion":"1.1.0","applicationCategory":"DeveloperApplication","operatingSystem":"Web","url":"https://wts-data-table.github.io/","downloadUrl":"https://www.npmjs.com/package/wts-data-table","license":"https://opensource.org/license/mit","programmingLanguage":"TypeScript","softwareHelp":{"@type":"WebPage","name":"WTS Data Table issue tracker","url":"https://github.com/wts-data-table/wts-data-table.github.io/issues"}}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"WTS Data Table","softwareVersion":"1.1.1","applicationCategory":"DeveloperApplication","operatingSystem":"Web","url":"https://wts-data-table.github.io/","downloadUrl":"https://www.npmjs.com/package/wts-data-table","license":"https://wts-data-table.github.io/pricing","programmingLanguage":"TypeScript","softwareHelp":{"@type":"WebPage","name":"WTS Data Table issue tracker","url":"https://github.com/wts-data-table/wts-data-table.github.io/issues"}}</script>
   </head>
   <body>
     <app-root></app-root>

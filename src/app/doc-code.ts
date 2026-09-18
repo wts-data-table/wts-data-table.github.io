@@ -37,7 +37,7 @@ import { Component, DestroyRef, computed, effect, inject, input, signal } from '
       .code-frame {
         overflow: hidden;
         border: 1px solid #2b374c;
-        border-radius: 12px;
+        border-radius: 6px;
         background: #111b2d;
         color: #dce6f5;
       }

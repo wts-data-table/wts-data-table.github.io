@@ -26,6 +26,8 @@ jobs:
       - run: npm ci
       - run: npm test -- --watch=false
       - run: npm run build:pages
+        env:
+          WTS_DATA_TABLE_DEMO_KEY: ${{ vars.WTS_DATA_TABLE_DEMO_KEY }}
       - uses: actions/configure-pages@v5
         if: github.event_name != 'pull_request'
       - uses: actions/upload-pages-artifact@v3

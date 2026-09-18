@@ -3,9 +3,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { TABLE_DEMOS } from './site-data';
 import { TableDemo } from './table-demo';
 import { CARD_VIEW_LICENSE_LOADER } from './card-view-demo-license';
-import { verifyDataTableLicense } from 'wts-data-table/license';
-const TEST_TOKEN = 'eyJhbGciOiJFZERTQSIsImtpZCI6Ind0cy1kYXRhLXRhYmxlLXByb2R1Y3Rpb24tMDIiLCJ0eXAiOiJXVFMtTElDRU5TRSJ9.eyJpc3MiOiJ3dHMtZGF0YS10YWJsZS1saWNlbnNlIiwiYXVkIjoid3RzLWRhdGEtdGFibGUtdjEiLCJzdWIiOiJ3dHMtZGF0YS10YWJsZS1jYXJkLXZpZXctdGVzdHMiLCJqdGkiOiJjYXJkLXZpZXctdGVzdC1maXh0dXJlIiwiaWF0IjoxNzg5MDg0ODAwLCJleHAiOjQxMDI0NDQ4MDAsInRpZXIiOiJwcmVtaXVtIiwiZmVhdHVyZXMiOlsiY2FyZC12aWV3Il0sIm9yaWdpbnMiOlsiaHR0cDovL2xvY2FsaG9zdDozMDAwIiwiaHR0cDovL2xvY2FsaG9zdCIsImh0dHBzOi8vZGF0YS10YWJsZS50ZXN0Il19.dFmLYWSViWZUx5rUbnHv3eme-oFdegWGUCBu6glVeteptcka2-4v6_N69_-12uZLf2V_PY_IOaO1CvH4QaPDAg';
-const licenseProvider = { provide: CARD_VIEW_LICENSE_LOADER, useValue: () => verifyDataTableLicense(TEST_TOKEN) };
+import { testCardLicense, testSubscription } from './license-test-fixture';
+const licenseProvider = { provide: CARD_VIEW_LICENSE_LOADER, useValue: () => testCardLicense() };
 import { createDemoRuntimeOptions } from './example-config';
 
 describe('TableDemo', () => {
@@ -129,8 +128,42 @@ describe('TableDemo', () => {
     fixture.destroy();
   });
 
+  it('restores cards after renewal without replacing the standard table or selection', async () => {
+    let denied = false;
+    const session = await testCardLicense(async () => Response.json(
+      denied ? { valid: false, status: 'SUBSCRIPTION_EXPIRED' } : testSubscription(),
+      { status: denied ? 403 : 200 },
+    ));
+    await TestBed.configureTestingModule({
+      imports: [TableDemo], providers: [{ provide: CARD_VIEW_LICENSE_LOADER, useValue: () => Promise.resolve(session) }],
+    }).compileComponents();
+    const fixture = TestBed.createComponent(TableDemo);
+    fixture.componentRef.setInput('demo', TABLE_DEMOS.find(demo => demo.id === 'card-view'));
+    fixture.componentRef.setInput('runtimeOptions', createDemoRuntimeOptions('card-view'));
+    fixture.detectChanges();
+    await fixture.whenStable();
+    const element = fixture.nativeElement as HTMLElement;
+    const root = element.querySelector('.wts-data-table');
+    element.querySelector<HTMLInputElement>('.wts-data-table-card-view__selection')!.click();
+    denied = true;
+    await expect(session.refresh()).rejects.toMatchObject({ reason: 'expired' });
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(element.querySelector('.wts-data-table-card-view')).toBeNull();
+    expect(element.querySelector('.wts-data-table')).toBe(root);
+    expect(element.textContent).toContain('Standard table view remains available');
+    denied = false;
+    [...element.querySelectorAll<HTMLButtonElement>('button')].find(button => button.textContent?.includes('Retry license verification'))!.click();
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(element.querySelector('.wts-data-table')).toBe(root);
+    expect(element.querySelector<HTMLInputElement>('.wts-data-table-card-view__selection')?.checked).toBe(true);
+    fixture.destroy();
+    expect(session.status.state).toBe('destroyed');
+  });
+
   it('does not attach a card controller if destroyed during verification', async () => {
-    const license = await verifyDataTableLicense(TEST_TOKEN);
+    const license = await testCardLicense();
     let resolve!: (value: typeof license) => void;
     const pending = new Promise<typeof license>(done => { resolve = done; });
     await TestBed.configureTestingModule({

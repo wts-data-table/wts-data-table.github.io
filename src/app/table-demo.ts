@@ -23,7 +23,7 @@ import {
   type DataTableCardViewController,
   type DataTableCardViewMode,
 } from "wts-data-table/card-view";
-import { DataTableLicenseError, type DataTableLicenseGrant } from 'wts-data-table/license';
+import { DataTableLicenseError, type DataTableLicenseSession } from 'wts-data-table/license';
 import { CARD_VIEW_LICENSE_LOADER } from './card-view-demo-license';
 import type { DemoRuntimeOptions } from "./example-config";
 import type { TableDemoDefinition } from "./site-data";
@@ -209,7 +209,11 @@ const PROJECTS: readonly Project[] = PROJECT_SEEDS.map((seed, index) => {
       }
     </div>
     <p class="view-help"><strong>Card view · Licensed.</strong> Cards share the same search, page, and row selection. Use Table for column controls and inline editing. Auto switches at a container width of 720px.</p>
-    @if (licenseError()) { <p class="view-help" role="status">{{ licenseError() }} Standard table view remains available.</p> }
+    @if (licenseWarning()) { <p class="view-help" role="status">{{ licenseWarning() }}</p> }
+    @if (licenseError()) {
+      <p class="view-help" role="status">{{ licenseError() }} Standard table view remains available.</p>
+      <button type="button" class="button license-retry" [disabled]="licenseBusy()" (click)="retryLicense()">Retry license verification</button>
+    }
     <div class="demo-readout" aria-live="polite">
       <span
         ><b>{{ selectedCount() }}</b> selected</span
@@ -229,6 +233,8 @@ const PROJECTS: readonly Project[] = PROJECT_SEEDS.map((seed, index) => {
       .view-controls span { margin-right: .4rem; font-size: .8rem; font-weight: 650; }
       .view-controls button { padding: .55rem .9rem; border: 1px solid var(--line-dark); border-radius: 7px; background: white; color: var(--ink); cursor: pointer; }
       .view-controls button[aria-pressed="true"] { background: var(--blue); border-color: var(--blue); color: white; }
+      .view-controls button:disabled { opacity: .5; cursor: not-allowed; }
+      .license-retry { min-height: 34px; margin-bottom: 1rem; padding: .4rem .7rem; font-size: .75rem; }
       .view-controls button:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
       .view-help { margin: .6rem 0 1rem; color: var(--muted); font-size: .75rem; line-height: 1.6; }
       .demo-readout {
@@ -239,7 +245,7 @@ const PROJECTS: readonly Project[] = PROJECT_SEEDS.map((seed, index) => {
         padding: 0.65rem 0.9rem;
         border: 1px solid var(--line);
         border-bottom: 0;
-        border-radius: 12px 12px 0 0;
+        border-radius: 6px 6px 0 0;
         background: #f5f7fa;
         color: var(--muted);
         font-size: 0.72rem;
@@ -261,9 +267,8 @@ const PROJECTS: readonly Project[] = PROJECT_SEEDS.map((seed, index) => {
         padding: 14px;
         overflow: hidden;
         border: 1px solid var(--line);
-        border-radius: 0 0 12px 12px;
+        border-radius: 0 0 6px 6px;
         background: white;
-        box-shadow: 0 28px 70px rgba(24, 35, 52, 0.09);
       }
       @media (max-width: 640px) {
         .demo-readout {
@@ -293,8 +298,12 @@ export class TableDemo {
   private readonly mounted = signal(false);
   private readonly pendingTasks = inject(PendingTasks);
   private readonly loadCardLicense = inject(CARD_VIEW_LICENSE_LOADER);
-  protected readonly cardLicense = signal<DataTableLicenseGrant | undefined>(undefined);
+  protected readonly cardLicense = signal<DataTableLicenseSession | undefined>(undefined);
   protected readonly licenseError = signal('');
+  protected readonly licenseWarning = signal('');
+  protected readonly licenseBusy = signal(false);
+  private licenseSession?: DataTableLicenseSession;
+  private stopLicenseStatus?: () => void;
   private table?: DataTable<Project>;
   private cards?: DataTableCardViewController<Project>;
   private mountedConfiguration?: string;
@@ -304,14 +313,7 @@ export class TableDemo {
   constructor() {
     afterNextRender(() => {
       this.mounted.set(true);
-      void this.pendingTasks.run(async () => {
-        try {
-          const license = await this.loadCardLicense(window.location.origin);
-          if (!this.destroyRef.destroyed) this.cardLicense.set(license);
-        } catch {
-          if (!this.destroyRef.destroyed) this.licenseError.set('Card view requires a valid signed license for this origin.');
-        }
-      });
+      this.retryLicense();
     });
     effect(() => {
       const demo = this.demo();
@@ -322,6 +324,46 @@ export class TableDemo {
     this.destroyRef.onDestroy(() => {
       this.cards?.destroy();
       this.table?.destroy();
+      this.stopLicenseStatus?.();
+      this.licenseSession?.destroy();
+    });
+  }
+
+  protected retryLicense(): void {
+    if (this.licenseBusy() || this.destroyRef.destroyed) return;
+    this.licenseBusy.set(true);
+    void this.pendingTasks.run(async () => {
+      try {
+        if (this.licenseSession) await this.licenseSession.refresh();
+        else {
+          const license = await this.loadCardLicense(window.location.origin);
+          if (this.destroyRef.destroyed) { license.destroy(); return; }
+          this.licenseSession = license;
+          this.stopLicenseStatus = license.subscribe(status => {
+            if (this.destroyRef.destroyed) return;
+            if (status.features.includes('card-view')) {
+              this.cardLicense.set(license);
+              this.licenseError.set('');
+              this.licenseWarning.set(status.state === 'offline'
+                ? 'Verification is temporarily unavailable. Cards remain enabled only for the current short lease.'
+                : status.renewalDue ? 'The demo subscription is nearing expiry and needs renewal.' : '');
+            } else {
+              this.cards?.destroy();
+              this.cards = undefined;
+              this.cardLicense.set(undefined);
+              this.licenseWarning.set('');
+              this.licenseError.set('Card view is unavailable. Renew the subscription or retry verification.');
+            }
+          });
+          this.cardLicense.set(license);
+          this.licenseError.set('');
+          this.licenseWarning.set(license.status.renewalDue ? 'The demo subscription is nearing expiry and needs renewal.' : '');
+        }
+      } catch {
+        if (!this.destroyRef.destroyed) this.licenseError.set('Card view requires an active subscription for this origin. Please retry after configuration or renewal.');
+      } finally {
+        if (!this.destroyRef.destroyed) this.licenseBusy.set(false);
+      }
     });
   }
 
@@ -330,10 +372,11 @@ export class TableDemo {
     this.lastAction.set("View reset");
   }
 
-  private mount(mode: string, runtime: DemoRuntimeOptions, license?: DataTableLicenseGrant): void {
+  private mount(mode: string, runtime: DemoRuntimeOptions, license?: DataTableLicenseSession): void {
     const { viewMode, ...tableOptions } = runtime;
     const configuration = JSON.stringify({ mode, ...tableOptions });
     if (this.table && this.mountedConfiguration === configuration) {
+      if (!license) { this.cards?.destroy(); this.cards = undefined; return; }
       if (!this.cards && license) this.attachCards(runtime, license);
       else if (this.cards && this.cards.getMode() !== viewMode) this.cards.setMode(viewMode);
       return;
@@ -420,7 +463,7 @@ export class TableDemo {
     if (license) this.attachCards(runtime, license);
   }
 
-  private attachCards(runtime: DemoRuntimeOptions, license: DataTableLicenseGrant): void {
+  private attachCards(runtime: DemoRuntimeOptions, license: DataTableLicenseSession): void {
     if (!this.table) return;
     try {
       this.cards = createDataTableCardView({
@@ -436,7 +479,7 @@ export class TableDemo {
     } catch (error) {
       if (!(error instanceof DataTableLicenseError)) throw error;
       this.cardLicense.set(undefined);
-      this.licenseError.set('Card view requires a valid signed license for this origin.');
+      this.licenseError.set('Card view requires an active subscription for this origin.');
     }
   }
 

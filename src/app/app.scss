@@ -23,13 +23,12 @@
   top: 0;
   z-index: 30;
   border-bottom: 1px solid var(--line);
-  background: color-mix(in srgb, var(--paper) 92%, transparent);
-  backdrop-filter: blur(14px);
+  background: white;
 }
 .site-header__inner {
   display: flex;
-  width: min(1380px, calc(100% - 48px));
-  min-height: 72px;
+  width: min(1320px, calc(100% - 64px));
+  min-height: 64px;
   margin: auto;
   align-items: center;
   justify-content: space-between;
@@ -44,7 +43,7 @@
   text-decoration: none;
 }
 .brand strong {
-  font-weight: 800;
+  font-weight: 700;
 }
 .brand__mark {
   display: grid;
@@ -54,22 +53,22 @@
   gap: 2px;
   padding: 5px;
   border-radius: 7px;
-  background: var(--ink);
+  background: var(--blue);
 }
 .brand__mark i {
   border-radius: 1px;
-  background: var(--lime);
+  background: white;
 }
 nav {
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 nav a {
-  padding: 0.45rem 0;
+  padding: 1.4rem 0;
   color: var(--muted);
   font-size: 0.83rem;
-  font-weight: 620;
+  font-weight: 550;
   text-decoration: none;
 }
 nav a:hover,
@@ -102,11 +101,11 @@ nav a.active {
 }
 .site-footer {
   display: grid;
-  width: min(1380px, calc(100% - 48px));
-  margin: 7rem auto 0;
+  width: min(1320px, calc(100% - 64px));
+  margin: 4rem auto 0;
   grid-template-columns: 1fr 1fr;
   gap: 4rem;
-  padding: 4rem 0 1.7rem;
+  padding: 2.5rem 0 1.7rem;
   border-top: 1px solid var(--line-dark);
 }
 .site-footer__lead p {
@@ -128,8 +127,7 @@ nav a.active {
 .site-footer__links strong {
   margin-bottom: 0.35rem;
   font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0;
 }
 .site-footer__links a {
   color: var(--muted);
@@ -146,10 +144,9 @@ nav a.active {
   padding-top: 1.5rem;
   border-top: 1px solid var(--line);
   color: var(--muted);
-  font: 0.68rem var(--mono);
-  text-transform: uppercase;
+  font: 0.75rem var(--sans);
 }
-@media (max-width: 760px) {
+@media (max-width: 920px) {
   .site-header__inner,
   .site-footer {
     width: min(100% - 32px, 1380px);
@@ -159,7 +156,7 @@ nav a.active {
   }
   nav {
     position: absolute;
-    top: 71px;
+    top: 63px;
     left: 0;
     right: 0;
     display: none;

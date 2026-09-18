@@ -20,7 +20,7 @@ describe("framework example snippets", () => {
       expect(code).toContain("mode: 'cards'");
       expect(code).toContain("breakpoint: 720");
       expect(code).toContain("showToggle: false");
-      expect(code).toContain('await verifyDataTableLicense(entitlementToken)');
+      expect(code).toContain('await connectDataTableLicense({ licenseKey: deploymentKey })');
       expect(code).toContain('license, origin: window.location.origin');
       expect(code).toMatch(/cards(?:\.current)?\??\.destroy\(\)/);
       expect(createFrameworkSnippet(framework, demo, {
@@ -48,7 +48,7 @@ describe("framework example snippets", () => {
   it("does not require a license for standard table-only examples", () => {
     for (const framework of FRAMEWORKS) {
       const code = createFrameworkSnippet(framework, grouping, createDemoRuntimeOptions("grouping"));
-      expect(code).not.toContain('verifyDataTableLicense');
+      expect(code).not.toContain('connectDataTableLicense');
       expect(code).not.toContain('createDataTableCardView');
     }
   });

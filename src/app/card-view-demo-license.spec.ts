@@ -1,20 +1,30 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { loadCardViewDemoLicense } from './card-view-demo-license';
+import { testSubscription } from './license-test-fixture';
+afterEach(() => vi.unstubAllGlobals());
 
-describe('official card-view demo license', () => {
-  it('uses a card-only key restricted to the exact official HTTPS origin', async () => {
-    const license = await loadCardViewDemoLicense('https://wts-data-table.github.io');
-    expect(license.claims.features).toEqual(['card-view']);
-    expect(license.claims.origins).toEqual(['https://wts-data-table.github.io']);
+describe('renewable card-view demo license', () => {
+  it('rejects unconfigured origins before a service request', async () => {
+    const fetcher = vi.fn();
+    vi.stubGlobal('fetch', fetcher);
+    await expect(loadCardViewDemoLicense('https://customer.example')).rejects.toThrow('this origin');
+    expect(fetcher).not.toHaveBeenCalled();
   });
-  it('uses a separate signed key for local preview, with no remote origins', async () => {
-    const license = await loadCardViewDemoLicense('http://127.0.0.1:4300');
-    expect(license.claims.sub).toBe('wts-data-table-local-preview');
-    expect(license.claims.origins?.every(origin => /^http:\/\/(localhost|127\.0\.0\.1):/.test(origin))).toBe(true);
+  it('does not unlock premium when deployment configuration is empty', async () => {
+    vi.stubGlobal('fetch', vi.fn(async () => Response.json({ deployments: {} })));
+    await expect(loadCardViewDemoLicense('https://wts-data-table.github.io')).rejects.toThrow('not been configured');
   });
-  it('does not silently enable copied demos on other domains', async () => {
-    for (const origin of ['https://customer.example', 'http://wts-data-table.github.io', 'https://sub.wts-data-table.github.io']) {
-      await expect(loadCardViewDemoLicense(origin)).rejects.toThrow('valid for this origin');
-    }
+  it('connects to the service using the configured key and has no forever-cached token', async () => {
+    const actual = 'http://localhost:4300';
+    vi.stubGlobal('document', { location: new URL(actual), addEventListener() {}, removeEventListener() {} });
+    const fetcher = vi.fn(async (url: string | URL | Request) => String(url) === '/license-config.json'
+      ? Response.json({ deployments: { [actual]: 'test-deployment-key' } })
+      : Response.json(testSubscription({ domain: actual })));
+    vi.stubGlobal('fetch', fetcher);
+    const first = await loadCardViewDemoLicense(actual);
+    const second = await loadCardViewDemoLicense(actual);
+    expect(first).not.toBe(second);
+    expect(first.has('card-view')).toBe(true);
+    first.destroy(); second.destroy();
   });
 });

@@ -4,7 +4,7 @@ import { of } from 'rxjs';
 import { describe, expect, it } from 'vitest';
 import { ExamplesPage } from './examples-page';
 import { CARD_VIEW_LICENSE_LOADER } from '../card-view-demo-license';
-import { verifyDataTableLicense } from 'wts-data-table/license';
+import { testCardLicense } from '../license-test-fixture';
 
 describe('Card view example page', () => {
   it('links the named example and updates the preview and framework code from its view buttons', async () => {
@@ -12,7 +12,7 @@ describe('Card view example page', () => {
       imports: [ExamplesPage],
       providers: [
         provideRouter([]),
-        { provide: CARD_VIEW_LICENSE_LOADER, useValue: () => verifyDataTableLicense('eyJhbGciOiJFZERTQSIsImtpZCI6Ind0cy1kYXRhLXRhYmxlLXByb2R1Y3Rpb24tMDIiLCJ0eXAiOiJXVFMtTElDRU5TRSJ9.eyJpc3MiOiJ3dHMtZGF0YS10YWJsZS1saWNlbnNlIiwiYXVkIjoid3RzLWRhdGEtdGFibGUtdjEiLCJzdWIiOiJ3dHMtZGF0YS10YWJsZS1jYXJkLXZpZXctdGVzdHMiLCJqdGkiOiJjYXJkLXZpZXctdGVzdC1maXh0dXJlIiwiaWF0IjoxNzg5MDg0ODAwLCJleHAiOjQxMDI0NDQ4MDAsInRpZXIiOiJwcmVtaXVtIiwiZmVhdHVyZXMiOlsiY2FyZC12aWV3Il0sIm9yaWdpbnMiOlsiaHR0cDovL2xvY2FsaG9zdDozMDAwIiwiaHR0cDovL2xvY2FsaG9zdCIsImh0dHBzOi8vZGF0YS10YWJsZS50ZXN0Il19.dFmLYWSViWZUx5rUbnHv3eme-oFdegWGUCBu6glVeteptcka2-4v6_N69_-12uZLf2V_PY_IOaO1CvH4QaPDAg') },
+        { provide: CARD_VIEW_LICENSE_LOADER, useValue: () => testCardLicense() },
         { provide: ActivatedRoute, useValue: { paramMap: of(convertToParamMap({ id: 'card-view' })) } },
       ],
     }).compileComponents();

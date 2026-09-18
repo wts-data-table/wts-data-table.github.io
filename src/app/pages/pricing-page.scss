@@ -1,0 +1,357 @@
+:host {
+  display: block;
+}
+.pricing-width {
+  max-width: 1120px;
+}
+.pricing-hero {
+  padding-block: 3.5rem 2.25rem;
+  max-width: 1120px;
+}
+.pricing-hero h1 {
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+}
+.pricing-hero > p {
+  max-width: 680px;
+  line-height: 1.75;
+}
+.pricing-jumps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+  margin-top: 1.4rem;
+}
+.pricing-jumps a {
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-decoration: none;
+  border-bottom: 1px solid var(--line-dark);
+  padding-bottom: .35rem;
+}
+:is(#plans, #evaluation, #comparison, #questions, #renewal) {
+  scroll-margin-top: 7rem;
+}
+.plans {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+.plan {
+  padding: 2rem;
+  border: 1px solid var(--line-dark);
+  border-radius: 8px;
+  background: white;
+}
+.plan-label {
+  font: 500 0.75rem var(--sans);
+  color: var(--muted);
+}
+.plan h2 {
+  margin: .7rem 0 1.2rem;
+  font-size: 1.35rem;
+  letter-spacing: -0.04em;
+}
+.price {
+  margin: 0;
+  min-height: 70px;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+.price span {
+  display: block;
+  margin-top: 0.6rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.contact-price {
+  font-size: 2rem;
+}
+.plan-description {
+  color: var(--muted);
+  min-height: 3.3rem;
+  line-height: 1.65;
+  font-size: 0.9rem;
+  margin: 1.2rem 0 1.5rem;
+}
+.plan > .button {
+  width: 100%;
+  justify-content: center;
+}
+.plan ul {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0;
+  display: grid;
+  gap: 0.7rem;
+}
+.plan li {
+  position: relative;
+  padding-left: 1.4rem;
+  font-size: 0.87rem;
+  line-height: 1.5;
+}
+.plan li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--blue);
+}
+.premium-plan {
+  border-color: var(--blue);
+  background: white;
+  border-top: 3px solid var(--blue);
+  padding-top: calc(2rem - 2px);
+}
+.premium-plan .plan-label {
+  color: var(--blue);
+}
+.text-link {
+  color: var(--blue);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  line-height: 1.6;
+}
+.text-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+button.text-link {
+  padding: 0;
+  background: none;
+  border: 0;
+  text-align: left;
+  cursor: pointer;
+}
+.fine-print {
+  color: var(--muted);
+  font-size: 0.77rem;
+  line-height: 1.7;
+}
+.plan .fine-print {
+  margin: 1.25rem 0 0;
+}
+.license-note {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  justify-content: space-between;
+  margin-top: 1.25rem;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--line);
+}
+.license-note h2 {
+  margin: 0;
+  font-size: 1rem;
+}
+.license-note p {
+  max-width: 720px;
+  margin: 0.5rem 0 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.7;
+}
+.license-note > a {
+  flex: 0 0 155px;
+}
+code {
+  font-family: var(--mono);
+  font-size: 0.9em;
+  overflow-wrap: anywhere;
+}
+.pricing-section {
+  margin-top: 3.5rem;
+}
+.section-heading {
+  display: block;
+  margin-bottom: 1.75rem;
+}
+.section-heading h2,
+.renewal h2 {
+  font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+  line-height: 1.25;
+  letter-spacing: -0.025em;
+  margin: 0.7rem 0;
+}
+.section-heading p {
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 760px;
+  font-size: 0.9rem;
+}
+.evaluation-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem;
+  gap: 1.75rem;
+}
+.evaluation-steps li {
+  border-top: 1px solid var(--line-dark);
+  padding: 1.25rem 0;
+}
+.step-number {
+  color: var(--blue);
+  font: 0.8rem var(--mono);
+}
+.evaluation-steps h3 {
+  margin: 1rem 0 0.7rem;
+  font-size: 1rem;
+}
+.evaluation-steps p {
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.7;
+}
+.comparison-scroll {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  overflow-x: auto;
+  background: white;
+}
+.comparison-scroll:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 3px;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 650px;
+  text-align: left;
+  font-size: 0.85rem;
+}
+caption {
+  text-align: left;
+  padding: 1rem 1.25rem;
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+thead {
+  background: var(--surface);
+}
+th,
+td {
+  padding: .85rem 1.25rem;
+  border-top: 1px solid var(--line);
+  vertical-align: middle;
+}
+thead th {
+  font-size: 0.75rem;
+}
+tbody th {
+  width: 55%;
+  font-weight: 600;
+}
+th small {
+  display: block;
+  max-width: 450px;
+  margin-top: 0.4rem;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  font-weight: 400;
+  color: var(--muted);
+}
+th a {
+  color: var(--ink);
+  text-underline-offset: 3px;
+}
+th a:hover {
+  color: var(--blue);
+}
+td {
+  white-space: nowrap;
+}
+.not-included {
+  color: var(--muted);
+}
+.licensed {
+  color: #1c50bd;
+  font-weight: 600;
+  font-size: 0.78rem;
+}
+.renewal {
+  margin-top: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 2rem;
+  background: var(--blue-soft);
+  border: 1px solid #ccdaff;
+  border-radius: 6px;
+}
+.renewal p {
+  margin: 1rem 0 0;
+  max-width: 720px;
+  font-size: 0.9rem;
+  color: var(--muted);
+  line-height: 1.7;
+}
+.renewal button {
+  flex-shrink: 0;
+}
+.faq {
+  margin-bottom: 4rem;
+}
+details {
+  border-top: 1px solid var(--line-dark);
+  padding: 1.3rem 0;
+}
+details:last-child {
+  border-bottom: 1px solid var(--line-dark);
+}
+summary {
+  font-weight: 600;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  cursor: pointer;
+}
+summary:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 5px;
+}
+details p {
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.8;
+  max-width: 900px;
+  margin: 1rem 0 0.25rem;
+}
+@media (max-width: 760px) {
+  .pricing-hero {
+    padding-block: 3rem 2.5rem;
+  }
+  .pricing-hero h1 {
+    font-size: 2rem;
+  }
+  .plans,
+  .evaluation-steps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .plan {
+    padding: 1.5rem;
+  }
+  .plan-description {
+    min-height: 0;
+  }
+  .license-note,
+  .renewal {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.5rem;
+  }
+  .license-note > a {
+    flex: auto;
+  }
+  .pricing-section {
+    margin-top: 3rem;
+  }
+}

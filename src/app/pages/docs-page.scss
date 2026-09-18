@@ -39,8 +39,8 @@
   gap: 0.55rem;
   padding: 1rem 0.9rem;
   border: 1px solid var(--line);
-  border-radius: 10px;
-  background: white;
+  border-radius: 6px;
+  background: var(--surface);
   text-decoration: none;
   transition:
     border-color 0.15s,
@@ -48,7 +48,7 @@
 }
 .learning-paths > a:hover {
   border-color: #9cb8ee;
-  box-shadow: 0 4px 18px #24416f0a;
+  background: var(--blue-soft);
 }
 .path-icon {
   display: grid;
@@ -56,9 +56,9 @@
   width: 30px;
   height: 30px;
   margin-bottom: 0.2rem;
-  border-radius: 7px;
-  background: #edf3ff;
-  color: var(--blue);
+  border-radius: 0;
+  background: transparent;
+  color: var(--muted);
   font: 0.68rem var(--mono);
 }
 .learning-paths strong {

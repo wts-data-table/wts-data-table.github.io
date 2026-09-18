@@ -1,168 +1,124 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { LICENSE_REQUEST } from '../site-data';
+import { LicenseRequestForm } from '../license-request-form';
+
+export const PRICING_CAPABILITIES = [
+  {
+    name: 'Core table & framework integration',
+    description: 'Core and DOM APIs with Angular, React, and Vue integrations.',
+    premium: false,
+  },
+  {
+    name: 'Search, sorting & filtering',
+    description: 'Global search, column filters, advanced filters, and filter panes.',
+    premium: false,
+  },
+  {
+    name: 'Grouping & summaries',
+    description: 'Grouped rows, aggregates, and summary footers.',
+    premium: false,
+  },
+  {
+    name: 'Selection & editing',
+    description: 'Row selection, bulk actions, and standard cell editing.',
+    premium: false,
+  },
+  {
+    name: 'Responsive tables & virtualization',
+    description: 'Responsive row details and virtualized table rendering.',
+    premium: false,
+  },
+  {
+    name: 'Themes & localization',
+    description: 'CSS variables, framework themes, locale packs, and RTL support.',
+    premium: false,
+  },
+  {
+    name: 'Standard export',
+    description:
+      'Client-side table export; background export jobs are a separate licensed capability.',
+    premium: false,
+  },
+  {
+    name: 'Standard server integration',
+    description:
+      'Manual filtering, sorting, pagination, and managed data-source APIs for your backend.',
+    premium: false,
+  },
+  {
+    name: 'Card view',
+    description: 'Table, Cards, and Auto layouts sharing search, selection, and pagination.',
+    premium: true,
+    fragment: 'card-view',
+  },
+  {
+    name: 'Advanced row model',
+    description: 'Remote viewport loading for large datasets with bounded client-side caching.',
+    premium: true,
+    fragment: 'remote-viewport',
+  },
+  {
+    name: 'Worker processing',
+    description: 'Move supported data-processing work off the main UI thread.',
+    premium: true,
+    fragment: 'worker-processing',
+  },
+  {
+    name: 'Indexed search',
+    description: 'Build and query indexes for repeated searches over large local datasets.',
+    premium: true,
+    fragment: 'indexed-search',
+  },
+  {
+    name: 'Background export',
+    description: 'Export-job orchestration with progress, cancellation, and resumable workflows.',
+    premium: true,
+    fragment: 'background-export',
+  },
+  {
+    name: 'Live data',
+    description:
+      'Connect streaming updates to table state with recovery and backpressure controls.',
+    premium: true,
+    fragment: 'live-data',
+  },
+  {
+    name: 'Server analytics',
+    description: 'Server-driven pivoting, aggregation, and drill-through.',
+    premium: true,
+    fragment: 'server-analytics',
+  },
+  {
+    name: 'Spreadsheet formulas',
+    description: 'Formula workbook, recalculation, and a formula editor.',
+    premium: true,
+    fragment: 'formula-editor',
+  },
+  {
+    name: 'Collaborative editing',
+    description: 'Presence, concurrent edits, and conflict-resolution workflows.',
+    premium: true,
+    fragment: 'collaborative-editing',
+  },
+  {
+    name: 'Governed editing',
+    description: 'Policy-driven changes, approvals, and audit workflows.',
+    premium: true,
+    fragment: 'governed-editing',
+  },
+  {
+    name: 'Report designer',
+    description: 'Compose report layouts and connect report generation to your application.',
+    premium: true,
+    fragment: 'report-designer',
+  },
+] as const;
 
 @Component({
-  imports: [RouterLink],
-  template: `
-    <section class="page-hero wrap">
-      <span class="kicker">Licensing</span>
-      <h1>Open foundation.<br /><em>Advanced scale.</em></h1>
-      <p>
-        Use the standard data table under MIT. Add signed entitlement access when your product needs
-        licensed card layouts or advanced data platform capabilities.
-      </p>
-    </section>
-    <section class="plans wrap">
-      <article>
-        <header><span>Standard</span><strong>Free</strong><small>MIT license</small></header>
-        <p>Everything needed for rich local data tables and framework integrations.</p>
-        <ul>
-          <li>Core and DOM renderer</li>
-          <li>Sorting, filtering, grouping</li>
-          <li>Selection and editing</li>
-          <li>Responsive and virtualized rows</li>
-          <li>Angular, React, and Vue wrappers</li>
-        </ul>
-        <a
-          class="button"
-          href="https://www.npmjs.com/package/wts-data-table"
-          target="_blank"
-          rel="noreferrer"
-          >Install from npm ↗</a
-        >
-      </article>
-      <article class="plans__advanced">
-        <header>
-          <span>Licensed advanced</span><strong>Contact</strong><small>Signed entitlement</small>
-        </header>
-        <p>Responsive card layouts and infrastructure for very large, live, governed, and analytical datasets.</p>
-        <ul>
-          <li>Responsive card view · Table / Cards / Auto</li>
-          <li>Dedicated-worker processing</li>
-          <li>Remote viewport and live data</li>
-          <li>Server pivot and drill-through</li>
-          <li>Formula workbook and editor</li>
-          <li>Durable export jobs</li>
-          <li>Collaboration, governance, reports</li>
-        </ul>
-        <div class="plan-actions">
-          <a class="button button--primary" [href]="licenseRequest">Email for a license key →</a
-          ><a class="button" routerLink="/premium">Explore advanced examples →</a>
-        </div>
-      </article>
-    </section>
-    <section class="license-note wrap">
-      <strong>One package. Normal import paths.</strong>
-      <p>
-        Standard and advanced source stays in <code>wts-data-table</code> under the same MIT
-        software license. Advanced factories require a verified signed entitlement; there is no
-        separate “Pro” package and no <code>/premium</code> import namespace.
-      </p>
-    </section>
-  `,
-  styles: [
-    `
-      .plans {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1rem;
-        max-width: 1040px;
-      }
-      .plans article {
-        display: grid;
-        align-content: start;
-        padding: 2rem;
-        border: 1px solid var(--line-dark);
-        border-radius: 14px;
-        background: white;
-      }
-      .plans__advanced {
-        background: var(--ink) !important;
-        color: white;
-      }
-      .plans header {
-        display: grid;
-        gap: 0.25rem;
-        padding-bottom: 1.5rem;
-        border-bottom: 1px solid var(--line);
-      }
-      .plans header span {
-        color: var(--blue);
-        font: 0.68rem var(--mono);
-        text-transform: uppercase;
-      }
-      .plans__advanced header span {
-        color: var(--lime);
-      }
-      .plans header strong {
-        font-size: 3rem;
-        letter-spacing: -0.06em;
-      }
-      .plans header small,
-      .plans article > p {
-        color: var(--muted);
-      }
-      .plans__advanced header small,
-      .plans__advanced > p {
-        color: #aeb8c6;
-      }
-      .plans article > p {
-        min-height: 75px;
-        line-height: 1.65;
-      }
-      .plans ul {
-        display: grid;
-        gap: 0.75rem;
-        margin: 1rem 0 2rem;
-        padding: 0;
-        list-style: none;
-      }
-      .plans li:before {
-        content: '✓';
-        margin-right: 0.65rem;
-        color: #13845c;
-      }
-      .plans .button {
-        justify-content: center;
-        margin-top: auto;
-      }
-      .plan-actions {
-        display: grid;
-        gap: 0.65rem;
-      }
-      .plans__advanced .button--primary {
-        background: var(--lime);
-        color: var(--ink);
-      }
-      .plans__advanced .plan-actions .button:not(.button--primary) {
-        border-color: #49576b;
-        color: white;
-      }
-      .license-note {
-        max-width: 1040px;
-        margin-top: 2rem;
-        padding: 1.3rem;
-        border: 1px solid #c8d8fa;
-        border-radius: 10px;
-        background: var(--blue-soft);
-      }
-      .license-note p {
-        margin: 0.5rem 0 0;
-        color: var(--muted);
-        line-height: 1.7;
-      }
-      @media (max-width: 750px) {
-        .plans {
-          grid-template-columns: 1fr;
-        }
-        .plans article > p {
-          min-height: 0;
-        }
-      }
-    `,
-  ],
+  imports: [RouterLink, LicenseRequestForm],
+  templateUrl: './pricing-page.html',
+  styleUrl: './pricing-page.scss',
 })
 export class PricingPage {
-  protected readonly licenseRequest = LICENSE_REQUEST;
+  protected readonly capabilities = PRICING_CAPABILITIES;
 }

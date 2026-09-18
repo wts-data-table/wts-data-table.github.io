@@ -3,14 +3,14 @@
 }
 .documentation-layout {
   display: grid;
-  grid-template-columns: 235px minmax(0, 820px) 160px;
-  gap: 3rem;
+  grid-template-columns: 215px minmax(0, 1fr) 155px;
+  gap: 2.5rem;
   align-items: start;
   padding-block: 2rem 4rem;
 }
 .docs-sidebar {
   position: sticky;
-  top: 96px;
+  top: 88px;
   min-width: 0;
 }
 .docs-sidebar > summary {
@@ -19,6 +19,7 @@
 .docs-content {
   min-width: 0;
   padding: 0 0.1rem;
+  max-width: 850px;
 }
 .docs-breadcrumb {
   display: flex;
@@ -44,9 +45,9 @@
 .docs-intro h1 {
   margin: 0;
   color: var(--ink);
-  font-size: clamp(2rem, 3.25vw, 3rem);
-  font-weight: 740;
-  letter-spacing: -0.055em;
+  font-size: clamp(1.8rem, 3vw, 2.35rem);
+  font-weight: 650;
+  letter-spacing: -0.035em;
   line-height: 1.12;
 }
 .docs-intro > p {
@@ -84,7 +85,7 @@
 .section-title h2 {
   margin: 0;
   font-size: 1.65rem;
-  font-weight: 720;
+  font-weight: 650;
   letter-spacing: -0.035em;
   line-height: 1.25;
 }
@@ -169,7 +170,8 @@
 .page-outline {
   display: grid;
   position: sticky;
-  top: 106px;
+  top: 90px;
+  min-width: 0;
   gap: 0.15rem;
   padding-top: 0.2rem;
 }
@@ -232,9 +234,9 @@
 }
 @media (min-width: 1550px) {
   .documentation-layout {
-    width: min(1500px, calc(100% - 80px));
-    grid-template-columns: 240px minmax(0, 850px) 180px;
-    gap: 4rem;
+    width: min(1460px, calc(100% - 80px));
+    grid-template-columns: 235px minmax(0, 1fr) 175px;
+    gap: 3rem;
   }
 }
 @media (max-width: 1180px) {
@@ -254,7 +256,7 @@
   }
   .docs-sidebar {
     position: sticky;
-    top: 82px;
+    top: 74px;
     z-index: 15;
     max-height: calc(100dvh - 100px);
     overflow: auto;

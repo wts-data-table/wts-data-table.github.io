@@ -67,8 +67,8 @@ const OPTION_GROUPS = [
   imports: [RouterLink, TableDemo],
   template: `
     <section class="page-hero wrap">
-      <span class="kicker">Interactive gallery</span>
-      <h1>See every behavior<br /><em>in context.</em></h1>
+      <span class="kicker">Playground</span>
+      <h1>Examples</h1>
       <p>
         Focused, runnable examples with live options and framework-specific
         implementation code.
@@ -94,7 +94,8 @@ const OPTION_GROUPS = [
             <span>{{ item }}</span>
           }
         </div>
-        <section class="configurator" aria-labelledby="runtime-options-title">
+        <details class="configurator">
+          <summary>Table options <span>Search, layout, editing, and more</span></summary>
           <div class="configurator-heading">
             <div>
               <span class="kicker">Live configuration</span>
@@ -153,7 +154,7 @@ const OPTION_GROUPS = [
               </fieldset>
             }
           </div>
-        </section>
+        </details>
         <app-table-demo
           [demo]="selected()"
           [runtimeOptions]="runtimeOptions()"
@@ -183,7 +184,7 @@ const OPTION_GROUPS = [
               }
             </div>
           </div>
-          <p>Table-only examples need no key. Card and Auto layouts require your own signed
+          <p>Table-only examples need no key. Card and Auto layouts require your own renewable
             <code>card-view</code> entitlement for your deployment origin.
             <a routerLink="/docs/guides/advanced-features">License setup →</a></p>
           <div class="code-block" role="tabpanel">
@@ -203,8 +204,8 @@ const OPTION_GROUPS = [
     `
       .examples-layout {
         display: grid;
-        grid-template-columns: 240px minmax(0, 1fr);
-        gap: 4rem;
+        grid-template-columns: 195px minmax(0, 1fr);
+        gap: 2rem;
         align-items: start;
       }
       .examples-layout aside {
@@ -247,8 +248,8 @@ const OPTION_GROUPS = [
       }
       .example-content h2 {
         margin: 0.7rem 0;
-        font-size: clamp(2.5rem, 5vw, 4.8rem);
-        letter-spacing: -0.065em;
+        font-size: 1.75rem;
+        letter-spacing: -0.035em;
       }
       .example-content {
         min-width: 0;
@@ -268,18 +269,21 @@ const OPTION_GROUPS = [
       }
       .chips span {
         padding: 0.45rem 0.7rem;
-        border-radius: 99px;
-        background: var(--blue-soft);
-        color: #31579c;
+        border-radius: 4px;
+        background: var(--surface);
+        color: var(--muted);
         font-size: 0.7rem;
       }
       .configurator {
         margin-bottom: 1rem;
         padding: 1.25rem;
         border: 1px solid var(--line);
-        border-radius: 12px;
+        border-radius: 6px;
         background: white;
       }
+      .configurator > summary { cursor: pointer; font-size: .85rem; font-weight: 600; }
+      .configurator > summary span { margin-left: .75rem; color: var(--muted); font-size: .75rem; font-weight: 400; }
+      .configurator[open] > summary { margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--line); }
       .configurator-heading,
       .code-heading {
         display: flex;
@@ -333,12 +337,12 @@ const OPTION_GROUPS = [
       }
       .option-grid label {
         display: flex;
-        min-height: 58px;
+        min-height: 50px;
         align-items: center;
         gap: 0.65rem;
         padding: 0.65rem 0.7rem;
         border: 1px solid var(--line);
-        border-radius: 8px;
+        border-radius: 5px;
         background: #fbfcfe;
         cursor: pointer;
       }

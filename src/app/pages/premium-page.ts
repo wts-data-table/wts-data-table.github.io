@@ -1,6 +1,7 @@
 import { Component, signal } from '@angular/core';
-import { LICENSE_REQUEST, TABLE_DEMOS } from '../site-data';
+import { TABLE_DEMOS } from '../site-data';
 import { RouterLink } from '@angular/router';
+import { LicenseRequestForm } from '../license-request-form';
 import { TableDemo } from '../table-demo';
 import { createDemoRuntimeOptions } from '../example-config';
 import type { DataTableCardViewMode } from 'wts-data-table/card-view';
@@ -10,15 +11,15 @@ const PREMIUM_EXAMPLES = [
     id: 'card-view',
     label: 'Card view',
     title: 'Responsive cards, shared table state',
-    description: 'Switch between Table, Cards, and Auto without resetting search, pagination, or selection. Card view uses a signed entitlement restricted to your deployment origin.',
+    description: 'Switch between Table, Cards, and Auto without resetting search, pagination, or selection. Card view uses a renewable subscription restricted to your deployment origin.',
     image: '',
     alt: '',
     caption: 'Live licensed card-view component · official demo key',
     options: ['mode', 'breakpoint', 'minCardWidth', 'selection', 'renderCard', 'renderField'],
-    code: `import { verifyDataTableLicense } from 'wts-data-table/license';
+    code: `import { connectDataTableLicense } from 'wts-data-table/license';
 import { createDataTableCardView } from 'wts-data-table/card-view';
 
-const license = await verifyDataTableLicense(entitlementToken);
+const license = await connectDataTableLicense({ licenseKey: deploymentKey });
 const cards = createDataTableCardView({
   license, origin: window.location.origin,
   table, mode: 'auto', breakpoint: 720, minCardWidth: '17rem',
@@ -26,7 +27,8 @@ const cards = createDataTableCardView({
 });
 cards.setMode('cards');
 // When the component unmounts:
-cards.destroy();`,
+cards.destroy();
+license.destroy();`,
   },
   {
     id: 'worker-processing',
@@ -38,7 +40,7 @@ cards.destroy();`,
     alt: 'Large WTS Data Table dataset processed through a dedicated worker',
     caption: 'Worker processing · bounded table pages',
     options: ['blockSize', 'maxBlocks', 'maxCacheBytes', 'maxWindowRows'],
-    code: `import { createWorkerProcessingClient } from 'wts-data-table/worker-client';\nimport { createBrowserWorkerTransport } from 'wts-data-table/worker-browser';\nimport { createWorkerTableController } from 'wts-data-table/worker-table';\n\nconst license = await verifyDataTableLicense(entitlementToken);\nconst client = createWorkerProcessingClient({\n  license,\n  createTransport: () => createBrowserWorkerTransport(\n    new URL('./worker.js', import.meta.url), { license }\n  )\n});\nawait client.loadSnapshot(snapshot);\nconst bridge = createWorkerTableController({\n  license, client, blockSize: 100, maxBlocks: 3,\n  ...tableAdapter\n});\nawait bridge.refresh();`,
+    code: `import { createWorkerProcessingClient } from 'wts-data-table/worker-client';\nimport { createBrowserWorkerTransport } from 'wts-data-table/worker-browser';\nimport { createWorkerTableController } from 'wts-data-table/worker-table';\n\nconst license = await connectDataTableLicense({ licenseKey: deploymentKey });\nconst client = createWorkerProcessingClient({\n  license,\n  createTransport: () => createBrowserWorkerTransport(\n    new URL('./worker.js', import.meta.url), { license }\n  )\n});\nawait client.loadSnapshot(snapshot);\nconst bridge = createWorkerTableController({\n  license, client, blockSize: 100, maxBlocks: 3,\n  ...tableAdapter\n});\nawait bridge.refresh();`,
   },
   {
     id: 'remote-viewport',
@@ -151,17 +153,17 @@ cards.destroy();`,
 ] as const;
 
 @Component({
-  imports: [RouterLink, TableDemo],
+  imports: [RouterLink, TableDemo, LicenseRequestForm],
   template: `
     <section class="page-hero wrap">
-      <span class="kicker">Licensed advanced capabilities</span>
-      <h1>Every shipped feature.<br /><em>Demonstrated.</em></h1>
+      <span class="kicker">Included with a Premium subscription</span>
+      <h1>Premium capabilities</h1>
       <p>
         Explore all {{ examples.length }} licensed capability groups. Each section identifies runtime controls, shows
         the product-facing result, and provides the package API used to build it.
       </p>
       <div class="coverage">
-        <strong>{{ examples.length }} / {{ examples.length }}</strong><span>licensed capability groups documented below</span>
+        <strong>{{ examples.length }} capabilities</strong><span>One package. Monthly or yearly access.</span>
       </div>
     </section>
     <nav class="premium-index wrap" aria-label="Advanced capability examples">
@@ -213,15 +215,16 @@ cards.destroy();`,
       <strong>One package, explicit entitlement</strong>
       <p>
         These capabilities are included in <code>wts-data-table</code> under
-        feature-named imports. Card-view licensing starts with version 1.1.0; published 1.0.x remains unchanged. Advanced factories require a verified signed entitlement. The
+        feature-named imports. Card-view licensing starts with version 1.1.0; published 1.0.x remains unchanged. Advanced factories require a verified renewable subscription. The
         controllers are framework-neutral, so Angular, React, Vue, and JavaScript applications use
         the same feature APIs and connect them to their own component lifecycle.
       </p>
       <div class="license-actions">
-        <a class="button button--primary" [href]="licenseRequest"> Email for a license key → </a>
-        <a class="button" href="/pricing">Review licensing →</a>
+        <button type="button" class="button button--primary" aria-haspopup="dialog" (click)="requestForm.open('NEW_ACCESS')">Request Premium access →</button>
+        <a class="button" routerLink="/pricing">Pricing &amp; licensing →</a>
       </div>
     </section>
+    <app-license-request-form #requestForm />
   `,
   styles: [
     `
@@ -233,7 +236,7 @@ cards.destroy();`,
       }
       .coverage strong {
         color: var(--blue);
-        font-size: 1.65rem;
+        font-size: .85rem;
       }
       .coverage span {
         color: var(--muted);
@@ -242,7 +245,7 @@ cards.destroy();`,
         display: grid;
         grid-template-columns: repeat(5, minmax(0, 1fr));
         gap: 0.65rem;
-        margin-bottom: 6rem;
+        margin-bottom: 3rem;
       }
       .premium-index a {
         display: flex;
@@ -274,27 +277,23 @@ cards.destroy();`,
       }
       .premium-list {
         display: grid;
-        gap: 7rem;
+        gap: 3rem;
       }
       .premium-list > article {
         display: grid;
         grid-template-columns: minmax(320px, 0.72fr) minmax(0, 1.28fr);
         min-width: 0;
-        gap: 4rem;
+        gap: 2rem;
+        padding-bottom: 3rem;
+        border-bottom: 1px solid var(--line);
         align-items: center;
         scroll-margin-top: 6rem;
       }
       #card-view { align-items: start; }
-      .premium-list > article:nth-child(even) {
-        grid-template-columns: minmax(0, 1.28fr) minmax(320px, 0.72fr);
-      }
-      .premium-list > article:nth-child(even) .premium-copy {
-        order: 2;
-      }
       .premium-list h2 {
         margin: 0.7rem 0 1rem;
-        font-size: clamp(2.2rem, 4vw, 4rem);
-        letter-spacing: -0.06em;
+        font-size: 1.75rem;
+        letter-spacing: -0.03em;
       }
       .premium-copy > p {
         color: var(--muted);
@@ -308,9 +307,8 @@ cards.destroy();`,
         margin: 0;
         overflow: hidden;
         border: 1px solid var(--line);
-        border-radius: 12px;
+        border-radius: 6px;
         background: white;
-        box-shadow: 0 28px 70px rgba(24, 35, 52, 0.13);
       }
       .premium-list img {
         display: block;
@@ -430,7 +428,6 @@ export class PremiumPage {
   protected setCardView(viewMode: DataTableCardViewMode): void {
     this.cardOptions.update(options => ({ ...options, viewMode }));
   }
-  protected readonly licenseRequest = LICENSE_REQUEST;
   protected readonly copied = signal('');
   protected async copy(code: string, id: string) {
     await navigator.clipboard.writeText(code);

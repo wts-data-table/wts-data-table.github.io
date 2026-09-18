@@ -160,13 +160,19 @@ new DataTable({
     summary: 'Entitlements, feature imports, origins, and security boundaries.',
     intro: 'Advanced code ships inside wts-data-table under normal feature names. There is no separate Pro package and no premium import namespace.',
     sections: [
-      { title: 'Verify before construction', body: 'verifyDataTableLicense accepts a signed entitlement token. Invalid signatures, expiry, origin mismatch, or a missing feature claim fail before the advanced controller is created.' },
-      { title: 'Available entitlements', body: 'Card view, advanced row model, indexed search, background export, worker processing, live data, server analytics, formulas, collaboration, governance, and report design can be licensed independently.' },
+      { title: 'Verify before construction', body: 'connectDataTableLicense verifies a deployment key with the backend and returns a renewable session. Service denial, expiry, origin mismatch, or denied package-wide Premium access fail before the advanced controller is created.' },
+      { title: 'Standard and Premium licensing', body: 'In 1.1.1, Standard code remains MIT-licensed. Premium code requires a separate written commercial subscription agreement; downloading the package or possessing a deployment key does not itself grant commercial permission. Previously published MIT copies retain their original permissions. Review pricing and licensing before deploying Premium in a customer product.' },
+      { title: 'Package-managed Premium features', body: 'An active Premium subscription includes card view, advanced row model, indexed search, background export, worker processing, live data, server analytics, formulas, collaboration, governance, and report design. The package defines these capabilities; backend features metadata does not grant or restrict them.' },
+      { title: 'Subscription-based access, not version coverage', body: 'Premium access follows the paid subscription period, not a package release or maintenance window. The SDK sends its installed version as diagnostic metadata required by the shared service, but does not validate versionAllowed or compare response package versions. The backend must apply subscription policy independently of release registration. An explicit service denial is never bypassed.' },
       { title: 'Card-view migration', body: 'From version 1.1.0, createDataTableCardView and DataTableCardViewController require a verified card-view entitlement. Pass license and origin: window.location.origin. The controller also validates the real host document origin; a copied demo key cannot unlock another site. Standard tables need no key, and published 1.0.x behavior is unchanged.' },
+      { title: 'Renewal and recovery', body: 'Premium access ends at subscription or short-lease expiry. Observe status.renewalDue, save drafts with subscribeBeforeAccessLoss, and refresh after renewal. Recreate disposed controllers from saved state. Destroy the session on teardown. Signed keys are unsupported.' },
       { title: 'Keep authorization separate', body: 'The entitlement controls access to package APIs. It never replaces user authentication, server authorization, tenant checks, or mutation validation.' },
     ],
     codeTitle: 'Verify and use a licensed feature',
-    code: `const license = await verifyDataTableLicense(entitlementToken);
+    code: `import { connectDataTableLicense } from 'wts-data-table/license';
+import { createRemoteRowModel } from 'wts-data-table/remote';
+
+const license = await connectDataTableLicense({ licenseKey: deploymentKey });
 
 const rows = createRemoteRowModel({
   license,

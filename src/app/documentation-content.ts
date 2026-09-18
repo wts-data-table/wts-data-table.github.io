@@ -248,7 +248,7 @@ export const ADVANCED_FEATURES = [
     name: 'Card view',
     entitlement: 'card-view',
     import: 'wts-data-table/card-view',
-    use: 'Responsive cards with synchronized search, pagination, and selection. Requires a signed card-view entitlement.',
+    use: 'Responsive cards with synchronized search, pagination, and selection. Requires an active subscription with the card-view feature.',
   },
   {
     name: 'Advanced row model',
@@ -363,10 +363,10 @@ table.applyTransaction({
 await table.ready();
 await table.destroyAsync();`;
 
-export const LICENSE_EXAMPLE = `import { verifyDataTableLicense } from 'wts-data-table';
+export const LICENSE_EXAMPLE = `import { connectDataTableLicense } from 'wts-data-table/license';
 import { createRemoteRowModel } from 'wts-data-table/remote';
 
-const license = await verifyDataTableLicense(entitlementToken);
+const license = await connectDataTableLicense({ licenseKey: deploymentKey });
 const rows = createRemoteRowModel({
   license,
   origin: window.location.origin,

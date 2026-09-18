@@ -1,8 +1,7 @@
 import { TestBed } from '@angular/core/testing';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { PremiumPage } from './premium-page';
 import { provideRouter } from '@angular/router';
-import { LICENSE_REQUEST, PREMIUM_CONTACT_EMAIL } from '../site-data';
 
 describe('PremiumPage', () => {
   it('demonstrates every licensed capability group with code and a product image', async () => {
@@ -15,8 +14,8 @@ describe('PremiumPage', () => {
     const element = fixture.nativeElement as HTMLElement;
     const text = element.textContent ?? '';
 
-    expect(text).toContain('Every shipped feature.');
-    expect(text).toContain('11 / 11');
+    expect(element.querySelector('h1')?.textContent).toContain('Premium capabilities');
+    expect(text).toContain('11 capabilities');
     for (const capability of [
       'Card view',
       'Advanced row model',
@@ -37,14 +36,17 @@ describe('PremiumPage', () => {
     expect(element.querySelectorAll('.code-block')).toHaveLength(11);
     expect(element.querySelectorAll('.runtime-options')).toHaveLength(11);
     expect(text).toContain('One package, explicit entitlement');
-    const licenseLink = element.querySelector<HTMLAnchorElement>('a[href^="mailto:"]');
-    expect(licenseLink?.textContent).toContain('Email for a license key');
-    expect(licenseLink?.getAttribute('href')).toBe(LICENSE_REQUEST);
-    expect(LICENSE_REQUEST).toBe(
-      'mailto:' +
-        PREMIUM_CONTACT_EMAIL +
-        '?subject=WTS%20Data%20Table%20premium%20license%20request',
-    );
-    expect(text).not.toContain(PREMIUM_CONTACT_EMAIL);
+    const accessButton = element.querySelector<HTMLButtonElement>('.license-actions button')!;
+    expect(accessButton.textContent).toContain('Request Premium access');
+    const dialog = element.querySelector<HTMLDialogElement>('dialog')!;
+    const show = vi.fn(() => {
+      dialog.open = true;
+    });
+    Object.defineProperty(dialog, 'showModal', { configurable: true, value: show });
+    accessButton.click();
+    fixture.detectChanges();
+    expect(show).toHaveBeenCalledTimes(1);
+    expect(dialog.querySelector<HTMLSelectElement>('#request-type')?.value).toBe('NEW_ACCESS');
+    expect(element.querySelector('a[href^="mailto:"]')).toBeNull();
   });
 });

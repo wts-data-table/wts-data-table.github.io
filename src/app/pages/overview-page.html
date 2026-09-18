@@ -1,0 +1,46 @@
+<section class="hero wrap">
+  <div class="hero__copy">
+    <span class="kicker">WTS Data Table <span class="release">v1.1.1</span></span>
+    <h1>Your data.<br />A table that fits.</h1>
+    <p>Search, sort, edit, and explore your data with a typed table API. Use JavaScript directly, or integrate with Angular, React, and Vue.</p>
+    <div class="hero__actions">
+      <a class="button button--primary" routerLink="/docs">Get started <span aria-hidden="true">→</span></a>
+      <a class="button" routerLink="/examples/portfolio">Try the playground</a>
+    </div>
+    <button class="install" type="button" (click)="copyInstall()" aria-label="Copy npm install command">
+      <code>npm install wts-data-table</code><span>{{ copied() ? 'Copied' : 'Copy' }}</span>
+    </button>
+    <p class="install-note" role="status">{{ copied() ? 'Install command copied.' : 'Free Standard features · No runtime dependencies' }}</p>
+  </div>
+  <div class="quickstart">
+    <div class="quickstart__heading"><span>Start with a few rows</span><span>TypeScript</span></div>
+    <app-doc-code [code]="quickstartCode" label="Basic table example" />
+    <a routerLink="/docs" fragment="integrate">Find the setup for your framework <span aria-hidden="true">→</span></a>
+  </div>
+</section>
+<nav class="frameworks wrap" aria-label="Framework quick starts">
+  <span>Works with your stack</span>
+  @for (framework of frameworks; track framework.id) {
+    <a routerLink="/docs" [queryParams]="{ framework: framework.id }" fragment="integrate">{{ framework.label }} <span aria-hidden="true">↗</span></a>
+  }
+</nav>
+<section class="preview-section section wrap">
+  <div class="section-heading">
+    <div><span class="kicker">Interactive preview</span><h2>Give it your usual workflow.</h2></div>
+    <p>Search projects, sort a column, or select a few rows. This is the published package, running in Angular.</p>
+  </div>
+  <app-table-demo [demo]="featured" [runtimeOptions]="featuredOptions" />
+  <div class="section-action"><a routerLink="/examples/portfolio">Configure this example <span aria-hidden="true">→</span></a></div>
+</section>
+<section class="resources-section wrap" aria-labelledby="resources-heading">
+  <div class="section-heading"><div><span class="kicker">Developer resources</span><h2 id="resources-heading">Build the table your application needs.</h2></div></div>
+  <div class="resource-links">
+    <a routerLink="/docs" fragment="features"><span class="resource-number">01</span><h3>Explore the API</h3><p>Column definitions, filtering, editing, selection, and table lifecycle.</p><span class="resource-action">Read the feature guide →</span></a>
+    <a routerLink="/docs/guides/server-integration"><span class="resource-number">02</span><h3>Connect your backend</h3><p>Use remote data, server-side operations, and your existing authorization.</p><span class="resource-action">Server integration →</span></a>
+    <a routerLink="/premium"><span class="resource-number">03</span><h3>Explore Premium</h3><p>Cards, worker processing, remote viewports, and collaborative workflows.</p><span class="resource-action">Browse Premium capabilities →</span></a>
+  </div>
+</section>
+<section class="start-section wrap">
+  <div><h2>Ready to try it in your project?</h2><p>Start with Standard. Add a Premium subscription when you need it.</p></div>
+  <a class="button button--primary" routerLink="/docs" fragment="install">Installation guide →</a>
+</section>
