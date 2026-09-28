@@ -168,7 +168,7 @@ license.destroy();`,
     </section>
     <nav class="premium-index wrap" aria-label="Advanced capability examples">
       @for (item of examples; track item.id; let index = $index) {
-        <a [href]="'#' + item.id"
+        <a routerLink="/premium" [fragment]="item.id"
           ><span>{{ index + 1 }}</span
           >{{ item.label }}</a
         >
@@ -201,8 +201,10 @@ license.destroy();`,
           </div>
           <figure>
             @if (item.id === 'card-view') {
-              <app-table-demo [demo]="cardDemo" [runtimeOptions]="cardOptions()" (viewModeChange)="setCardView($event)" />
-              <a class="button" routerLink="/examples/card-view">All options &amp; framework code →</a>
+              <div class="live-preview">
+                <app-table-demo [demo]="cardDemo" [runtimeOptions]="cardOptions()" (viewModeChange)="setCardView($event)" />
+                <a class="button" routerLink="/examples/card-view">All options &amp; framework code →</a>
+              </div>
             } @else {
               <img [src]="item.image" [alt]="item.alt" width="1280" height="540" loading="lazy" />
             }
@@ -317,10 +319,17 @@ license.destroy();`,
       }
       .premium-list figcaption {
         padding: 0.7rem 1rem;
-        background: white;
+        border-top: 1px solid var(--line);
+        background: var(--surface);
         color: var(--muted);
-        font: 0.65rem var(--mono);
-        text-transform: uppercase;
+        font-size: 0.75rem;
+        line-height: 1.5;
+      }
+      .live-preview {
+        padding: clamp(0.75rem, 1.5vw, 1.25rem);
+      }
+      .live-preview > .button {
+        margin-top: 1rem;
       }
       .runtime-options {
         margin-top: 1.2rem;
@@ -356,7 +365,9 @@ license.destroy();`,
       }
       .code-block > div {
         display: flex;
+        flex-wrap: wrap;
         justify-content: space-between;
+        gap: 0.65rem;
         padding: 0.7rem 0.9rem;
         border-bottom: 1px solid #2e394a;
         color: #8ea0b8;
@@ -394,14 +405,10 @@ license.destroy();`,
         margin-top: 1rem;
       }
       @media (max-width: 900px) {
-        .premium-list > article,
-        #card-view { align-items: start; }
-      .premium-list > article:nth-child(even) {
+        .premium-list > article {
           grid-template-columns: 1fr;
           gap: 2rem;
-        }
-        .premium-list > article:nth-child(even) .premium-copy {
-          order: 0;
+          align-items: start;
         }
       }
       @media (max-width: 1050px) {
