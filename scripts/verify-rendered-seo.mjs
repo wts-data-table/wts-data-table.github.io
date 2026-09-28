@@ -6,6 +6,7 @@ const root = new URL('../dist/wts-data-table-angular-example/browser/', import.m
 const files = (await readdir(root, { recursive: true })).filter(file => /(^|\/)index\.html$/.test(file));
 const titles = new Set();
 const keywordSets = new Set();
+const canonicalUrls = new Set();
 let count = 0;
 for (const file of files) {
   const dom = new JSDOM(await readFile(new URL(file, root), 'utf8'));
@@ -27,9 +28,18 @@ for (const file of files) {
   assert.equal(document.querySelector('meta[name="twitter:description"]')?.content, description, file);
   const path = file === 'index.html' ? '/' : '/' + file.replace(/index\.html$/, '');
   assert.equal(document.querySelector('link[rel="canonical"]')?.href, 'https://wts-data-table.github.io' + path, `${file}: canonical must identify this page`);
+  canonicalUrls.add('https://wts-data-table.github.io' + path);
   if (file === 'index.html') assert.equal(keywords.length, 12, 'Homepage must contain the 12 reviewed phrases');
   count++;
   dom.window.close();
 }
 assert.equal(count, 22, 'Verify all public content pages');
-console.log(`Verified keywords, distinct titles, social metadata, and canonical URLs in ${count} prerendered pages.`);
+const sitemap = new JSDOM(await readFile(new URL('sitemap.xml', root), 'utf8'), { contentType: 'application/xml' });
+const namespace = 'http://www.sitemaps.org/schemas/sitemap/0.9';
+assert.equal(sitemap.window.document.documentElement.localName, 'urlset', 'Sitemap must be a URL set');
+assert.equal(sitemap.window.document.documentElement.namespaceURI, namespace, 'Sitemap must use the standard namespace');
+const urls = [...sitemap.window.document.getElementsByTagNameNS(namespace, 'loc')].map(node => node.textContent.trim());
+assert.equal(new Set(urls).size, urls.length, 'Sitemap must not contain duplicate URLs');
+assert.deepEqual([...urls].sort(), [...canonicalUrls].sort(), 'Sitemap must list every prerendered canonical page, with no missing or stale URLs');
+sitemap.window.close();
+console.log(`Verified keywords, distinct titles, social metadata, canonical URLs, and complete sitemap coverage for ${count} prerendered pages.`);
