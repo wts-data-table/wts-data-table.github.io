@@ -71,7 +71,10 @@ describe('Developer-focused overview', () => {
     const element = fixture.nativeElement as HTMLElement;
     expect(element.querySelectorAll('h1')).toHaveLength(1);
     expect(element.querySelectorAll('nav[aria-label="Framework quick starts"] a')).toHaveLength(4);
-    expect(element.querySelector('nav a[href="/docs?framework=core#integrate"]')).toBeTruthy();
+    expect(element.querySelector('nav a[href="/docs#integrate"]')).toBeTruthy();
+    for (const framework of ['angular', 'react', 'vue']) {
+      expect(element.querySelector(`nav a[href="/docs/guides/${framework}"]`)).toBeTruthy();
+    }
     expect(element.querySelector('app-doc-code pre')?.textContent).toContain("import { DataTable } from 'wts-data-table'");
     expect(element.querySelector('app-table-demo table')).toBeTruthy();
     expect(element.textContent).not.toContain('1,000,000');

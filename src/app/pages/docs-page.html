@@ -10,7 +10,19 @@
 
   <article class="docs-content">
     <header class="docs-intro">
-      <div class="docs-breadcrumb">Documentation <span>/</span> Getting started</div>
+      <nav class="docs-breadcrumb" aria-label="Breadcrumb">
+        <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a itemprop="item" routerLink="/"><span itemprop="name">Home</span></a>
+            <meta itemprop="position" content="1" />
+          </li>
+          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <span class="breadcrumb-separator" aria-hidden="true">/</span>
+            <span itemprop="name" aria-current="page">Documentation</span>
+            <meta itemprop="position" content="2" />
+          </li>
+        </ol>
+      </nav>
       <div class="intro-heading">
         <h1>Build your first table.</h1>
         <span class="version-badge">v1.1.1</span>
@@ -87,6 +99,9 @@
       <div id="framework-setup" role="tabpanel" [attr.aria-labelledby]="'framework-' + framework()">
         <app-doc-code [code]="installs[framework()]" label="Terminal" language="npm" />
         <p class="framework-note">{{ frameworkNotes[framework()] }}</p>
+        @if (framework() !== 'Core') {
+          <p><a [routerLink]="['/docs/guides', framework().toLowerCase()]">Read the complete {{ framework() }} guide: editing, selection, server data, and lifecycle →</a></p>
+        }
         <div class="callout">
           <strong>Import the stylesheet once</strong>
           <p>

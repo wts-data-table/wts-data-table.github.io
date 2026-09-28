@@ -4,6 +4,20 @@ import { describe, expect, it } from 'vitest';
 import { DocsPage } from './docs-page';
 
 describe('DocsPage', () => {
+  it('renders visible structured breadcrumbs with a home link and current page', async () => {
+    await TestBed.configureTestingModule({
+      imports: [DocsPage], providers: [provideRouter([])],
+    }).compileComponents();
+    const fixture = TestBed.createComponent(DocsPage);
+    fixture.detectChanges();
+    const nav = fixture.nativeElement.querySelector('nav[aria-label="Breadcrumb"]') as HTMLElement;
+    expect(nav.querySelector('[itemtype="https://schema.org/BreadcrumbList"]')).not.toBeNull();
+    expect([...nav.querySelectorAll('[itemprop="name"]')].map(item => item.textContent?.trim()))
+      .toEqual(['Home', 'Documentation']);
+    expect(nav.querySelector('a[itemprop="item"]')?.getAttribute('href')).toBe('/');
+    expect(nav.querySelector('[aria-current="page"]')?.textContent).toBe('Documentation');
+  });
+
   it('links every sidebar item to its section on the docs route', async () => {
     await TestBed.configureTestingModule({
       imports: [DocsPage],
@@ -58,7 +72,7 @@ describe('DocsPage', () => {
     const links = [
       ...fixture.nativeElement.querySelectorAll('#reference .resource-grid a'),
     ] as HTMLAnchorElement[];
-    expect(links).toHaveLength(10);
+    expect(links).toHaveLength(13);
     expect(links.every(({ pathname }) => pathname.startsWith('/docs/guides/'))).toBe(true);
     expect(links.every(({ hostname }) => hostname === 'localhost')).toBe(true);
   });

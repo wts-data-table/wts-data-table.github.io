@@ -1,7 +1,12 @@
+import { FRAMEWORK_GUIDES } from './framework-guides';
+
 export interface DeveloperGuideSection {
   readonly title: string;
   readonly body: string;
   readonly points?: readonly string[];
+  readonly code?: string;
+  readonly codeTitle?: string;
+  readonly language?: string;
 }
 
 export interface DeveloperGuide {
@@ -12,6 +17,9 @@ export interface DeveloperGuide {
   readonly sections: readonly DeveloperGuideSection[];
   readonly codeTitle: string;
   readonly code: string;
+  readonly language?: string;
+  readonly codeIntro?: string;
+  readonly framework?: 'Angular' | 'React' | 'Vue';
 }
 
 export const DEVELOPER_GUIDES: readonly DeveloperGuide[] = [
@@ -213,6 +221,7 @@ import { selectionFeature } from 'wts-data-table/features/selection';
 
 // Avoid undocumented deep paths and private DOM internals.`,
   },
+  ...FRAMEWORK_GUIDES,
 ];
 
 export function getDeveloperGuide(slug: string | null): DeveloperGuide {

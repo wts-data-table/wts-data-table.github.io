@@ -42,6 +42,18 @@ npm test -- --watch=false
 npm run build:pages
 ```
 
+`build:pages` compiles the exact Angular, React, and Vue guide snippets against
+the published wrapper packages, then verifies prerendered metadata, breadcrumb
+structured data, sitemap coverage, and internal links/anchors/images. Run
+`npm run test:framework-examples` or `npm run test:site-checks` independently
+while editing guides. Compiler success does not replace browser interaction tests.
+
+Framework-specific guides: [Angular](https://wts-data-table.github.io/docs/guides/angular/),
+[React](https://wts-data-table.github.io/docs/guides/react/), and
+[Vue](https://wts-data-table.github.io/docs/guides/vue/).
+See [the mobile SEO/performance audit](docs/seo-audit-2026-09-28.md) for measured
+results and outstanding work; a passing basic SEO check is not a ranking guarantee.
+
 The static output is written to
 `dist/wts-data-table-angular-example/browser`. The workflow in
 `.github/workflows/deploy-pages.yml` deploys that folder from `main`. To serve

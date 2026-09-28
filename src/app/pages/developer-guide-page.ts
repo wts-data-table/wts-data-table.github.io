@@ -36,7 +36,7 @@ export class DeveloperGuidePage {
       Math.ceil(
         [
           this.guide().intro,
-          ...this.guide().sections.flatMap((s) => [s.body, ...(s.points ?? [])]),
+          ...this.guide().sections.flatMap((s) => [s.body, ...(s.points ?? []), s.code ?? '']),
           this.guide().code,
         ]
           .join(' ')

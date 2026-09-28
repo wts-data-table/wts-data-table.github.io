@@ -6,8 +6,22 @@
   <article class="docs-content guide-content">
     <header class="docs-intro">
       <nav class="docs-breadcrumb" aria-label="Breadcrumb">
-        <a routerLink="/docs">Documentation</a><span>/</span
-        ><a routerLink="/docs" fragment="reference">Developer guides</a>
+        <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a itemprop="item" routerLink="/"><span itemprop="name">Home</span></a>
+            <meta itemprop="position" content="1" />
+          </li>
+          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <span class="breadcrumb-separator" aria-hidden="true">/</span>
+            <a itemprop="item" routerLink="/docs"><span itemprop="name">Documentation</span></a>
+            <meta itemprop="position" content="2" />
+          </li>
+          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <span class="breadcrumb-separator" aria-hidden="true">/</span>
+            <span itemprop="name" aria-current="page">{{ guide().title }}</span>
+            <meta itemprop="position" content="3" />
+          </li>
+        </ol>
       </nav>
       <div class="guide-meta">
         <span>Developer guide</span><span>{{ readingMinutes() }} min read</span>
@@ -17,11 +31,8 @@
       @if (guide().slug === 'framework-wrappers') {
         <div class="guide-frameworks">
           @for (framework of frameworks; track framework) {
-            <a
-              routerLink="/docs"
-              fragment="integrate"
-              [queryParams]="{ framework: framework.toLowerCase() }"
-              >{{ framework }} quick start →</a
+            <a [routerLink]="['/docs/guides', framework.toLowerCase()]"
+              >{{ framework }} guide →</a
             >
           }
         </div>
@@ -29,6 +40,9 @@
       <div class="guide-summary">
         <strong>In this guide</strong>
         <ul>
+          @if (guide().framework) {
+            <li><a [routerLink]="['/docs/guides', guide().slug]" fragment="code-example">Complete {{ guide().framework }} component</a></li>
+          }
           @for (section of guide().sections; track section.title) {
             <li>
               <a
@@ -61,6 +75,9 @@
             }
           </ul>
         }
+        @if (section.code) {
+          <app-doc-code [code]="section.code" [label]="section.codeTitle ?? section.title" [language]="section.language ?? 'TypeScript'" />
+        }
       </section>
     }
     <section id="code-example" data-doc-section>
@@ -74,27 +91,32 @@
         >
       </div>
       <p class="recipe-context">
-        This recipe focuses on the integration pattern. Replace application-specific values and
-        callbacks with your own data and services.
+        {{ guide().codeIntro ?? 'This recipe focuses on the integration pattern. Replace application-specific values and callbacks with your own data and services.' }}
       </p>
       <app-doc-code
         [code]="guide().code"
         [label]="guide().codeTitle"
         [language]="
-          guide().slug === 'themes'
+          guide().language ?? (guide().slug === 'themes'
             ? 'CSS'
             : guide().slug === 'bundle-size'
               ? 'Shell'
-              : 'TypeScript'
+              : 'TypeScript')
         "
       />
       <div class="callout">
+        @if (guide().framework) {
+        <strong>Try the table before wiring up your backend</strong>
+        <p>Explore search, selection, editing, and runtime options in the interactive example.</p>
+        <a routerLink="/examples/portfolio">Open the configurable example →</a>
+        } @else {
         <strong>Need a complete starting point?</strong>
         <p>
           The framework quick start includes install commands, a typed data file, and the component
           that renders it.
         </p>
         <a routerLink="/docs" fragment="install">Go to the quick start →</a>
+        }
       </div>
     </section>
 

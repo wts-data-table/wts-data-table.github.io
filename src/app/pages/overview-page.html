@@ -21,7 +21,7 @@
 <nav class="frameworks wrap" aria-label="Framework quick starts">
   <span>Works with your stack</span>
   @for (framework of frameworks; track framework.id) {
-    <a routerLink="/docs" [queryParams]="{ framework: framework.id }" fragment="integrate">{{ framework.label }} <span aria-hidden="true">↗</span></a>
+    <a [routerLink]="framework.id === 'core' ? '/docs' : '/docs/guides/' + framework.id" [fragment]="framework.id === 'core' ? 'integrate' : undefined">{{ framework.label }} <span aria-hidden="true">↗</span></a>
   }
 </nav>
 <section class="preview-section section wrap">
