@@ -531,6 +531,8 @@ export class ExamplesPage {
         content: demo.description,
       });
       this.meta.updateTag({ property: "og:url", content: url });
+      this.meta.updateTag({ name: "twitter:title", content: title });
+      this.meta.updateTag({ name: "twitter:description", content: demo.description });
       const canonical = this.document.querySelector<HTMLLinkElement>(
         'link[rel="canonical"]',
       );

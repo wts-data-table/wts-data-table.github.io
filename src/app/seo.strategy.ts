@@ -2,6 +2,7 @@ import { DOCUMENT } from '@angular/common';
 import { inject, Injectable } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { RouterStateSnapshot, TitleStrategy } from '@angular/router';
+import { keywordsForPage } from './seo-keywords';
 
 export interface SeoRouteData {
   readonly title: string;
@@ -25,6 +26,9 @@ export class SiteTitleStrategy extends TitleStrategy {
     const url = `${this.origin}${seo.path}`;
     this.title.setTitle(seo.title);
     this.meta.updateTag({ name: 'description', content: seo.description });
+    const keywords = keywordsForPage(snapshot.url);
+    if (keywords.length) this.meta.updateTag({ name: 'keywords', content: keywords.join(', ') });
+    else this.meta.removeTag('name="keywords"');
     this.meta.updateTag({ property: 'og:title', content: seo.title });
     this.meta.updateTag({ property: 'og:description', content: seo.description });
     this.meta.updateTag({ property: 'og:url', content: url });

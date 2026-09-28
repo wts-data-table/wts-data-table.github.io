@@ -64,6 +64,8 @@ export class DeveloperGuidePage {
       this.meta.updateTag({ property: 'og:title', content: title });
       this.meta.updateTag({ property: 'og:description', content: guide.summary });
       this.meta.updateTag({ property: 'og:url', content: url });
+      this.meta.updateTag({ name: 'twitter:title', content: title });
+      this.meta.updateTag({ name: 'twitter:description', content: guide.summary });
       const canonical = this.document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
       if (canonical) canonical.href = url;
     });

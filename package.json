@@ -16,6 +16,7 @@
     "build": "ng build",
     "build:pages": "ng build --configuration production",
     "prebuild:pages": "node scripts/verify-card-view-package.mjs && node scripts/configure-demo-license.mjs && node scripts/verify-site-metadata.mjs",
+    "postbuild:pages": "node scripts/verify-rendered-seo.mjs",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },

@@ -4,7 +4,7 @@ export const routes: Routes = [
   {
     path: '',
     loadComponent: () => import('./pages/overview-page').then((m) => m.OverviewPage),
-    data: { seo: { title: 'WTS Data Table | Accessible JavaScript Data Grid', description: 'A fast, accessible, framework-agnostic TypeScript data grid with Angular, React, and Vue integrations.', path: '/' } },
+    data: { seo: { title: 'JavaScript & TypeScript Data Grid | WTS Data Table', description: 'Build accessible JavaScript data tables for Angular, React, and Vue. Explore sorting, filtering, inline editing, virtual scrolling, and server-side pagination.', path: '/' } },
   },
   { path: 'examples', pathMatch: 'full', redirectTo: 'examples/portfolio' },
   {
@@ -15,7 +15,7 @@ export const routes: Routes = [
   {
     path: 'features',
     loadComponent: () => import('./pages/features-page').then((m) => m.FeaturesPage),
-    data: { seo: { title: 'Features | WTS Data Table', description: 'Explore the capabilities of the WTS Data Table TypeScript data grid.', path: '/features/' } },
+    data: { seo: { title: 'Data Grid Features: Filtering & Editing | WTS Data Table', description: 'Explore data grid sorting, column filters, inline editing, row grouping, CSV export, and virtual scrolling with WTS Data Table.', path: '/features/' } },
   },
   {
     path: 'docs/guides/:slug',
@@ -25,17 +25,17 @@ export const routes: Routes = [
   {
     path: 'docs',
     loadComponent: () => import('./pages/docs-page').then((m) => m.DocsPage),
-    data: { seo: { title: 'Documentation | WTS Data Table', description: 'Install WTS Data Table and integrate the framework-agnostic controller or an Angular, React, or Vue wrapper.', path: '/docs/' } },
+    data: { seo: { title: 'Data Table Setup for Angular, React & Vue | WTS Data Table', description: 'Install a TypeScript data table in Angular, React, Vue, or plain JavaScript. Follow code examples for filtering, editing, pagination, and server integration.', path: '/docs/' } },
   },
   {
     path: 'pricing',
     loadComponent: () => import('./pages/pricing-page').then((m) => m.PricingPage),
-    data: { seo: { title: 'Pricing & Licensing | WTS Data Table', description: 'Compare MIT-licensed Standard features and renewable Premium subscriptions. Request WTS Data Table pricing, evaluation access, or renewal.', path: '/pricing/' } },
+    data: { seo: { title: 'Data Grid Pricing & Licensing | WTS Data Table', description: 'Compare free MIT-licensed Standard data table features with monthly or yearly Premium subscriptions. Request pricing, evaluation access, or license renewal.', path: '/pricing/' } },
   },
   {
     path: 'premium',
     loadComponent: () => import('./pages/premium-page').then((m) => m.PremiumPage),
-    data: { seo: { title: 'Advanced Examples | WTS Data Table', description: 'Explore WTS Data Table worker processing, remote data viewports, and formula workflows with implementation code.', path: '/premium/' } },
+    data: { seo: { title: 'Advanced Data Grid: Cards & Large Datasets | WTS Data Table', description: 'Explore Premium data grid examples: responsive cards, Web Worker processing, large datasets, spreadsheet formulas, server analytics, and collaborative editing.', path: '/premium/' } },
   },
   {
     path: '**',
