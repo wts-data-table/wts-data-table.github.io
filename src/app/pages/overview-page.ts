@@ -4,6 +4,7 @@ import { createDemoRuntimeOptions } from '../example-config';
 import { TABLE_DEMOS } from '../site-data';
 import { TableDemo } from '../table-demo';
 import { DocCode } from '../doc-code';
+import type { DataTableCardViewMode } from 'wts-data-table/card-view';
 
 @Component({
   imports: [RouterLink, TableDemo, DocCode],
@@ -12,7 +13,10 @@ import { DocCode } from '../doc-code';
 })
 export class OverviewPage {
   protected readonly featured = TABLE_DEMOS[0];
-  protected readonly featuredOptions = createDemoRuntimeOptions('portfolio');
+  protected readonly featuredOptions = signal(createDemoRuntimeOptions('portfolio'));
+  protected setViewMode(viewMode: DataTableCardViewMode): void {
+    this.featuredOptions.update(options => ({ ...options, viewMode }));
+  }
   protected readonly frameworks = [
     { id: 'core', label: 'JavaScript / TypeScript' },
     { id: 'angular', label: 'Angular' },

@@ -29,7 +29,7 @@
     <div><span class="kicker">Interactive preview</span><h2>Give it your usual workflow.</h2></div>
     <p>Search projects, sort a column, or select a few rows. This is the published package, running in Angular.</p>
   </div>
-  <app-table-demo [demo]="featured" [runtimeOptions]="featuredOptions" />
+  <app-table-demo [demo]="featured" [runtimeOptions]="featuredOptions()" (viewModeChange)="setViewMode($event)" />
   <div class="section-action"><a routerLink="/examples/portfolio">Configure this example <span aria-hidden="true">→</span></a></div>
 </section>
 <section class="resources-section wrap" aria-labelledby="resources-heading">
