@@ -1,6 +1,7 @@
 export interface TableDemoDefinition {
   readonly id: string;
   readonly title: string;
+  readonly pageTitle?: string;
   readonly eyebrow: string;
   readonly description: string;
   readonly highlights: readonly string[];
@@ -16,6 +17,7 @@ export const TABLE_DEMOS: readonly TableDemoDefinition[] = [
   {
     id: 'portfolio',
     title: 'Complete portfolio table',
+    pageTitle: 'JavaScript data table with sorting and pagination',
     eyebrow: 'Start here',
     description:
       'A production-style view combining search, filters, selection, responsive details, pagination, and summaries.',
@@ -28,6 +30,7 @@ export const TABLE_DEMOS: readonly TableDemoDefinition[] = [
   {
     id: 'card-view',
     title: 'Card view',
+    pageTitle: 'Responsive table-to-card view',
     eyebrow: 'Licensed layout',
     description:
       'A licensed responsive card layout, enabled when the demo subscription is active for this origin. Explore projects as responsive cards. Switch between Table, Cards, and Auto without losing search, pagination, or row selection. Auto uses cards when the table container is 720px wide or smaller.',
@@ -36,6 +39,7 @@ export const TABLE_DEMOS: readonly TableDemoDefinition[] = [
   {
     id: 'selection',
     title: 'Selection and bulk work',
+    pageTitle: 'Data table row selection and bulk actions',
     eyebrow: 'Workflow',
     description:
       'Select individual projects or the filtered result set and respond to state changes from your application.',
@@ -44,6 +48,7 @@ export const TABLE_DEMOS: readonly TableDemoDefinition[] = [
   {
     id: 'filtering',
     title: 'Search and column filters',
+    pageTitle: 'Data table search and column filtering',
     eyebrow: 'Find anything',
     description:
       'Combine quick global search with type-aware filters and collapsible column controls.',
@@ -52,6 +57,7 @@ export const TABLE_DEMOS: readonly TableDemoDefinition[] = [
   {
     id: 'grouping',
     title: 'Grouping and totals',
+    pageTitle: 'Data grid row grouping and aggregation',
     eyebrow: 'Understand the data',
     description:
       'Group rows by status and keep aggregate budget totals visible as the view changes.',
@@ -60,6 +66,7 @@ export const TABLE_DEMOS: readonly TableDemoDefinition[] = [
   {
     id: 'responsive',
     title: 'Responsive details',
+    pageTitle: 'Responsive data table for mobile screens',
     eyebrow: 'Every viewport',
     description:
       'Keep priority fields visible and move supporting fields into accessible inline details when space gets tight.',
@@ -72,6 +79,7 @@ export const TABLE_DEMOS: readonly TableDemoDefinition[] = [
   {
     id: 'editing',
     title: 'Inline editing',
+    pageTitle: 'Editable data table with inline validation',
     eyebrow: 'Update in context',
     description:
       'Double-click editable cells, validate changes, and connect commits to your own persistence layer.',

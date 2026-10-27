@@ -68,7 +68,7 @@ const OPTION_GROUPS = [
   template: `
     <section class="page-hero wrap">
       <span class="kicker">Playground</span>
-      <h1>Examples</h1>
+      <h1>{{ selected().pageTitle ?? selected().title }}</h1>
       <p>
         Focused, runnable examples with live options and framework-specific
         implementation code.
@@ -521,7 +521,7 @@ export class ExamplesPage {
     effect(() => {
       const demo = this.selected();
       this.runtimeOptions.set(createDemoRuntimeOptions(demo.id));
-      const title = `${demo.title} Example | WTS Data Table`;
+      const title = `${demo.pageTitle ?? demo.title} | WTS Data Table`;
       const url = `https://wts-data-table.github.io/examples/${demo.id}/`;
       this.title.setTitle(title);
       this.meta.updateTag({ name: "description", content: demo.description });

@@ -105,8 +105,8 @@ new DataTable({
   },
   {
     slug: 'server-integration',
-    title: 'Browser/server integration',
-    summary: 'Remote rows, request cancellation, cursors, facets, and uploads.',
+    title: 'Server-side data tables and pagination',
+    summary: 'Connect a data table to an API for server-side pagination, filtering, sorting, cursor loading, and cancellable requests.',
     intro: 'Let the table own interaction state while an authenticated API owns filtering, sorting, pagination, summaries, and mutations.',
     sections: [
       { title: 'Manual processing', body: 'Enable manualFiltering, manualSorting, and manualPagination. Send state changes to the API, then call setData(rows, total, summaries).' },
@@ -190,7 +190,7 @@ const rows = createRemoteRowModel({
   },
   {
     slug: 'bundle-size',
-    title: 'Bundle-size strategy',
+    title: 'Data table bundle size and tree shaking',
     summary: 'Renderer selection, presets, focused imports, and budgets.',
     intro: 'Choose a renderer and feature composition deliberately instead of shipping the complete compatibility surface to every page.',
     sections: [

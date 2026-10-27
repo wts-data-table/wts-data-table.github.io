@@ -21,6 +21,8 @@ describe('Card view example page', () => {
     await fixture.whenStable();
     const element = fixture.nativeElement as HTMLElement;
     expect(element.querySelector('h2')?.textContent).toBe('Card view');
+    expect(element.querySelector('h1')?.textContent).toBe('Responsive table-to-card view');
+    expect(document.title).toBe('Responsive table-to-card view | WTS Data Table');
     expect(element.querySelector<HTMLSelectElement>('.configurator select')?.value).toBe('8');
     expect(element.querySelector('aside a.active')?.getAttribute('href')).toBe('/examples/card-view');
     expect(element.querySelector('.code-section pre')?.textContent).toContain("mode: 'cards'");

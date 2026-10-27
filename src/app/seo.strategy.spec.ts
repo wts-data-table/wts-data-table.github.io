@@ -14,6 +14,14 @@ import { TABLE_DEMOS } from './site-data';
 class SeoTestPage {}
 
 describe('Page-specific SEO metadata', () => {
+  it('gives every example a distinct, descriptive visible page title', () => {
+    const titles = TABLE_DEMOS.map(demo => demo.pageTitle);
+    expect(new Set(titles).size).toBe(TABLE_DEMOS.length);
+    for (const title of titles) {
+      expect(title).toMatch(/table|grid/i);
+      expect(title!.length).toBeLessThanOrEqual(60);
+    }
+  });
   it('covers every public content page with a short, unique keyword set', () => {
     const paths = ['/', '/features', '/docs', '/premium', '/pricing', '/sitemap',
       ...TABLE_DEMOS.map(demo => `/examples/${demo.id}`),
