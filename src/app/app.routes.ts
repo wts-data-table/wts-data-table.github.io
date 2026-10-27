@@ -8,6 +8,11 @@ export const routes: Routes = [
   },
   { path: 'examples', pathMatch: 'full', redirectTo: 'examples/portfolio' },
   {
+    path: 'sitemap',
+    loadComponent: () => import('./pages/directory-page').then(m => m.DirectoryPage),
+    data: { seo: { title: 'Documentation & Example Directory | WTS Data Table', description: 'Browse every WTS Data Table guide and live example. Find Angular, React, Vue, server integration, editing, filtering, and official npm packages.', path: '/sitemap/' } },
+  },
+  {
     path: 'examples/:id',
     loadComponent: () => import('./pages/examples-page').then((m) => m.ExamplesPage),
     data: { seo: { title: 'Live Examples | WTS Data Table', description: 'Try sorting, filtering, selection, grouping, responsive details, and editing in live WTS Data Table examples.', path: '/examples/portfolio/' } },

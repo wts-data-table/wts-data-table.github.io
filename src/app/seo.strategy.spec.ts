@@ -15,10 +15,10 @@ class SeoTestPage {}
 
 describe('Page-specific SEO metadata', () => {
   it('covers every public content page with a short, unique keyword set', () => {
-    const paths = ['/', '/features', '/docs', '/premium', '/pricing',
+    const paths = ['/', '/features', '/docs', '/premium', '/pricing', '/sitemap',
       ...TABLE_DEMOS.map(demo => `/examples/${demo.id}`),
       ...DEVELOPER_GUIDES.map(guide => `/docs/guides/${guide.slug}`)];
-    expect(paths).toHaveLength(25);
+    expect(paths).toHaveLength(26);
     for (const path of paths) {
       const keywords = keywordsForPage(path);
       expect(keywords.length, path).toBeGreaterThanOrEqual(4);

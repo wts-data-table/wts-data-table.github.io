@@ -70,6 +70,8 @@ describe('Developer-focused overview', () => {
     await fixture.whenStable();
     const element = fixture.nativeElement as HTMLElement;
     expect(element.querySelectorAll('h1')).toHaveLength(1);
+    expect(element.querySelector('h1')?.textContent).toContain('Data tables');
+    expect(element.querySelector('.hero a[href="https://www.npmjs.com/package/wts-data-table"]')).toBeTruthy();
     expect(element.querySelectorAll('nav[aria-label="Framework quick starts"] a')).toHaveLength(4);
     expect(element.querySelector('nav a[href="/docs#integrate"]')).toBeTruthy();
     for (const framework of ['angular', 'react', 'vue']) {

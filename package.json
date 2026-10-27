@@ -16,8 +16,8 @@
     "build": "ng build",
     "build:pages": "ng build --configuration production",
     "prebuild:pages": "node scripts/verify-card-view-package.mjs && node scripts/configure-demo-license.mjs && node scripts/verify-site-metadata.mjs && npm run test:framework-examples",
-    "postbuild:pages": "npm run test:site-checks && node scripts/verify-rendered-seo.mjs && node scripts/verify-site-links.mjs",
-    "test:site-checks": "node --test scripts/verify-site-links.test.mjs",
+    "postbuild:pages": "npm run test:site-checks && node scripts/build-text-sitemap.mjs && node scripts/verify-rendered-seo.mjs && node scripts/verify-site-links.mjs",
+    "test:site-checks": "node --test scripts/verify-site-links.test.mjs scripts/build-text-sitemap.test.mjs",
     "test:framework-examples": "node scripts/verify-framework-examples.mjs",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"

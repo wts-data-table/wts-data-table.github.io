@@ -1,11 +1,12 @@
 <section class="hero wrap">
   <div class="hero__copy">
     <span class="kicker">WTS Data Table <span class="release">v1.1.1</span></span>
-    <h1>Your data.<br />A table that fits.</h1>
-    <p>Build accessible JavaScript data tables with a typed TypeScript API. Search, sort, filter, and edit rows in Angular, React, or Vue.</p>
+    <h1>Data tables for<br />JavaScript applications.</h1>
+    <p>Install <strong>wts-data-table</strong> from npm for an accessible data grid with a typed TypeScript API. Search, sort, filter, and edit rows in Angular, React, Vue, or plain JavaScript.</p>
     <div class="hero__actions">
       <a class="button button--primary" routerLink="/docs">Get started <span aria-hidden="true">→</span></a>
       <a class="button" routerLink="/examples/portfolio">Try the playground</a>
+      <a class="button" href="https://www.npmjs.com/package/wts-data-table" target="_blank" rel="noreferrer">View on npm <span aria-hidden="true">↗</span></a>
     </div>
     <button class="install" type="button" (click)="copyInstall()" aria-label="Copy npm install command">
       <code>npm install wts-data-table</code><span>{{ copied() ? 'Copied' : 'Copy' }}</span>
@@ -26,7 +27,7 @@
 </nav>
 <section class="preview-section section wrap">
   <div class="section-heading">
-    <div><span class="kicker">Interactive preview</span><h2>Give it your usual workflow.</h2></div>
+    <div><span class="kicker">Interactive preview</span><h2>Try sorting, filtering, and row selection.</h2></div>
     <p>Search projects, sort a column, or select a few rows. This is the published package, running in Angular.</p>
   </div>
   <app-table-demo [demo]="featured" [runtimeOptions]="featuredOptions()" (viewModeChange)="setViewMode($event)" />
@@ -38,6 +39,14 @@
     <a routerLink="/docs" fragment="features"><span class="resource-number">01</span><h3>Explore the API</h3><p>Column definitions, filtering, editing, selection, and table lifecycle.</p><span class="resource-action">Read the feature guide →</span></a>
     <a routerLink="/docs/guides/server-integration"><span class="resource-number">02</span><h3>Connect your backend</h3><p>Use remote data, server-side operations, and your existing authorization.</p><span class="resource-action">Server integration →</span></a>
     <a routerLink="/premium"><span class="resource-number">03</span><h3>Explore Premium</h3><p>Cards, worker processing, remote viewports, and collaborative workflows.</p><span class="resource-action">Browse Premium capabilities →</span></a>
+  </div>
+</section>
+<section class="resources-section wrap" aria-labelledby="workflows-heading">
+  <div class="section-heading"><div><span class="kicker">Common workflows</span><h2 id="workflows-heading">Build a table around your data.</h2></div></div>
+  <div class="resource-links">
+    <a routerLink="/docs/guides/react"><span class="resource-number">React</span><h3>Server-side pagination with React</h3><p>Connect a paged API, keep query options stable, and cancel stale requests when filters change.</p><span class="resource-action">React integration guide →</span></a>
+    <a routerLink="/docs/guides/angular"><span class="resource-number">Angular</span><h3>Editable Angular data tables</h3><p>Use a standalone component, typed rows, signals, selection, and validated local edits.</p><span class="resource-action">Angular integration guide →</span></a>
+    <a routerLink="/docs/guides/vue"><span class="resource-number">Vue</span><h3>Typed tables with Vue 3</h3><p>Use the Composition API, shallow references, editable columns, and explicit request cleanup.</p><span class="resource-action">Vue integration guide →</span></a>
   </div>
 </section>
 <section class="start-section wrap">

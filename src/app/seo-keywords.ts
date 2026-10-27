@@ -9,6 +9,7 @@ const PAGE_KEYWORDS: Readonly<Record<string, readonly string[]>> = {
   ],
   '/features': ['data grid features', 'table sorting and filtering', 'inline cell editing', 'row grouping', 'virtual scrolling', 'CSV export'],
   '/docs': ['data table documentation', 'Angular data table tutorial', 'React data table setup', 'Vue data table integration', 'TypeScript table API'],
+  '/sitemap': ['data table guides', 'data table examples directory', 'WTS npm packages', 'framework integration documentation'],
   '/premium': ['large dataset data grid', 'responsive card view', 'Web Worker table processing', 'server-side analytics', 'spreadsheet formulas', 'collaborative data grid'],
   '/pricing': ['data grid pricing', 'data table licensing', 'MIT Standard data table', 'Premium data grid subscription', 'monthly data grid subscription', 'yearly data grid subscription'],
   '/examples/portfolio': ['JavaScript data table example', 'project portfolio table', 'table sorting and filtering', 'table pagination', 'row selection'],

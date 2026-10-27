@@ -52,7 +52,7 @@ for (const file of files) {
   count++;
   dom.window.close();
 }
-assert.equal(count, 25, 'Verify all public content pages');
+assert.equal(count, 26, 'Verify all public content pages');
 const sitemap = new JSDOM(await readFile(new URL('sitemap.xml', root), 'utf8'), { contentType: 'application/xml' });
 const namespace = 'http://www.sitemaps.org/schemas/sitemap/0.9';
 assert.equal(sitemap.window.document.documentElement.localName, 'urlset', 'Sitemap must be a URL set');
@@ -60,5 +60,18 @@ assert.equal(sitemap.window.document.documentElement.namespaceURI, namespace, 'S
 const urls = [...sitemap.window.document.getElementsByTagNameNS(namespace, 'loc')].map(node => node.textContent.trim());
 assert.equal(new Set(urls).size, urls.length, 'Sitemap must not contain duplicate URLs');
 assert.deepEqual([...urls].sort(), [...canonicalUrls].sort(), 'Sitemap must list every prerendered canonical page, with no missing or stale URLs');
+const textUrls = (await readFile(new URL('sitemap.txt', root), 'utf8')).trim().split('\n');
+assert.deepEqual(textUrls, urls, 'The plain-text sitemap must exactly match the XML URL list');
+assert(urls.every(url => new URL(url).origin === 'https://wts-data-table.github.io'), 'Do not submit external npm URLs as pages owned by this site');
+const directory = new JSDOM(await readFile(new URL('sitemap/index.html', root), 'utf8'), { url: 'https://wts-data-table.github.io/sitemap/' });
+const directoryUrls = new Set([...directory.window.document.querySelectorAll('a[href]')].map(a => {
+  const url = new URL(a.href);
+  url.hash = ''; url.search = '';
+  if (!url.pathname.endsWith('/')) url.pathname += '/';
+  return url.href;
+}));
+for (const url of canonicalUrls) assert(directoryUrls.has(url), `Site directory must link to ${url}`);
+assert(directory.window.document.querySelector('a[href="https://www.npmjs.com/package/wts-data-table"]'), 'Site directory must link to the official npm listing');
+directory.window.close();
 sitemap.window.close();
 console.log(`Verified metadata, documentation breadcrumbs, canonical URLs, and complete sitemap coverage for ${count} prerendered pages.`);

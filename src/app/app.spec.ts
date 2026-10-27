@@ -16,5 +16,7 @@ describe('App shell', () => {
     const tracker = fixture.nativeElement.querySelector('footer a[href="https://github.com/wts-data-table/wts-data-table.github.io/issues"]') as HTMLAnchorElement;
     expect(tracker?.textContent).toContain('Issue tracker');
     expect(tracker?.rel).toContain('noreferrer');
+    expect(fixture.nativeElement.querySelector('footer a[href="/sitemap"]')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('footer a[href="https://www.npmjs.com/package/wts-data-table"]')?.textContent).toContain('wts-data-table');
   });
 });

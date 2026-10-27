@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://wts-data-table.github.io/</loc></url>
+  <url><loc>https://wts-data-table.github.io/sitemap/</loc></url>
   <url><loc>https://wts-data-table.github.io/features/</loc></url>
   <url><loc>https://wts-data-table.github.io/docs/</loc></url>
   <url><loc>https://wts-data-table.github.io/docs/guides/framework-wrappers/</loc></url>

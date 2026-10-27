@@ -55,7 +55,14 @@ See [the mobile SEO/performance audit](docs/seo-audit-2026-09-28.md) for measure
 results and outstanding work; a passing basic SEO check is not a ranking guarantee.
 
 The static output is written to
-`dist/wts-data-table-angular-example/browser`. The workflow in
+`dist/wts-data-table-angular-example/browser`. It includes `/sitemap/`, a
+human-readable directory linking every content page and the official npm
+packages. `/sitemap.txt` is generated from `/sitemap.xml` during the build; both
+list only owned-site canonical URLs. External npm links belong in page content,
+not in the search-engine sitemap. Submission is not proof of indexing: confirm
+successful processing and actual page indexing in Search Console.
+
+The workflow in
 `.github/workflows/deploy-pages.yml` deploys that folder from `main`. To serve
 the root URL `wts-data-table.github.io`, the GitHub repository must be named
 `wts-data-table.github.io` under the `wts-data-table` account or organization,
